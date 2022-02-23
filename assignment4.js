@@ -4,7 +4,7 @@ const {
     Vector, Vector3, vec, vec3, vec4, color, hex_color, Shader, Matrix, Mat4, Light, Shape, Material, Scene, Texture,
 } = tiny;
 
-const {Cube, Axis_Arrows, Textured_Phong} = defs
+const {Cube, Axis_Arrows, Textured_Phong, Subdivision_Sphere} = defs
 
 export class Assignment4 extends Scene {
     /**
@@ -21,7 +21,8 @@ export class Assignment4 extends Scene {
         this.shapes = {
             box_1: new Cube(),
             box_2: new Cube(),
-            axis: new Axis_Arrows()
+            axis: new Axis_Arrows(),
+            sphere: new Subdivision_Sphere(4),
         }
         console.log(this.shapes.box_1.arrays.texture_coord)
 
@@ -68,6 +69,14 @@ export class Assignment4 extends Scene {
                 ambient: 0.5, diffusivity: 0.1, specularity: 0.1,
                 texture: new Texture("assets/table.png", "NEAREST")
             }),
+            fishbowl_texture: new Material(new Textured_Phong(), {
+                color: hex_color("#AFDFEF"),
+                ambient: 0.7, diffusivity: 0, specularity: 0.2
+            }),
+            water_texture: new Material(new Textured_Phong(), {
+                color: hex_color("#006EE6"),
+                ambient: 0.7, diffusivity: 0, specularity: 0.2
+            }),
         }
 
         this.initial_camera_location = Mat4.look_at(vec3(0, 10, 20), vec3(0, 0, 0), vec3(0, 1, 0));
@@ -91,31 +100,23 @@ export class Assignment4 extends Scene {
         program_state.lights = [new Light(light_position, color(1, 1, 1, 1), 1000)];
 
         let t = program_state.animation_time / 1000, dt = program_state.animation_delta_time / 1000;
-        let model_transform = Mat4.rotation(.3,1,0,0);
+        let model_transform = Mat4.rotation(.4,1,0,0);
 
         // TODO:  Draw the required boxes. Also update their stored matrices.
         // You can remove the following line.
-        // this.shapes.axis.draw(context, program_state, model_transform, this.materials.phong.override({color: hex_color("#ffff00")}));
         
-        // this.shapes.box_1.draw(context, program_state, model_transform.times(Mat4.translation(-2, 0, 0)), this.materials.texture3);
+        // table
         this.shapes.box_2.draw(context, program_state, model_transform.times(Mat4.scale(2, 1/20, 2)), this.materials.table_texture);
         this.shapes.box_2.draw(context, program_state, model_transform.times(Mat4.translation(-2,-1.1,1.8)).times(Mat4.scale(1/20, 1.1, 1/20)), this.materials.table_texture);
         this.shapes.box_2.draw(context, program_state, model_transform.times(Mat4.translation(2,-1.1,1.8)).times(Mat4.scale(1/20, 1.1, 1/20)), this.materials.table_texture);
         this.shapes.box_2.draw(context, program_state, model_transform.times(Mat4.translation(2, -1.1,-1.8)).times(Mat4.scale(1/20, 1.1, 1/20)), this.materials.table_texture);
         this.shapes.box_2.draw(context, program_state, model_transform.times(Mat4.translation(-2, -1.1,-1.8)).times(Mat4.scale(1/20, 1.1, 1/20)), this.materials.table_texture);
-    
-        // if (this.attached) {
-        //     if (this.attached() === this.initial_camera_location) {
-        //         program_state.set_camera(this.initial_camera_location.map((x,i) => Vector.from(program_state.camera_inverse[i]).mix(x, 0.1)));
-        //     }
-        //     else {
-        //         let desired = Mat4.inverse(this.attached().times(Mat4.translation(0, 0, 5)));
-        //         // program_state.set_camera(Mat4.inverse(desired));
-        //         program_state.set_camera(desired.map((x,i) => Vector.from(program_state.camera_inverse[i]).mix(x, 0.1)));
-        //     }
-        // }
-
-        if (t <= 9) {
+        
+        // fishbowl
+        this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.9, .7, .7).times(Mat4.translation(0, 1, 1.5))), this.materials.fishbowl_texture);
+        // this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.9, .7, .7).times(Mat4.translation(0, 1, 1.5))), this.materials.water_texture);
+        
+        if (t <= 7) {
             let desired = Mat4.translation(0,0,t-12);
             program_state.set_camera(desired);
         }
