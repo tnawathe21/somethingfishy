@@ -63,6 +63,11 @@ export class Assignment4 extends Scene {
                 ambient: 0.5, diffusivity: 0.1, specularity: 0.1,
                 texture: new Texture("assets/rgb.jpg", "LINEAR_MIPMAP_LINEAR")
             }),
+            table_texture: new Material(new Textured_Phong(), {
+                color: hex_color("#964B00"),
+                ambient: 0.5, diffusivity: 0.1, specularity: 0.1,
+                texture: new Texture("assets/table.png", "NEAREST")
+            }),
         }
 
         this.initial_camera_location = Mat4.look_at(vec3(0, 10, 20), vec3(0, 0, 0), vec3(0, 1, 0));
@@ -76,7 +81,7 @@ export class Assignment4 extends Scene {
         if (!context.scratchpad.controls) {
             this.children.push(context.scratchpad.controls = new defs.Movement_Controls());
             // Define the global camera and projection matrices, which are stored in program_state.
-            program_state.set_camera(Mat4.translation(0, 0, -8));
+            program_state.set_camera(Mat4.translation(0, 0, -12));
         }
 
         program_state.projection_transform = Mat4.perspective(
@@ -86,14 +91,34 @@ export class Assignment4 extends Scene {
         program_state.lights = [new Light(light_position, color(1, 1, 1, 1), 1000)];
 
         let t = program_state.animation_time / 1000, dt = program_state.animation_delta_time / 1000;
-        let model_transform = Mat4.identity();
+        let model_transform = Mat4.rotation(.3,1,0,0);
 
         // TODO:  Draw the required boxes. Also update their stored matrices.
         // You can remove the following line.
         // this.shapes.axis.draw(context, program_state, model_transform, this.materials.phong.override({color: hex_color("#ffff00")}));
         
-        this.shapes.box_1.draw(context, program_state, model_transform.times(Mat4.translation(-2, 0, 0)), this.materials.texture3);
-        this.shapes.box_2.draw(context, program_state, model_transform.times(Mat4.translation(2, 0, 0)), this.materials.texture4);
+        // this.shapes.box_1.draw(context, program_state, model_transform.times(Mat4.translation(-2, 0, 0)), this.materials.texture3);
+        this.shapes.box_2.draw(context, program_state, model_transform.times(Mat4.scale(2, 1/20, 2)), this.materials.table_texture);
+        this.shapes.box_2.draw(context, program_state, model_transform.times(Mat4.translation(-2,-1.1,1.8)).times(Mat4.scale(1/20, 1.1, 1/20)), this.materials.table_texture);
+        this.shapes.box_2.draw(context, program_state, model_transform.times(Mat4.translation(2,-1.1,1.8)).times(Mat4.scale(1/20, 1.1, 1/20)), this.materials.table_texture);
+        this.shapes.box_2.draw(context, program_state, model_transform.times(Mat4.translation(2, -1.1,-1.8)).times(Mat4.scale(1/20, 1.1, 1/20)), this.materials.table_texture);
+        this.shapes.box_2.draw(context, program_state, model_transform.times(Mat4.translation(-2, -1.1,-1.8)).times(Mat4.scale(1/20, 1.1, 1/20)), this.materials.table_texture);
+    
+        // if (this.attached) {
+        //     if (this.attached() === this.initial_camera_location) {
+        //         program_state.set_camera(this.initial_camera_location.map((x,i) => Vector.from(program_state.camera_inverse[i]).mix(x, 0.1)));
+        //     }
+        //     else {
+        //         let desired = Mat4.inverse(this.attached().times(Mat4.translation(0, 0, 5)));
+        //         // program_state.set_camera(Mat4.inverse(desired));
+        //         program_state.set_camera(desired.map((x,i) => Vector.from(program_state.camera_inverse[i]).mix(x, 0.1)));
+        //     }
+        // }
+
+        if (t <= 9) {
+            let desired = Mat4.translation(0,0,t-12);
+            program_state.set_camera(desired);
+        }
     }
 }
 
