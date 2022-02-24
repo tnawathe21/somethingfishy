@@ -43,9 +43,9 @@ export class Assignment4 extends Scene {
                 color: hex_color("#18aa6c"),
             }),
             sand_texture: new Material(new Textured_Phong(), {
-                color: hex_color("#bca472"),
+                color: hex_color("#000000"),
                 ambient: 1, diffusivity: 0.1, specularity: 0.1,
-                texture: new Texture("assets/sand.png", "NEAREST")
+                texture: new Texture("assets/sand.png", "LINEAR_MIPMAP_LINEAR")
             }),
         }
 
@@ -53,19 +53,13 @@ export class Assignment4 extends Scene {
     }
 
     draw_sand(context, program_state, sand_model, i, j) {
-        if (j < -6) {
-            sand_model = sand_model.times(Mat4.translation(i, j, 2));
-            this.shapes.cube.draw(context, program_state, sand_model, this.materials.sand_texture);
-        }
-        else {
-            sand_model = sand_model.times(Mat4.translation(i, j, 1));
-            this.shapes.cube.draw(context, program_state, sand_model, this.materials.sand_texture.override({ambient:0.8}));
-        }
+        sand_model = sand_model.times(Mat4.translation(i, j, 1));
+        this.shapes.cube.draw(context, program_state, sand_model, this.materials.sand_texture);
     }
 
     draw_seaweed(context, program_state, seaweed_model, color, i) {
         let t = program_state.animation_time / 1000;
-        let angle = 0.2 * Math.sin(t);
+        let angle = 0.1 * Math.sin(t);
         if (i % 2 == 0) {
             angle *= -1;
         }
@@ -109,36 +103,42 @@ export class Assignment4 extends Scene {
             program_state.set_camera(Mat4.translation(0, 0, -12));
 
             // sand
-            let sand_model = Mat4.identity().times(Mat4.scale(0.5, 0.5, 0.1));
-            for (let i = -18; i < 18; i++) {
+            let sand_model = Mat4.identity().times(Mat4.scale(0.5, 0.5, 0.5));
+            for (let i = -17; i < 18; i++) {
                 for (let j = -9; j < -4; j++) {
                     this.draw_sand(context, program_state, sand_model, i, j);
                 }
             }
 
+            for (let i = -88; i < 88; i++) {
+                let position = Math.sin(i / 8) - 20;
+                sand_model = Mat4.identity().times(Mat4.scale(0.1, 0.1, 0.1));
+                this.draw_sand(context, program_state, sand_model, i, position);
+            }
+
             // seaweed
-            let seaweed_model = Mat4.identity().times(Mat4.translation(-6, -3, 2)).times(Mat4.scale(0.1, 0.2, 0.01));
+            let seaweed_model = Mat4.identity().times(Mat4.translation(-6, -3.4, 2)).times(Mat4.scale(0.15, 0.3, 0.01));
             for (let i = 0; i < 4; i++) {
                 seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
             }
             //this.shapes.cone.draw(context, program_state, seaweed_model.times(Mat4.translation(0, 1, 0)), this.materials.seaweed_texture);
 
-            seaweed_model = Mat4.identity().times(Mat4.translation(-6.4, -3, 2)).times(Mat4.scale(0.1, 0.2, 0.01));
+            seaweed_model = Mat4.identity().times(Mat4.translation(-6.4, -3.4, 2)).times(Mat4.scale(0.15, 0.3, 0.01));
             for (let i = 0; i < 6; i++) {
                 seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#18aa6c"), i);
             }
 
-            seaweed_model = Mat4.identity().times(Mat4.translation(-6.8, -3, 2)).times(Mat4.scale(0.1, 0.2, 0.01));
+            seaweed_model = Mat4.identity().times(Mat4.translation(-6.8, -3.4, 2)).times(Mat4.scale(0.15, 0.3, 0.01));
             for (let i = 0; i < 7; i++) {
                 seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#18aa6c"), i);
             }
 
-            seaweed_model = Mat4.identity().times(Mat4.translation(-7.2, -3, 1)).times(Mat4.scale(0.1, 0.2, 0.01));
+            seaweed_model = Mat4.identity().times(Mat4.translation(-7.2, -3.4, 1)).times(Mat4.scale(0.15, 0.3, 0.01));
             for (let i = 0; i < 8; i++) {
                 seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
             }
 
-            seaweed_model = Mat4.identity().times(Mat4.translation(-7.6, -3, 1)).times(Mat4.scale(0.1, 0.2, 0.01));
+            seaweed_model = Mat4.identity().times(Mat4.translation(-7.6, -3.4, 1)).times(Mat4.scale(0.15, 0.3, 0.01));
             for (let i = 0; i < 5; i++) {
                 seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
             }
