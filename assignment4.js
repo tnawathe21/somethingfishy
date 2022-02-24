@@ -19,6 +19,7 @@ export class Assignment4 extends Scene {
             cube: new Cube(),
             cone: new Rounded_Closed_Cone(),
             sphere: new Subdivision_Sphere(4),
+            cave: new (defs.Subdivision_Sphere.prototype.make_flat_shaded_version())(2),
         }
 
         this.materials = {
@@ -46,6 +47,10 @@ export class Assignment4 extends Scene {
                 color: hex_color("#bca472"),
                 ambient: 1, diffusivity: 0.1, specularity: 0.1,
                 texture: new Texture("assets/sand.png", "NEAREST")
+            }),
+            cave_texture: new Material(new Textured_Phong(), {
+                color: hex_color("4d493a"),
+                ambient: 1, diffusivity: 0.1,
             }),
         }
 
@@ -142,6 +147,15 @@ export class Assignment4 extends Scene {
             for (let i = 0; i < 5; i++) {
                 seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
             }
+
+            // water bubble
+            for (let i = 0; i < 10; i++)
+            {
+                this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.2, .2, .2).times(Mat4.translation(7, 1+2*i, 1.5))), this.materials.fishbowl_texture);
+            }
+
+            // cave
+            this.shapes.cave.draw(context, program_state, model_transform.times(Mat4.scale(1.6, 1.6, 1.6).times(Mat4.translation(2.5, -0.5, 1.5))), this.materials.cave_texture);
         }
     }
 }
