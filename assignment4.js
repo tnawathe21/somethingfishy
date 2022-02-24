@@ -4,7 +4,7 @@ const {
     Vector, Vector3, vec, vec3, vec4, color, hex_color, Shader, Matrix, Mat4, Light, Shape, Material, Scene, Texture,
 } = tiny;
 
-const {Cube, Axis_Arrows, Textured_Phong, Subdivision_Sphere} = defs
+const {Cube, Rounded_Closed_Cone, Textured_Phong, Subdivision_Sphere} = defs
 
 export class Assignment4 extends Scene {
     /**
@@ -15,54 +15,15 @@ export class Assignment4 extends Scene {
         // constructor(): Scenes begin by populating initial values like the Shapes and Materials they'll need.
         super();
 
-        // TODO:  Create two cubes, including one with the default texture coordinates (from 0 to 1), and one with the modified
-        //        texture coordinates as required for cube #2.  You can either do this by modifying the cube code or by modifying
-        //        a cube instance's texture_coords after it is already created.
         this.shapes = {
-            box_1: new Cube(),
-            box_2: new Cube(),
-            axis: new Axis_Arrows(),
+            cube: new Cube(),
+            cone: new Rounded_Closed_Cone(),
             sphere: new Subdivision_Sphere(4),
         }
-        console.log(this.shapes.box_1.arrays.texture_coord)
 
-        // Display texture 4 times on each side
-        this.shapes.box_2.arrays.texture_coord = [
-            Vector.of(0, 0), Vector.of(2, 0), Vector.of(0, 2), Vector.of(2, 2),
-            Vector.of(0, 0), Vector.of(2, 0), Vector.of(0, 2), Vector.of(2, 2),
-            Vector.of(0, 0), Vector.of(2, 0), Vector.of(0, 2), Vector.of(2, 2),
-            Vector.of(0, 0), Vector.of(2, 0), Vector.of(0, 2), Vector.of(2, 2),
-            Vector.of(0, 0), Vector.of(2, 0), Vector.of(0, 2), Vector.of(2, 2),
-            Vector.of(0, 0), Vector.of(2, 0), Vector.of(0, 2), Vector.of(2, 2),
-        ]
-
-
-        // TODO:  Create the materials required to texture both cubes with the correct images and settings.
-        //        Make each Material from the correct shader.  Phong_Shader will work initially, but when
-        //        you get to requirements 6 and 7 you will need different ones.
         this.materials = {
             phong: new Material(new Textured_Phong(), {
                 color: hex_color("#ffffff"),
-            }),
-            texture: new Material(new Textured_Phong(), {
-                color: hex_color("#ffffff"),
-                ambient: 0.5, diffusivity: 0.1, specularity: 0.1,
-                texture: new Texture("assets/stars.png")
-            }),
-            texture2: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"),
-                ambient: 0.5, diffusivity: 0.1, specularity: 0.1,
-                texture: new Texture("assets/earth.gif")
-            }),
-            texture3: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"),
-                ambient: 0.5, diffusivity: 0.1, specularity: 0.1,
-                texture: new Texture("assets/rgb.jpg", "NEAREST")
-            }),
-            texture4: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"),
-                ambient: 0.5, diffusivity: 0.1, specularity: 0.1,
-                texture: new Texture("assets/rgb.jpg", "LINEAR_MIPMAP_LINEAR")
             }),
             table_texture: new Material(new Textured_Phong(), {
                 color: hex_color("#964B00"),
@@ -70,20 +31,48 @@ export class Assignment4 extends Scene {
                 texture: new Texture("assets/table.png", "NEAREST")
             }),
             fishbowl_texture: new Material(new Textured_Phong(), {
-                color: hex_color("#AFDFEF"),
+                color: hex_color("#afdfef"),
                 ambient: 0.7, diffusivity: 0, specularity: 0.2
             }),
             water_texture: new Material(new Textured_Phong(), {
-                color: hex_color("#006EE6"),
+                color: hex_color("#006ee6"),
                 ambient: 0.7, diffusivity: 0, specularity: 0.2
+            }),
+            seaweed_texture: new Material(new Textured_Phong(), {
+                ambient: 0.5, diffusivity: 0.1, specularity: 0.1,
+                color: hex_color("#18aa6c"),
+            }),
+            sand_texture: new Material(new Textured_Phong(), {
+                color: hex_color("#bca472"),
+                ambient: 1, diffusivity: 0.1, specularity: 0.1,
+                texture: new Texture("assets/sand.png", "NEAREST")
             }),
         }
 
         this.initial_camera_location = Mat4.look_at(vec3(0, 10, 20), vec3(0, 0, 0), vec3(0, 1, 0));
     }
 
-    make_control_panel() {
-        // TODO:  Implement requirement #5 using a key_triggered_button that responds to the 'c' key.
+    draw_sand(context, program_state, sand_model, i, j) {
+        if (j < -6) {
+            sand_model = sand_model.times(Mat4.translation(i, j, 2));
+            this.shapes.cube.draw(context, program_state, sand_model, this.materials.sand_texture);
+        }
+        else {
+            sand_model = sand_model.times(Mat4.translation(i, j, 1));
+            this.shapes.cube.draw(context, program_state, sand_model, this.materials.sand_texture.override({ambient:0.8}));
+        }
+    }
+
+    draw_seaweed(context, program_state, seaweed_model, color, i) {
+        let t = program_state.animation_time / 1000;
+        let angle = 0.2 * Math.sin(t);
+        if (i % 2 == 0) {
+            angle *= -1;
+        }
+        seaweed_model = seaweed_model.times(Mat4.scale(10, 2, 10)).times(Mat4.translation(0, 1, 0)).times(Mat4.translation(-0.1, -0.5, 0))
+                                        .times(Mat4.rotation(angle, 0, 0, 1)).times(Mat4.translation(0.1, 0.5, 0)).times(Mat4.scale(0.1, 0.5, 0.1));
+        this.shapes.cube.draw(context, program_state, seaweed_model, this.materials.seaweed_texture.override({color:color}));
+        return seaweed_model;
     }
 
     display(context, program_state) {
@@ -101,31 +90,64 @@ export class Assignment4 extends Scene {
 
         let t = program_state.animation_time / 1000, dt = program_state.animation_delta_time / 1000;
         let model_transform = Mat4.rotation(.4,1,0,0);
-
-        // TODO:  Draw the required boxes. Also update their stored matrices.
-        // You can remove the following line.
         
-        // table
-        this.shapes.box_2.draw(context, program_state, model_transform.times(Mat4.scale(2, 1/20, 2)), this.materials.table_texture);
-        this.shapes.box_2.draw(context, program_state, model_transform.times(Mat4.translation(-2,-1.1,1.8)).times(Mat4.scale(1/20, 1.1, 1/20)), this.materials.table_texture);
-        this.shapes.box_2.draw(context, program_state, model_transform.times(Mat4.translation(2,-1.1,1.8)).times(Mat4.scale(1/20, 1.1, 1/20)), this.materials.table_texture);
-        this.shapes.box_2.draw(context, program_state, model_transform.times(Mat4.translation(2, -1.1,-1.8)).times(Mat4.scale(1/20, 1.1, 1/20)), this.materials.table_texture);
-        this.shapes.box_2.draw(context, program_state, model_transform.times(Mat4.translation(-2, -1.1,-1.8)).times(Mat4.scale(1/20, 1.1, 1/20)), this.materials.table_texture);
-        
-        // fishbowl
-        this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.9, .7, .7).times(Mat4.translation(0, 1, 1.5))), this.materials.fishbowl_texture);
-        // this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.9, .7, .7).times(Mat4.translation(0, 1, 1.5))), this.materials.water_texture);
-        
-        if (t <= 7) {
+        if (t < 9) {
+            // table
+            this.shapes.cube.draw(context, program_state, model_transform.times(Mat4.scale(2, 1/20, 2)), this.materials.table_texture);
+            this.shapes.cube.draw(context, program_state, model_transform.times(Mat4.translation(-2,-1.1,1.8)).times(Mat4.scale(1/20, 1.1, 1/20)), this.materials.table_texture);
+            this.shapes.cube.draw(context, program_state, model_transform.times(Mat4.translation(2,-1.1,1.8)).times(Mat4.scale(1/20, 1.1, 1/20)), this.materials.table_texture);
+            this.shapes.cube.draw(context, program_state, model_transform.times(Mat4.translation(2, -1.1,-1.8)).times(Mat4.scale(1/20, 1.1, 1/20)), this.materials.table_texture);
+            this.shapes.cube.draw(context, program_state, model_transform.times(Mat4.translation(-2, -1.1,-1.8)).times(Mat4.scale(1/20, 1.1, 1/20)), this.materials.table_texture);
             let desired = Mat4.translation(0,0,t-12);
             program_state.set_camera(desired);
+        
+            // fishbowl
+            this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.9, .7, .7).times(Mat4.translation(0, 1, 1.5))), this.materials.fishbowl_texture);
+        }
+
+        else {
+            program_state.set_camera(Mat4.translation(0, 0, -12));
+
+            // sand
+            let sand_model = Mat4.identity().times(Mat4.scale(0.5, 0.5, 0.1));
+            for (let i = -18; i < 18; i++) {
+                for (let j = -9; j < -4; j++) {
+                    this.draw_sand(context, program_state, sand_model, i, j);
+                }
+            }
+
+            // seaweed
+            let seaweed_model = Mat4.identity().times(Mat4.translation(-6, -3, 2)).times(Mat4.scale(0.1, 0.2, 0.01));
+            for (let i = 0; i < 4; i++) {
+                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
+            }
+            //this.shapes.cone.draw(context, program_state, seaweed_model.times(Mat4.translation(0, 1, 0)), this.materials.seaweed_texture);
+
+            seaweed_model = Mat4.identity().times(Mat4.translation(-6.4, -3, 2)).times(Mat4.scale(0.1, 0.2, 0.01));
+            for (let i = 0; i < 6; i++) {
+                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#18aa6c"), i);
+            }
+
+            seaweed_model = Mat4.identity().times(Mat4.translation(-6.8, -3, 2)).times(Mat4.scale(0.1, 0.2, 0.01));
+            for (let i = 0; i < 7; i++) {
+                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#18aa6c"), i);
+            }
+
+            seaweed_model = Mat4.identity().times(Mat4.translation(-7.2, -3, 1)).times(Mat4.scale(0.1, 0.2, 0.01));
+            for (let i = 0; i < 8; i++) {
+                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
+            }
+
+            seaweed_model = Mat4.identity().times(Mat4.translation(-7.6, -3, 1)).times(Mat4.scale(0.1, 0.2, 0.01));
+            for (let i = 0; i < 5; i++) {
+                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
+            }
         }
     }
 }
 
 
 class Texture_Scroll_X extends Textured_Phong {
-    // TODO:  Modify the shader below (right now it's just the same fragment shader as Textured_Phong) for requirement #6.
     fragment_glsl_code() {
         return this.shared_glsl_code() + `
             varying vec2 f_tex_coord;
@@ -146,7 +168,6 @@ class Texture_Scroll_X extends Textured_Phong {
 
 
 class Texture_Rotate extends Textured_Phong {
-    // TODO:  Modify the shader below (right now it's just the same fragment shader as Textured_Phong) for requirement #7.
     fragment_glsl_code() {
         return this.shared_glsl_code() + `
             varying vec2 f_tex_coord;
