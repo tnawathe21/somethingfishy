@@ -57,11 +57,14 @@ export class Assignment4 extends Scene {
                 texture: new Texture("assets/blue_fish_scales.png", "LINEAR_MIPMAP_LINEAR")
             }),        
             cave_texture: new Material(new Textured_Phong(), {
-                color: hex_color("4c4c4c"),
+                color: hex_color("#4c4c4c"),
                 ambient: 1, diffusivity: 1, specularity: 1,
             }),
             cave_hole_texture: new Material(new defs.Phong_Shader(), {
                 color: hex_color("000000"), 
+            }),
+            crab_texture: new Material(new defs.Phong_Shader(), {
+                color: color(255, 209, 193, 1), 
             }),
             fish_texture_orange: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"),
@@ -109,8 +112,24 @@ export class Assignment4 extends Scene {
         let t = program_state.animation_time / 1000;
         let bigfish_tail_model = Mat4.identity().times(Mat4.translation(5.2*Math.sin(t/3)+1.5, 3, 1))
                     .times(Mat4.scale(1.5, .75, .75)).times(Mat4.rotation(-Math.PI/4, 0, 0, 1));
+                    
+        let eye_model = Mat4.identity().times(Mat4.translation(5.2*Math.sin(t/3)+.7, 3.1, 1.2)) .times(Mat4.scale(.1, .1, .1));
+        this.shapes.sphere.draw(context, program_state, eye_model, this.materials.cave_hole_texture);
+
+        let eyebrow_model = Mat4.identity().times(Mat4.translation(5.2*Math.sin(t/3)+.5, 3.3, 1.3)) .times(Mat4.scale(.5, .1, .1))
+                            .times(Mat4.rotation(-5*Math.PI/11, 0, 0, 1));
+        this.shapes.triangle.draw(context, program_state, eyebrow_model, this.materials.cave_hole_texture);
+
+        let mouth_model = Mat4.identity().times(Mat4.translation(5.2*Math.sin(t/3)+0.95, 2.5, 1.3)) .times(Mat4.scale(.4, .4, .4))
+                            .times(Mat4.rotation(3*Math.PI/8, 0, 0, 1));
+        this.shapes.triangle.draw(context, program_state, mouth_model, this.materials.cave_hole_texture);
+
         this.shapes.triangle.draw(context, program_state, bigfish_model, this.materials.big_fish_texture);
         this.shapes.triangle.draw(context, program_state, bigfish_tail_model, this.materials.big_fish_texture);
+    }
+
+    draw_crab(context, program_state, crab_model) {
+        this.shapes.sphere.draw(context, program_state, crab_model, this.materials.crab_texture);
     }
 
     draw_table(context, program_state, model_transform) {
@@ -142,49 +161,49 @@ export class Assignment4 extends Scene {
         let t = program_state.animation_time / 1000, dt = program_state.animation_delta_time / 1000;
         let model_transform = Mat4.rotation(.4,1,0,0);
         
-        if (t < 10) {
-            this.draw_table(context, program_state, model_transform);
+        // if (t < 10) {
+        //     this.draw_table(context, program_state, model_transform);
 
-            let desired = Mat4.translation(0,-.5,t-12);
-            program_state.set_camera(desired);
+        //     let desired = Mat4.translation(0,-.5,t-12);
+        //     program_state.set_camera(desired);
 
-            // seaweed
-            let seaweed_model = Mat4.identity().times(Mat4.translation(-.6, -.1, 1.1)).times(Mat4.scale(0.03, 0.05, 0.01));
-            for (let i = 0; i < 4; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
-            }
-            //this.shapes.cone.draw(context, program_state, seaweed_model.times(Mat4.translation(0, 1, 0)), this.materials.seaweed_texture);
+        //     // seaweed
+        //     let seaweed_model = Mat4.identity().times(Mat4.translation(-.6, -.1, 1.1)).times(Mat4.scale(0.03, 0.05, 0.01));
+        //     for (let i = 0; i < 4; i++) {
+        //         seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
+        //     }
+        //     //this.shapes.cone.draw(context, program_state, seaweed_model.times(Mat4.translation(0, 1, 0)), this.materials.seaweed_texture);
 
-            seaweed_model = Mat4.identity().times(Mat4.translation(-.5, -.15, 1.1)).times(Mat4.scale(0.03, 0.05, 0.01));
-            for (let i = 0; i < 6; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#18aa6c"), i);
-            }
+        //     seaweed_model = Mat4.identity().times(Mat4.translation(-.5, -.15, 1.1)).times(Mat4.scale(0.03, 0.05, 0.01));
+        //     for (let i = 0; i < 6; i++) {
+        //         seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#18aa6c"), i);
+        //     }
 
-            seaweed_model = Mat4.identity().times(Mat4.translation(-.4, -.17, 1.1)).times(Mat4.scale(0.03, 0.05, 0.01));
-            for (let i = 0; i < 7; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#18aa6c"), i);
-            }
+        //     seaweed_model = Mat4.identity().times(Mat4.translation(-.4, -.17, 1.1)).times(Mat4.scale(0.03, 0.05, 0.01));
+        //     for (let i = 0; i < 7; i++) {
+        //         seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#18aa6c"), i);
+        //     }
 
-            seaweed_model = Mat4.identity().times(Mat4.translation(-.3, -.2, 1.1)).times(Mat4.scale(0.03, 0.05, 0.01));
-            for (let i = 0; i < 8; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
-            }
+        //     seaweed_model = Mat4.identity().times(Mat4.translation(-.3, -.2, 1.1)).times(Mat4.scale(0.03, 0.05, 0.01));
+        //     for (let i = 0; i < 8; i++) {
+        //         seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
+        //     }
 
-            seaweed_model = Mat4.identity().times(Mat4.translation(-.2, -.2, 1.1)).times(Mat4.scale(0.03, 0.05, 0.01));
-            for (let i = 0; i < 5; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
-            }
+        //     seaweed_model = Mat4.identity().times(Mat4.translation(-.2, -.2, 1.1)).times(Mat4.scale(0.03, 0.05, 0.01));
+        //     for (let i = 0; i < 5; i++) {
+        //         seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
+        //     }
         
-            // fishbowl fade
-           if (t <= 9) {
-                this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.9, .7, .7).times(Mat4.translation(0, 1.2, 1.5))), this.materials.fishbowl_texture);
-           }
-            if (t > 9) {
-                let fishbowl_color = color(50, 50, 50, 1-1/12*t);
-                this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.9, .7, .7).times(Mat4.translation(0, 1.2, 1.5))), this.materials.fishbowl_texture.override({color: fishbowl_color}));
-           }
-        }
-        else {
+        //     // fishbowl fade
+        //    if (t <= 9) {
+        //         this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.9, .7, .7).times(Mat4.translation(0, 1.2, 1.5))), this.materials.fishbowl_texture);
+        //    }
+        //     if (t > 9) {
+        //         let fishbowl_color = color(50, 50, 50, 1-1/12*t);
+        //         this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.9, .7, .7).times(Mat4.translation(0, 1.2, 1.5))), this.materials.fishbowl_texture.override({color: fishbowl_color}));
+        //    }
+        // }
+       // else {
             program_state.set_camera(Mat4.translation(0, 0, -12));
             
             //background
@@ -242,6 +261,7 @@ export class Assignment4 extends Scene {
             // let bigfish_model = Mat4.identity().times(Mat4.rotation(Math.PI*t/50, 0, 1, 0)).times(Mat4.translation(5.2*Math.sin(t/6), 0, 5.2*Math.cos(t/6)))
             //                 .times(Mat4.scale(3, 1.5, 1.5)).times(Mat4.rotation(-Math.PI/4, 0, 0, 1));
             this.draw_big_fish(context, program_state, bigfish_model);
+
             // water bubble
             // this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(7, 1, 2))), this.materials.fishbowl_texture);
             // this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(10, 1, 2))), this.materials.fishbowl_texture);
@@ -256,7 +276,9 @@ export class Assignment4 extends Scene {
             // cave
             this.shapes.cave.draw(context, program_state, model_transform.times(Mat4.scale(2, 2, 2).times(Mat4.translation(3, -0.75, 0.2))), this.materials.cave_texture);
            // this.shapes.cave_hole.draw(context, program_state, model_transform.times(Mat4.translation(5, -0.75, 2)), this.materials.cave_hole_texture);
-        }
+
+           this.draw_crab(context, program_state, model_transform.times(Mat4.scale(1, 1, 1).times(Mat4.translation(0, -0.75, 0.2))));
+        //}
     }
 }
 class Texture_Scroll_X extends Textured_Phong {
