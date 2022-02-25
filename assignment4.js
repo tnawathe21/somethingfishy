@@ -185,49 +185,49 @@ export class Assignment4 extends Scene {
         let t = program_state.animation_time / 1000, dt = program_state.animation_delta_time / 1000;
         let model_transform = Mat4.rotation(.4,1,0,0);
         
-        // if (t < 10) {
-        //     this.draw_table(context, program_state, model_transform);
+        if (t < 10) {
+            this.draw_table(context, program_state, model_transform);
 
-        //     let desired = Mat4.translation(0,-.5,t-12);
-        //     program_state.set_camera(desired);
+            let desired = Mat4.translation(0,-.5,t-12);
+            program_state.set_camera(desired);
 
-        //     // seaweed
-        //     let seaweed_model = Mat4.identity().times(Mat4.translation(-.6, -.1, 1.1)).times(Mat4.scale(0.03, 0.05, 0.01));
-        //     for (let i = 0; i < 4; i++) {
-        //         seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
-        //     }
-        //     //this.shapes.cone.draw(context, program_state, seaweed_model.times(Mat4.translation(0, 1, 0)), this.materials.seaweed_texture);
+            // seaweed
+            let seaweed_model = Mat4.identity().times(Mat4.translation(-.6, -.1, 1.1)).times(Mat4.scale(0.03, 0.05, 0.01));
+            for (let i = 0; i < 4; i++) {
+                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
+            }
+            //this.shapes.cone.draw(context, program_state, seaweed_model.times(Mat4.translation(0, 1, 0)), this.materials.seaweed_texture);
 
-        //     seaweed_model = Mat4.identity().times(Mat4.translation(-.5, -.15, 1.1)).times(Mat4.scale(0.03, 0.05, 0.01));
-        //     for (let i = 0; i < 6; i++) {
-        //         seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#18aa6c"), i);
-        //     }
+            seaweed_model = Mat4.identity().times(Mat4.translation(-.5, -.15, 1.1)).times(Mat4.scale(0.03, 0.05, 0.01));
+            for (let i = 0; i < 6; i++) {
+                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#18aa6c"), i);
+            }
 
-        //     seaweed_model = Mat4.identity().times(Mat4.translation(-.4, -.17, 1.1)).times(Mat4.scale(0.03, 0.05, 0.01));
-        //     for (let i = 0; i < 7; i++) {
-        //         seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#18aa6c"), i);
-        //     }
+            seaweed_model = Mat4.identity().times(Mat4.translation(-.4, -.17, 1.1)).times(Mat4.scale(0.03, 0.05, 0.01));
+            for (let i = 0; i < 7; i++) {
+                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#18aa6c"), i);
+            }
 
-        //     seaweed_model = Mat4.identity().times(Mat4.translation(-.3, -.2, 1.1)).times(Mat4.scale(0.03, 0.05, 0.01));
-        //     for (let i = 0; i < 8; i++) {
-        //         seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
-        //     }
+            seaweed_model = Mat4.identity().times(Mat4.translation(-.3, -.2, 1.1)).times(Mat4.scale(0.03, 0.05, 0.01));
+            for (let i = 0; i < 8; i++) {
+                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
+            }
 
-        //     seaweed_model = Mat4.identity().times(Mat4.translation(-.2, -.2, 1.1)).times(Mat4.scale(0.03, 0.05, 0.01));
-        //     for (let i = 0; i < 5; i++) {
-        //         seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
-        //     }
+            seaweed_model = Mat4.identity().times(Mat4.translation(-.2, -.2, 1.1)).times(Mat4.scale(0.03, 0.05, 0.01));
+            for (let i = 0; i < 5; i++) {
+                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
+            }
         
-        //     // fishbowl fade
-        //    if (t <= 9) {
-        //         this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.9, .7, .7).times(Mat4.translation(0, 1.2, 1.5))), this.materials.fishbowl_texture);
-        //    }
-        //     if (t > 9) {
-        //         let fishbowl_color = color(50, 50, 50, 1-1/12*t);
-        //         this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.9, .7, .7).times(Mat4.translation(0, 1.2, 1.5))), this.materials.fishbowl_texture.override({color: fishbowl_color}));
-        //    }
-        // }
-       // else {
+            // fishbowl fade
+           if (t <= 9) {
+                this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.9, .7, .7).times(Mat4.translation(0, 1.2, 1.5))), this.materials.fishbowl_texture);
+           }
+            if (t > 9) {
+                let fishbowl_color = color(50, 50, 50, 1-1/12*t);
+                this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.9, .7, .7).times(Mat4.translation(0, 1.2, 1.5))), this.materials.fishbowl_texture.override({color: fishbowl_color}));
+           }
+        }
+       else {
             program_state.set_camera(Mat4.translation(0, 0, -12));
             
             //background
@@ -306,7 +306,7 @@ export class Assignment4 extends Scene {
             fish_model =  Mat4.identity().times(Mat4.translation(3*Math.sin(t/3), 2, 1)).times(Mat4.scale(0.5, 0.3, 0.3));
             this.draw_fish_right_facing(context, program_state, fish_model, this.materials.fish_texture_rainbow, 3, 2);
 
-       // }
+        }
     }
 }
 class Texture_Scroll_X extends Textured_Phong {
