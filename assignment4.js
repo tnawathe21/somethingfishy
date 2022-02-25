@@ -136,7 +136,7 @@ export class Assignment4 extends Scene {
             this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.9, .7, .7).times(Mat4.translation(0, 1, 1.5))), this.materials.fishbowl_texture);
            }
             if (t > 7) {
-                let fishbowl_color = color(175, 223, 239, 1-(3/8)*(t));
+                let fishbowl_color = color(175, 223, 239, 0.75-(1/12)*(t));
                 this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.9, .7, .7).times(Mat4.translation(0, 1, 1.5))), this.materials.fishbowl_texture.override({color: fishbowl_color}));
             }
         }
