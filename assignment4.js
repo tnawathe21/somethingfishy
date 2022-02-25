@@ -32,7 +32,7 @@ export class Assignment4 extends Scene {
             table_texture: new Material(new Textured_Phong(), {
                 color: hex_color("#964B00"),
                 ambient: 0.5, diffusivity: 0.1, specularity: 0.1,
-               
+                texture: new Texture("assets/table.png", "LINEAR_MIPMAP_LINEAR")
             }),
             fishbowl_texture: new Material(new Textured_Phong(), {
                 color: color(175, 223, 239, .75),
