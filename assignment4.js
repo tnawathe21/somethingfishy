@@ -55,11 +55,11 @@ export class Assignment4 extends Scene {
             big_fish_texture: new Material(new Textured_Phong(), {
                 color: hex_color("#00468b"),
                 ambient: 1, diffusivity: 0.1, specularity: 0,
-                texture: new Texture("assets/table.png", "NEAREST")
+                texture: new Texture("assets/blue_fish_scales.png", "LINEAR_MIPMAP_LINEAR")
             }),        
             cave_texture: new Material(new Textured_Phong(), {
-                color: hex_color("4d493a"),
-                ambient: 1, diffusivity: 0.1,
+                color: hex_color("4c4c4c"),
+                ambient: 1, diffusivity: 1, specularity: 1,
             }),
             cave_hole_texture: new Material(new defs.Phong_Shader(), {
                 color: hex_color("000000"), 
@@ -143,22 +143,22 @@ export class Assignment4 extends Scene {
         let t = program_state.animation_time / 1000, dt = program_state.animation_delta_time / 1000;
         let model_transform = Mat4.rotation(.4,1,0,0);
         
-        if (t < 9) {
-            this.draw_table(context, program_state, model_transform);
+        // if (t < 9) {
+        //     this.draw_table(context, program_state, model_transform);
 
-            let desired = Mat4.translation(0,0,t-12);
-            program_state.set_camera(desired);
+        //     let desired = Mat4.translation(0,0,t-12);
+        //     program_state.set_camera(desired);
         
-            // fishbowl
-           if (t <= 7) {
-            this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.9, .7, .7).times(Mat4.translation(0, 1, 1.5))), this.materials.fishbowl_texture);
-           }
-            if (t > 7) {
-                let fishbowl_color = color(175, 223, 239, 0.75-(1/12)*(t));
-                this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.9, .7, .7).times(Mat4.translation(0, 1, 1.5))), this.materials.fishbowl_texture.override({color: fishbowl_color}));
-            }
-        }
-        else {
+        //     // fishbowl
+        //    if (t <= 7) {
+        //     this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.9, .7, .7).times(Mat4.translation(0, 1, 1.5))), this.materials.fishbowl_texture);
+        //    }
+        //     if (t > 7) {
+        //         let fishbowl_color = color(175, 223, 239, 0.75-(1/12)*(t));
+        //         this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.9, .7, .7).times(Mat4.translation(0, 1, 1.5))), this.materials.fishbowl_texture.override({color: fishbowl_color}));
+        //     }
+        // }
+       // else {
             program_state.set_camera(Mat4.translation(0, 0, -12));
             
             //background
@@ -229,8 +229,8 @@ export class Assignment4 extends Scene {
 
             // cave
             this.shapes.cave.draw(context, program_state, model_transform.times(Mat4.scale(2, 2, 2).times(Mat4.translation(3, -0.75, 0.2))), this.materials.cave_texture);
-            this.shapes.cave_hole.draw(context, program_state, model_transform.times(Mat4.translation(5, -0.75, 2)), this.materials.cave_hole_texture);
-        }
+           // this.shapes.cave_hole.draw(context, program_state, model_transform.times(Mat4.translation(5, -0.75, 2)), this.materials.cave_hole_texture);
+       // }
     }
 }
 class Texture_Scroll_X extends Textured_Phong {
