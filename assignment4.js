@@ -105,8 +105,8 @@ export class Assignment4 extends Scene {
         return seaweed_model;
     }
 
-    draw_big_fish(context, program_state, bigfish_model) {
-        let t = program_state.animation_time / 1000;
+    draw_big_fish(context, program_state, bigfish_model, t) {
+        // let t = program_state.animation_time / 1000;
         let bigfish_tail_model = Mat4.identity().times(Mat4.translation(5.2*Math.sin(t/3)+1.5, 3, 1))
                     .times(Mat4.scale(1.5, .75, .75)).times(Mat4.rotation(-Math.PI/4, 0, 0, 1));
         this.shapes.triangle.draw(context, program_state, bigfish_model, this.materials.big_fish_texture);
@@ -186,311 +186,31 @@ export class Assignment4 extends Scene {
         }
         if (t >= 10 && t < 20) { // intro to the scene
             program_state.set_camera(Mat4.translation(0, 0, -12));
-            
-            //background
-            let background_model = Mat4.identity().times(Mat4.scale(1, 1, -0.5));
-            for (let i = -17; i < 18; i++) {
-                for (let j = -14; j < 10; j++) {
-                    this.draw_background(context, program_state, background_model, i, j);
-                }
-            }
-
-            // sand
-            let sand_model = Mat4.identity().times(Mat4.scale(0.5, 0.5, 0.5));
-            for (let i = -17; i < 18; i++) {
-                for (let j = -9; j < -4; j++) {
-                    this.draw_sand(context, program_state, sand_model, i, j);
-                }
-            }
-
-            for (let i = -88; i < 88; i++) {
-                let position = Math.sin(i / 8) - 20;
-                sand_model = Mat4.identity().times(Mat4.scale(0.1, 0.1, 0.1));
-                this.draw_sand(context, program_state, sand_model, i, position);
-            }
-
-            // seaweed
-            let seaweed_model = Mat4.identity().times(Mat4.translation(-6, -3.4, 2)).times(Mat4.scale(0.15, 0.3, 0.01));
-            for (let i = 0; i < 4; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
-            }
-            //this.shapes.cone.draw(context, program_state, seaweed_model.times(Mat4.translation(0, 1, 0)), this.materials.seaweed_texture);
-
-            seaweed_model = Mat4.identity().times(Mat4.translation(-6.4, -3.4, 2)).times(Mat4.scale(0.15, 0.3, 0.01));
-            for (let i = 0; i < 6; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#18aa6c"), i);
-            }
-
-            seaweed_model = Mat4.identity().times(Mat4.translation(-6.8, -3.4, 2)).times(Mat4.scale(0.15, 0.3, 0.01));
-            for (let i = 0; i < 7; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#18aa6c"), i);
-            }
-
-            seaweed_model = Mat4.identity().times(Mat4.translation(-7.2, -3.4, 1)).times(Mat4.scale(0.15, 0.3, 0.01));
-            for (let i = 0; i < 8; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
-            }
-
-            seaweed_model = Mat4.identity().times(Mat4.translation(-7.6, -3.4, 1)).times(Mat4.scale(0.15, 0.3, 0.01));
-            for (let i = 0; i < 5; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
-            }
-
-            // seaweed next to cave
-            seaweed_model = Mat4.identity().times(Mat4.translation(4.7, -3.4, 3)).times(Mat4.scale(0.1, 0.25, 0.007));
-            for (let i = 0; i < 4; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
-            }
-
-            seaweed_model = Mat4.identity().times(Mat4.translation(4.5, -3.4, 3)).times(Mat4.scale(0.1, 0.25, 0.007));
-            for (let i = 0; i < 6; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#18aa6c"), i);
-            }
-
-            seaweed_model = Mat4.identity().times(Mat4.translation(4.8, -3.4, 3)).times(Mat4.scale(0.1, 0.25, 0.007));
-            for (let i = 0; i < 7; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#18aa6c"), i);
-            }
-
-            seaweed_model = Mat4.identity().times(Mat4.translation(5.3, -3.4, 3)).times(Mat4.scale(0.1, 0.25, 0.007));
-            for (let i = 0; i < 8; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
-            }
-
-            seaweed_model = Mat4.identity().times(Mat4.translation(5.1, -3.4, 3)).times(Mat4.scale(0.1, 0.25, 0.007));
-            for (let i = 0; i < 5; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#18aa6c"), i);
-            }
-
-            //big fish
-             let bigfish_model = Mat4.identity().times(Mat4.translation(5.2*Math.sin(t/3), 3, 1))
-                     .times(Mat4.scale(3, 1.5, 1.5)).times(Mat4.rotation(-Math.PI/4, 0, 0, 1));
-            // let bigfish_model = Mat4.identity().times(Mat4.rotation(Math.PI*t/50, 0, 1, 0)).times(Mat4.translation(5.2*Math.sin(t/6), 0, 5.2*Math.cos(t/6)))
-            //                 .times(Mat4.scale(3, 1.5, 1.5)).times(Mat4.rotation(-Math.PI/4, 0, 0, 1));
-            this.draw_big_fish(context, program_state, bigfish_model);
-            // water bubble
-            // this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(7, 1, 2))), this.materials.fishbowl_texture);
-            // this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(10, 1, 2))), this.materials.fishbowl_texture);
-            // this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(8.5, 2.8, 2))), this.materials.fishbowl_texture);
-            this.draw_bubble_group(context, program_state, Mat4.identity());
-            for (let i = 0; i < 5; i++) {
-                for (let j = 0; j < i; j++) {
-                    this.draw_bubble_group(context, program_state, Mat4.identity().times(Mat4.translation(.2+.2*i, .2+.2*i, 0)).times(Mat4.rotation(0, .5, .5, 0)));
-                }
-            }
-
-            // cave
-            this.shapes.cave.draw(context, program_state, model_transform.times(Mat4.scale(2, 2, 2).times(Mat4.translation(3, -0.75, 0.2))), this.materials.cave_texture);
-           // this.shapes.cave_hole.draw(context, program_state, model_transform.times(Mat4.translation(5, -0.75, 2)), this.materials.cave_hole_texture);
         }
         else if (t >= 20 && t < 25) { // fish swimming around
             program_state.set_camera(Mat4.translation(-4+.2*t, -4+.2*t, t-32));
             //background
-            let background_model = Mat4.identity().times(Mat4.scale(1, 1, -0.5));
-            for (let i = -17; i < 18; i++) {
-                for (let j = -14; j < 10; j++) {
-                    this.draw_background(context, program_state, background_model, i, j);
-                }
-            }
-
-            // sand
-            let sand_model = Mat4.identity().times(Mat4.scale(0.5, 0.5, 0.5));
-            for (let i = -17; i < 18; i++) {
-                for (let j = -9; j < -4; j++) {
-                    this.draw_sand(context, program_state, sand_model, i, j);
-                }
-            }
-
-            for (let i = -88; i < 88; i++) {
-                let position = Math.sin(i / 8) - 20;
-                sand_model = Mat4.identity().times(Mat4.scale(0.1, 0.1, 0.1));
-                this.draw_sand(context, program_state, sand_model, i, position);
-            }
-
-            // seaweed
-            let seaweed_model = Mat4.identity().times(Mat4.translation(-6, -3.4, 2)).times(Mat4.scale(0.15, 0.3, 0.01));
-            for (let i = 0; i < 4; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
-            }
-            //this.shapes.cone.draw(context, program_state, seaweed_model.times(Mat4.translation(0, 1, 0)), this.materials.seaweed_texture);
-
-            seaweed_model = Mat4.identity().times(Mat4.translation(-6.4, -3.4, 2)).times(Mat4.scale(0.15, 0.3, 0.01));
-            for (let i = 0; i < 6; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#18aa6c"), i);
-            }
-
-            seaweed_model = Mat4.identity().times(Mat4.translation(-6.8, -3.4, 2)).times(Mat4.scale(0.15, 0.3, 0.01));
-            for (let i = 0; i < 7; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#18aa6c"), i);
-            }
-
-            seaweed_model = Mat4.identity().times(Mat4.translation(-7.2, -3.4, 1)).times(Mat4.scale(0.15, 0.3, 0.01));
-            for (let i = 0; i < 8; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
-            }
-
-            seaweed_model = Mat4.identity().times(Mat4.translation(-7.6, -3.4, 1)).times(Mat4.scale(0.15, 0.3, 0.01));
-            for (let i = 0; i < 5; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
-            }
-
-            // seaweed next to cave
-            seaweed_model = Mat4.identity().times(Mat4.translation(4.7, -3.4, 3)).times(Mat4.scale(0.1, 0.25, 0.007));
-            for (let i = 0; i < 4; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
-            }
-
-            seaweed_model = Mat4.identity().times(Mat4.translation(4.5, -3.4, 3)).times(Mat4.scale(0.1, 0.25, 0.007));
-            for (let i = 0; i < 6; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#18aa6c"), i);
-            }
-
-            seaweed_model = Mat4.identity().times(Mat4.translation(4.8, -3.4, 3)).times(Mat4.scale(0.1, 0.25, 0.007));
-            for (let i = 0; i < 7; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#18aa6c"), i);
-            }
-
-            seaweed_model = Mat4.identity().times(Mat4.translation(5.3, -3.4, 3)).times(Mat4.scale(0.1, 0.25, 0.007));
-            for (let i = 0; i < 8; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
-            }
-
-            seaweed_model = Mat4.identity().times(Mat4.translation(5.1, -3.4, 3)).times(Mat4.scale(0.1, 0.25, 0.007));
-            for (let i = 0; i < 5; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#18aa6c"), i);
-            }
-
-            //big fish
-             let bigfish_model = Mat4.identity().times(Mat4.translation(5.2*Math.sin(t/3), 3, 1))
-                     .times(Mat4.scale(3, 1.5, 1.5)).times(Mat4.rotation(-Math.PI/4, 0, 0, 1));
-            // let bigfish_model = Mat4.identity().times(Mat4.rotation(Math.PI*t/50, 0, 1, 0)).times(Mat4.translation(5.2*Math.sin(t/6), 0, 5.2*Math.cos(t/6)))
-            //                 .times(Mat4.scale(3, 1.5, 1.5)).times(Mat4.rotation(-Math.PI/4, 0, 0, 1));
-            this.draw_big_fish(context, program_state, bigfish_model);
-            // water bubble
-            // this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(7, 1, 2))), this.materials.fishbowl_texture);
-            // this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(10, 1, 2))), this.materials.fishbowl_texture);
-            // this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(8.5, 2.8, 2))), this.materials.fishbowl_texture);
-            this.draw_bubble_group(context, program_state, Mat4.identity());
-            for (let i = 0; i < 5; i++) {
-                for (let j = 0; j < i; j++) {
-                    this.draw_bubble_group(context, program_state, Mat4.identity().times(Mat4.translation(.2+.2*i, .2+.2*i, 0)).times(Mat4.rotation(0, .5, .5, 0)));
-                }
-            }
-
-            // cave
-            this.shapes.cave.draw(context, program_state, model_transform.times(Mat4.scale(2, 2, 2).times(Mat4.translation(3, -0.75, 0.2))), this.materials.cave_texture);
-           // this.shapes.cave_hole.draw(context, program_state, model_transform.times(Mat4.translation(5, -0.75, 2)), this.materials.cave_hole_texture);
         }
         else if (t >= 25 && t < 35) { // crab scene
             // if (t > 35) {
             //     t = 35;
             // }
             program_state.set_camera(Mat4.translation(5.8-.2*t, .8, -8));
-            //background
-            let background_model = Mat4.identity().times(Mat4.scale(1, 1, -0.5));
-            for (let i = -17; i < 18; i++) {
-                for (let j = -14; j < 10; j++) {
-                    this.draw_background(context, program_state, background_model, i, j);
-                }
-            }
-
-            // sand
-            let sand_model = Mat4.identity().times(Mat4.scale(0.5, 0.5, 0.5));
-            for (let i = -17; i < 18; i++) {
-                for (let j = -9; j < -4; j++) {
-                    this.draw_sand(context, program_state, sand_model, i, j);
-                }
-            }
-
-            for (let i = -88; i < 88; i++) {
-                let position = Math.sin(i / 8) - 20;
-                sand_model = Mat4.identity().times(Mat4.scale(0.1, 0.1, 0.1));
-                this.draw_sand(context, program_state, sand_model, i, position);
-            }
-
-            // seaweed
-            let seaweed_model = Mat4.identity().times(Mat4.translation(-6, -3.4, 2)).times(Mat4.scale(0.15, 0.3, 0.01));
-            for (let i = 0; i < 4; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
-            }
-            //this.shapes.cone.draw(context, program_state, seaweed_model.times(Mat4.translation(0, 1, 0)), this.materials.seaweed_texture);
-
-            seaweed_model = Mat4.identity().times(Mat4.translation(-6.4, -3.4, 2)).times(Mat4.scale(0.15, 0.3, 0.01));
-            for (let i = 0; i < 6; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#18aa6c"), i);
-            }
-
-            seaweed_model = Mat4.identity().times(Mat4.translation(-6.8, -3.4, 2)).times(Mat4.scale(0.15, 0.3, 0.01));
-            for (let i = 0; i < 7; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#18aa6c"), i);
-            }
-
-            seaweed_model = Mat4.identity().times(Mat4.translation(-7.2, -3.4, 1)).times(Mat4.scale(0.15, 0.3, 0.01));
-            for (let i = 0; i < 8; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
-            }
-
-            seaweed_model = Mat4.identity().times(Mat4.translation(-7.6, -3.4, 1)).times(Mat4.scale(0.15, 0.3, 0.01));
-            for (let i = 0; i < 5; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
-            }
-
-            // seaweed next to cave
-            seaweed_model = Mat4.identity().times(Mat4.translation(4.7, -3.4, 3)).times(Mat4.scale(0.1, 0.25, 0.007));
-            for (let i = 0; i < 4; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
-            }
-
-            seaweed_model = Mat4.identity().times(Mat4.translation(4.5, -3.4, 3)).times(Mat4.scale(0.1, 0.25, 0.007));
-            for (let i = 0; i < 6; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#18aa6c"), i);
-            }
-
-            seaweed_model = Mat4.identity().times(Mat4.translation(4.8, -3.4, 3)).times(Mat4.scale(0.1, 0.25, 0.007));
-            for (let i = 0; i < 7; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#18aa6c"), i);
-            }
-
-            seaweed_model = Mat4.identity().times(Mat4.translation(5.3, -3.4, 3)).times(Mat4.scale(0.1, 0.25, 0.007));
-            for (let i = 0; i < 8; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
-            }
-
-            seaweed_model = Mat4.identity().times(Mat4.translation(5.1, -3.4, 3)).times(Mat4.scale(0.1, 0.25, 0.007));
-            for (let i = 0; i < 5; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#18aa6c"), i);
-            }
-
-            //big fish
-             let bigfish_model = Mat4.identity().times(Mat4.translation(5.2*Math.sin(t/3), 3, 1))
-                     .times(Mat4.scale(3, 1.5, 1.5)).times(Mat4.rotation(-Math.PI/4, 0, 0, 1));
-            // let bigfish_model = Mat4.identity().times(Mat4.rotation(Math.PI*t/50, 0, 1, 0)).times(Mat4.translation(5.2*Math.sin(t/6), 0, 5.2*Math.cos(t/6)))
-            //                 .times(Mat4.scale(3, 1.5, 1.5)).times(Mat4.rotation(-Math.PI/4, 0, 0, 1));
-            this.draw_big_fish(context, program_state, bigfish_model);
-            // water bubble
-            // this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(7, 1, 2))), this.materials.fishbowl_texture);
-            // this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(10, 1, 2))), this.materials.fishbowl_texture);
-            // this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(8.5, 2.8, 2))), this.materials.fishbowl_texture);
-            this.draw_bubble_group(context, program_state, Mat4.identity());
-            for (let i = 0; i < 5; i++) {
-                for (let j = 0; j < i; j++) {
-                    this.draw_bubble_group(context, program_state, Mat4.identity().times(Mat4.translation(.2+.2*i, .2+.2*i, 0)).times(Mat4.rotation(0, .5, .5, 0)));
-                }
-            }
-
-            // cave
-            this.shapes.cave.draw(context, program_state, model_transform.times(Mat4.scale(2, 2, 2).times(Mat4.translation(3, -0.75, 0.2))), this.materials.cave_texture);
-           // this.shapes.cave_hole.draw(context, program_state, model_transform.times(Mat4.translation(5, -0.75, 2)), this.materials.cave_hole_texture);
         }
 
         else if (t >= 35) { // fish feeding -- zoom out
-            if (t > 38) {
-                t = 38;
+            let u = t;
+            if (u > 38) {
+                u = 38;
             }
             // start -1.2, .8, -8
             // end 0, 0, -12
             // in 3
-            program_state.set_camera(Mat4.translation(-15.2+.4*t, 152/15-4/15*t, (13+1/3)-2/3*t));
+            program_state.set_camera(Mat4.translation(-15.2+.4*u, 152/15-4/15*u, (13+1/3)-2/3*u));
+            //background
+        }
+
+        if (t >= 10) {
             //background
             let background_model = Mat4.identity().times(Mat4.scale(1, 1, -0.5));
             for (let i = -17; i < 18; i++) {
@@ -571,7 +291,7 @@ export class Assignment4 extends Scene {
                      .times(Mat4.scale(3, 1.5, 1.5)).times(Mat4.rotation(-Math.PI/4, 0, 0, 1));
             // let bigfish_model = Mat4.identity().times(Mat4.rotation(Math.PI*t/50, 0, 1, 0)).times(Mat4.translation(5.2*Math.sin(t/6), 0, 5.2*Math.cos(t/6)))
             //                 .times(Mat4.scale(3, 1.5, 1.5)).times(Mat4.rotation(-Math.PI/4, 0, 0, 1));
-            this.draw_big_fish(context, program_state, bigfish_model);
+            this.draw_big_fish(context, program_state, bigfish_model, t);
             // water bubble
             // this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(7, 1, 2))), this.materials.fishbowl_texture);
             // this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(10, 1, 2))), this.materials.fishbowl_texture);
