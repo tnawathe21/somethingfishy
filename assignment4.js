@@ -62,6 +62,10 @@ export class Assignment4 extends Scene {
                 ambient: 1, diffusivity: 0.1, specularity: 0.1,
                 texture: new Texture("assets/rainbow_fish.png", "LINEAR_MIPMAP_LINEAR")
             }),
+            fish_features: new Material(new defs.Phong_Shader(), {
+                color: hex_color("#000000"),
+                ambient: 1, diffusivity: 0.1, specularity: 0.1,
+            }),
         }
 
         this.initial_camera_location = Mat4.look_at(vec3(0, 10, 20), vec3(0, 0, 0), vec3(0, 1, 0));
@@ -93,7 +97,29 @@ export class Assignment4 extends Scene {
    draw_fish_right_facing(context, program_state, fish_model, material) {
         
     fish_model = fish_model.times(Mat4.scale(.5, .3, .3));
+    let t = program_state.animation_time / 1000;
     this.shapes.sphere.draw(context, program_state, fish_model, material);
+
+    //tail
+    let upper_tail_model =  Mat4.identity().times(fish_model).times(Mat4.translation(1.2,0.5, 1)).times(Mat4.rotation(1, 0, 0, 1)).times(Mat4.scale(.5, 0.2,0.2));
+    this.shapes.sphere.draw(context, program_state, upper_tail_model, material);
+    let middle_tail_model =  Mat4.identity().times(fish_model).times(Mat4.translation(1.3, 0, 1)).times(Mat4.scale(.45, 0.2,0.2));
+    this.shapes.sphere.draw(context, program_state, middle_tail_model, material);
+    let bottom_tail_model =  Mat4.identity().times(fish_model).times(Mat4.translation(1.2,-0.5, 1)).times(Mat4.rotation(-1, 0, 0, 1)).times(Mat4.scale(.5, 0.2,0.2));
+    this.shapes.sphere.draw(context, program_state, bottom_tail_model, material);
+
+    //fins
+    let right_fin_model =  Mat4.identity().times(fish_model).times(Mat4.translation(-0.2,-0.5,1.5)).times(Mat4.scale(.5, 0.1, 1));
+    this.shapes.sphere.draw(context, program_state, right_fin_model, this.materials.fish_features.override({color: hex_color("#000000")}));
+    let left_fin_model =  Mat4.identity().times(fish_model).times(Mat4.translation(-0.2,-0.5, -1.5)).times(Mat4.scale(.5, 0.1, 1));
+    this.shapes.sphere.draw(context, program_state, left_fin_model, this.materials.fish_features.override({color: hex_color("#000000")}));
+
+    //eyes
+    let right_eye_model =  Mat4.identity().times(fish_model).times(Mat4.translation(-0.5,0.1,1.2)).times(Mat4.scale(0.1, 0.1, 0.1));
+    this.shapes.sphere.draw(context, program_state, right_eye_model, this.materials.fish_features);
+    let right_pupil_model = Mat4.identity().times(right_eye_model).times(Mat4.scale(2, 2, -0,5));
+    this.shapes.sphere.draw(context, program_state, right_pupil_model, this.materials.fish_features.override({color: hex_color("#FFFFFF")}));
+    
     return fish_model;
 }
 
@@ -181,7 +207,9 @@ export class Assignment4 extends Scene {
 
             //fish
             let fish_model =  Mat4.identity().times(Mat4.translation(0,2, 1));
-            this.draw_fish_right_facing(context, program_state, fish_model, this.materials.fish_texture_rainbow);
+            this.draw_fish_right_facing(context, program_state, fish_model, this.materials.fish_texture_pink);
+
+            
        // }
     }
 }
