@@ -81,6 +81,10 @@ export class Assignment4 extends Scene {
                 ambient: 1, diffusivity: 0.1, specularity: 0.1,
                 texture: new Texture("assets/rainbow_fish.png", "LINEAR_MIPMAP_LINEAR")
             }),
+            fish_features: new Material(new defs.Phong_Shader(), {
+                color: hex_color("#000000"),
+                ambient: 1, diffusivity: 0.1, specularity: 0.1,
+            }),
         }
 
         this.initial_camera_location = Mat4.look_at(vec3(0, 10, 20), vec3(0, 0, 0), vec3(0, 1, 0));
@@ -126,6 +130,43 @@ export class Assignment4 extends Scene {
 
         this.shapes.triangle.draw(context, program_state, bigfish_model, this.materials.big_fish_texture);
         this.shapes.triangle.draw(context, program_state, bigfish_tail_model, this.materials.big_fish_texture);
+    }
+
+    draw_generic_fish(context, program_state, fish_model, material, x, y,z) {
+        
+        let t = program_state.animation_time / 1000;
+        //fish
+        this.shapes.sphere.draw(context, program_state, fish_model, material);
+
+        //tails
+        let middle_tail_model = Mat4.identity().times(Mat4.translation(x*Math.sin(t/3)+0.7, y, z))
+                    .times(Mat4.scale(0.3, 0.06, 0.1));
+        let upper_tail_model = Mat4.identity().times(Mat4.translation(x*Math.sin(t/3)+0.6, y+0.2, z)).times(Mat4.rotation(1, 0, 0, 1))
+        .times(Mat4.scale(0.3, 0.06, 0.1));
+        let lower_tail_model = Mat4.identity().times(Mat4.translation(x*Math.sin(t/3)+0.6, y-0.2, z)).times(Mat4.rotation(-1, 0, 0, 1))
+        .times(Mat4.scale(0.3, 0.06, 0.1));
+
+        this.shapes.sphere.draw(context, program_state, middle_tail_model, material);
+        this.shapes.sphere.draw(context, program_state, upper_tail_model, material);
+        this.shapes.sphere.draw(context, program_state, lower_tail_model, material);
+
+        //fins
+        let right_fin = Mat4.identity().times(Mat4.translation(x*Math.sin(t/3)-0.2, y-0.2, z+0.2)).times(Mat4.rotation(1, 0, 0, 1))
+        .times(Mat4.scale(0.2, 0.06, 0.1));
+        let left_fin = Mat4.identity().times(Mat4.translation(x*Math.sin(t/3)-0.2, y-0.2, z -0.2)).times(Mat4.rotation(1, 0, 0, 1))
+        .times(Mat4.scale(0.2, 0.06, 0.1));
+
+        this.shapes.sphere.draw(context, program_state, right_fin, material);
+        this.shapes.sphere.draw(context, program_state, left_fin, material);
+
+        //eye
+        let white_eye = Mat4.identity().times(Mat4.translation((x*Math.sin(t/3))-0.2, y+0.04, z +0.2)).times(Mat4.rotation(1, 0, 0, 1))
+        .times(Mat4.scale(0.08, 0.07, 0.1));
+        this.shapes.sphere.draw(context, program_state, white_eye, this.materials.fish_features.override({color: hex_color("#FFFFFF")}));
+        let pupil = Mat4.identity().times(Mat4.translation((x*Math.sin(t/3))-0.2, y+0.04, z+0.2)).times(Mat4.rotation(1, 0, 0, 1))
+        .times(Mat4.scale(0.06, 0.06, 0.102));
+        this.shapes.sphere.draw(context, program_state, pupil, this.materials.fish_features);
+
     }
 
     draw_crab(context, program_state, crab_model) {
@@ -330,6 +371,13 @@ export class Assignment4 extends Scene {
             // cave
             this.shapes.cave.draw(context, program_state, model_transform.times(Mat4.scale(2, 2, 2).times(Mat4.translation(3, -0.75, 0.2))), this.materials.cave_texture);
            // this.shapes.cave_hole.draw(context, program_state, model_transform.times(Mat4.translation(5, -0.75, 2)), this.materials.cave_hole_texture);
+
+           //generic fish 
+           let fish_model =  Mat4.identity().times(Mat4.translation(5.2*Math.sin(t/3), -0.5, 2)).times(Mat4.scale(0.5, 0.3, 0.3));
+           this.draw_generic_fish(context, program_state, fish_model, this.materials.fish_texture_pink, 5.2, -0.5,2);
+
+           fish_model =  Mat4.identity().times(Mat4.translation(3*Math.sin(t/3), 2, 2)).times(Mat4.scale(0.5, 0.3, 0.3));
+           this.draw_generic_fish(context, program_state, fish_model, this.materials.fish_texture_rainbow, 3, 2,2);
 
            let crab_transform = model_transform.times(Mat4.scale(.7, .7, .7).times(Mat4.translation(5, -2, 2.5)));
            this.draw_crab(context, program_state, crab_transform);
