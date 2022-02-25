@@ -32,16 +32,16 @@ export class Assignment4 extends Scene {
             table_texture: new Material(new Textured_Phong(), {
                 color: hex_color("#964B00"),
                 ambient: 0.5, diffusivity: 0.1, specularity: 0.1,
-                texture: new Texture("assets/table.png", "NEAREST")
+               
             }),
             fishbowl_texture: new Material(new Textured_Phong(), {
                 // color: hex_color("#afdfef"),
                 color: color(175, 223, 239, .75),
                 ambient: 0.7, diffusivity: 0, specularity: 0.2
             }),
-            water_texture: new Material(new Textured_Phong(), {
-                color: hex_color("#006ee6"),
-                ambient: 0.7, diffusivity: 0, specularity: 0.2
+            water_texture: new Material(new defs.Phong_Shader(), {
+                color: hex_color("#4BBAFF"),
+                ambient: 0.7, diffusivity: 0, specularity: 0.2,
             }),
             seaweed_texture: new Material(new Textured_Phong(), {
                 ambient: 0.5, diffusivity: 0.1, specularity: 0.1,
@@ -64,6 +64,21 @@ export class Assignment4 extends Scene {
             cave_hole_texture: new Material(new defs.Phong_Shader(), {
                 color: hex_color("000000"), 
             }),
+            fish_texture_orange: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"),
+                ambient: 1, diffusivity: 0.1, specularity: 0.1,
+                texture: new Texture("assets/orange_fish.jpg", "LINEAR_MIPMAP_LINEAR")
+            }),
+            fish_texture_pink: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"),
+                ambient: 1, diffusivity: 0.1, specularity: 0.1,
+                texture: new Texture("assets/pink_fish.jpg", "LINEAR_MIPMAP_LINEAR")
+            }),
+            fish_texture_rainbow: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"),
+                ambient: 1, diffusivity: 0.1, specularity: 0.1,
+                texture: new Texture("assets/rainbow_fish.png", "LINEAR_MIPMAP_LINEAR")
+            }),
         }
 
         this.initial_camera_location = Mat4.look_at(vec3(0, 10, 20), vec3(0, 0, 0), vec3(0, 1, 0));
@@ -72,6 +87,11 @@ export class Assignment4 extends Scene {
     draw_sand(context, program_state, sand_model, i, j) {
         sand_model = sand_model.times(Mat4.translation(i, j, 1));
         this.shapes.cube.draw(context, program_state, sand_model, this.materials.sand_texture);
+    }
+
+    draw_background(context, program_state, background_model, i, j) {
+        background_model = background_model.times(Mat4.translation(i, j, 1));
+        this.shapes.cube.draw(context, program_state, background_model, this.materials.water_texture);
     }
 
     draw_seaweed(context, program_state, seaweed_model, color, i) {
@@ -140,6 +160,14 @@ export class Assignment4 extends Scene {
         }
         else {
             program_state.set_camera(Mat4.translation(0, 0, -12));
+            
+            //background
+            let background_model = Mat4.identity().times(Mat4.scale(1, 1, -0.5));
+            for (let i = -17; i < 18; i++) {
+                for (let j = -14; j < 10; j++) {
+                    this.draw_background(context, program_state, background_model, i, j);
+                }
+            }
 
             // sand
             let sand_model = Mat4.identity().times(Mat4.scale(0.5, 0.5, 0.5));
