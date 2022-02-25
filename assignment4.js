@@ -71,7 +71,7 @@ export class Assignment4 extends Scene {
             this.shapes.cube.draw(context, program_state, sand_model, this.materials.sand_texture);
         }
         else {
-            sand_model = sand_model.times(Mat4.translation(i, j, 1));
+            sand_model = sand_model.times(Mat4.translation(i, j-1, -20));
             this.shapes.cube.draw(context, program_state, sand_model, this.materials.sand_texture.override({ambient:0.8}));
         }
     }
@@ -196,7 +196,7 @@ export class Assignment4 extends Scene {
             }
 
             // cave
-            this.shapes.cave.draw(context, program_state, model_transform.times(Mat4.scale(1.6, 1.6, 1.6).times(Mat4.translation(2.5, -.5, 2))), this.materials.cave_texture);
+            this.shapes.cave.draw(context, program_state, model_transform.times(Mat4.scale(2, 2, 2).times(Mat4.translation(3, -1.3, -0.15))), this.materials.cave_texture);
         }
     }
 }
