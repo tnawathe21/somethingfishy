@@ -130,6 +130,11 @@ export class Assignment4 extends Scene {
 
     draw_crab(context, program_state, crab_model) {
         this.shapes.sphere.draw(context, program_state, crab_model, this.materials.crab_texture);
+
+        let crab_pincer_left = Mat4.identity().times(Mat4.scale(.3, .1, .1).times(Mat4.translation(9.5, -20, 2.5)))
+        this.shapes.cube.draw(context, program_state, crab_pincer_left, this.materials.crab_texture);
+        let crab_pincer_right = Mat4.identity().times(Mat4.scale(.2, .075, .075).times(Mat4.translation(21, -25, 20)))
+        this.shapes.cube.draw(context, program_state, crab_pincer_right, this.materials.crab_texture);
     }
 
     draw_table(context, program_state, model_transform) {
