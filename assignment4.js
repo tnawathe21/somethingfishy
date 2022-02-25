@@ -112,19 +112,19 @@ export class Assignment4 extends Scene {
         return seaweed_model;
     }
 
-    draw_big_fish(context, program_state, bigfish_model, t) {
+    draw_big_fish(context, program_state, bigfish_model, x, t) {
         // let t = program_state.animation_time / 1000;
-        let bigfish_tail_model = Mat4.identity().times(Mat4.translation(5.2*Math.sin(t/3)+1.5, 3, 1))
+        let bigfish_tail_model = Mat4.identity().times(Mat4.translation(x+1.5, 3, 1))
                     .times(Mat4.scale(1.5, .75, .75)).times(Mat4.rotation(-Math.PI/4, 0, 0, 1));
                     
-        let eye_model = Mat4.identity().times(Mat4.translation(5.2*Math.sin(t/3)+.7, 3.1, 1.2)) .times(Mat4.scale(.1, .1, .1));
+        let eye_model = Mat4.identity().times(Mat4.translation(x+.7, 3.1, 1.2)) .times(Mat4.scale(.1, .1, .1));
         this.shapes.sphere.draw(context, program_state, eye_model, this.materials.cave_hole_texture);
 
-        let eyebrow_model = Mat4.identity().times(Mat4.translation(5.2*Math.sin(t/3)+.5, 3.3, 1.3)) .times(Mat4.scale(.5, .1, .1))
+        let eyebrow_model = Mat4.identity().times(Mat4.translation(x+.5, 3.3, 1.3)) .times(Mat4.scale(.5, .1, .1))
                             .times(Mat4.rotation(-5*Math.PI/11, 0, 0, 1));
         this.shapes.triangle.draw(context, program_state, eyebrow_model, this.materials.cave_hole_texture);
 
-        let mouth_model = Mat4.identity().times(Mat4.translation(5.2*Math.sin(t/3)+0.95, 2.5, 1.3)) .times(Mat4.scale(.4, .4, .4))
+        let mouth_model = Mat4.identity().times(Mat4.translation(x+0.95, 2.5, 1.3)) .times(Mat4.scale(.4, .4, .4))
                             .times(Mat4.rotation(3*Math.PI/8, 0, 0, 1));
         this.shapes.triangle.draw(context, program_state, mouth_model, this.materials.cave_hole_texture);
 
@@ -352,11 +352,11 @@ export class Assignment4 extends Scene {
             }
 
             //big fish
-             let bigfish_model = Mat4.identity().times(Mat4.translation(5.2*Math.sin(t/3), 3, 1))
+             let bigfish_model = Mat4.identity().times(Mat4.translation(3+2.2*Math.sin(t/3), 3, 1))
                      .times(Mat4.scale(3, 1.5, 1.5)).times(Mat4.rotation(-Math.PI/4, 0, 0, 1));
             // let bigfish_model = Mat4.identity().times(Mat4.rotation(Math.PI*t/50, 0, 1, 0)).times(Mat4.translation(5.2*Math.sin(t/6), 0, 5.2*Math.cos(t/6)))
             //                 .times(Mat4.scale(3, 1.5, 1.5)).times(Mat4.rotation(-Math.PI/4, 0, 0, 1));
-            this.draw_big_fish(context, program_state, bigfish_model, t);
+            this.draw_big_fish(context, program_state, bigfish_model, 3+2.2*Math.sin(t/3), t);
             // water bubble
             // this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(7, 1, 2))), this.materials.fishbowl_texture);
             // this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(10, 1, 2))), this.materials.fishbowl_texture);
