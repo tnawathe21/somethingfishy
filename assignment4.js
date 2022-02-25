@@ -80,6 +80,12 @@ export class Assignment4 extends Scene {
         return seaweed_model;
     }
 
+    draw_bubble_group(context, program_state, bubble_model) {
+        this.shapes.sphere.draw(context, program_state, bubble_model.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(7, 1, 2))), this.materials.fishbowl_texture);
+        this.shapes.sphere.draw(context, program_state, bubble_model.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(10, 1, 2))), this.materials.fishbowl_texture);
+        this.shapes.sphere.draw(context, program_state, bubble_model.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(8.5, 2.8, 2))), this.materials.fishbowl_texture);
+    }
+
     display(context, program_state) {
         if (!context.scratchpad.controls) {
             this.children.push(context.scratchpad.controls = new defs.Movement_Controls());
@@ -96,21 +102,21 @@ export class Assignment4 extends Scene {
         let t = program_state.animation_time / 1000, dt = program_state.animation_delta_time / 1000;
         let model_transform = Mat4.rotation(.4,1,0,0);
         
-        if (t < 9) {
-            // table
-            this.shapes.cube.draw(context, program_state, model_transform.times(Mat4.scale(2, 1/20, 2)), this.materials.table_texture);
-            this.shapes.cube.draw(context, program_state, model_transform.times(Mat4.translation(-2,-1.1,1.8)).times(Mat4.scale(1/20, 1.1, 1/20)), this.materials.table_texture);
-            this.shapes.cube.draw(context, program_state, model_transform.times(Mat4.translation(2,-1.1,1.8)).times(Mat4.scale(1/20, 1.1, 1/20)), this.materials.table_texture);
-            this.shapes.cube.draw(context, program_state, model_transform.times(Mat4.translation(2, -1.1,-1.8)).times(Mat4.scale(1/20, 1.1, 1/20)), this.materials.table_texture);
-            this.shapes.cube.draw(context, program_state, model_transform.times(Mat4.translation(-2, -1.1,-1.8)).times(Mat4.scale(1/20, 1.1, 1/20)), this.materials.table_texture);
-            let desired = Mat4.translation(0,0,t-12);
-            program_state.set_camera(desired);
+        // if (t < 9) {
+        //     // table
+        //     this.shapes.cube.draw(context, program_state, model_transform.times(Mat4.scale(2, 1/20, 2)), this.materials.table_texture);
+        //     this.shapes.cube.draw(context, program_state, model_transform.times(Mat4.translation(-2,-1.1,1.8)).times(Mat4.scale(1/20, 1.1, 1/20)), this.materials.table_texture);
+        //     this.shapes.cube.draw(context, program_state, model_transform.times(Mat4.translation(2,-1.1,1.8)).times(Mat4.scale(1/20, 1.1, 1/20)), this.materials.table_texture);
+        //     this.shapes.cube.draw(context, program_state, model_transform.times(Mat4.translation(2, -1.1,-1.8)).times(Mat4.scale(1/20, 1.1, 1/20)), this.materials.table_texture);
+        //     this.shapes.cube.draw(context, program_state, model_transform.times(Mat4.translation(-2, -1.1,-1.8)).times(Mat4.scale(1/20, 1.1, 1/20)), this.materials.table_texture);
+        //     let desired = Mat4.translation(0,0,t-12);
+        //     program_state.set_camera(desired);
         
-            // fishbowl
-            this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.9, .7, .7).times(Mat4.translation(0, 1, 1.5))), this.materials.fishbowl_texture);
-        }
+        //     // fishbowl
+        //     this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.9, .7, .7).times(Mat4.translation(0, 1, 1.5))), this.materials.fishbowl_texture);
+        // }
 
-        else {
+        // else {
             program_state.set_camera(Mat4.translation(0, 0, -12));
 
             // sand
@@ -149,14 +155,19 @@ export class Assignment4 extends Scene {
             }
 
             // water bubble
-            for (let i = 0; i < 10; i++)
-            {
-                this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.2, .2, .2).times(Mat4.translation(7, 1+2*i, 1.5))), this.materials.fishbowl_texture);
+            // this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(7, 1, 2))), this.materials.fishbowl_texture);
+            // this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(10, 1, 2))), this.materials.fishbowl_texture);
+            // this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(8.5, 2.8, 2))), this.materials.fishbowl_texture);
+            this.draw_bubble_group(context, program_state, Mat4.identity());
+            for (let i = 0; i < 5; i++) {
+                for (let j = 0; j < i; j++) {
+                    this.draw_bubble_group(context, program_state, Mat4.identity().times(Mat4.translation(.2+.2*i, .2+.2*i, 0)).times(Mat4.rotation(0, .5, .5, 0)));
+                }
             }
 
             // cave
-            this.shapes.cave.draw(context, program_state, model_transform.times(Mat4.scale(1.6, 1.6, 1.6).times(Mat4.translation(2.5, -0.5, 1.5))), this.materials.cave_texture);
-        }
+            this.shapes.cave.draw(context, program_state, model_transform.times(Mat4.scale(1.6, 1.6, 1.6).times(Mat4.translation(2.5, -.5, 2))), this.materials.cave_texture);
+        // }
     }
 }
 
