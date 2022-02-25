@@ -4,7 +4,7 @@ const {
     Vector, Vector3, vec, vec3, vec4, color, hex_color, Shader, Matrix, Mat4, Light, Shape, Material, Scene, Texture,
 } = tiny;
 
-const {Cube, Rounded_Closed_Cone, Textured_Phong, Subdivision_Sphere, Triangle} = defs
+const {Cube, Rounded_Closed_Cone, Closed_Cone, Cone_Tip, Textured_Phong, Subdivision_Sphere, Triangle} = defs
 
 export class Assignment4 extends Scene {
     /**
@@ -17,9 +17,10 @@ export class Assignment4 extends Scene {
 
         this.shapes = {
             cube: new Cube(),
-            cone: new Rounded_Closed_Cone(),
+            cone: new Rounded_Closed_Cone(( 5, 10,  [[0,2],[0,1]] )),
             sphere: new Subdivision_Sphere(4),
             triangle: new Triangle(),
+            cone_tip: new Closed_Cone( 4, 10, [[  0 ,.33 ], [ 0,1 ]] )
         }
 
         this.materials = {
@@ -32,7 +33,8 @@ export class Assignment4 extends Scene {
                 texture: new Texture("assets/table.png", "NEAREST")
             }),
             fishbowl_texture: new Material(new Textured_Phong(), {
-                color: hex_color("#afdfef"),
+                // color: hex_color("#afdfef"),
+                color: color(175, 223, 239, .75),
                 ambient: 0.7, diffusivity: 0, specularity: 0.2
             }),
             water_texture: new Material(new Textured_Phong(), {
@@ -50,7 +52,8 @@ export class Assignment4 extends Scene {
             }),
             big_fish_texture: new Material(new Textured_Phong(), {
                 color: hex_color("#00468b"),
-                ambient: 1, diffusivity: 0.1, specularity: 0.
+                ambient: 1, diffusivity: 0.1, specularity: 0,
+                texture: new Texture("assets/table.png", "NEAREST")
             }),        
         }
 
@@ -82,11 +85,10 @@ export class Assignment4 extends Scene {
 
     draw_big_fish(context, program_state, bigfish_model) {
         let t = program_state.animation_time / 1000;
-        this.shapes.triangle.draw(context, program_state, bigfish_model, this.materials.big_fish_texture);
-       // bigfish_model = bigfish_model.times(Mat4.translation(0, 0, 1.5)).times(Mat4.scale(.5, .5, .5));
-        bigfish_model = Mat4.identity().times(Mat4.translation(5.2*Math.sin(t/3)+1.5, 3, 1))
+        let bigfish_tail_model = Mat4.identity().times(Mat4.translation(5.2*Math.sin(t/3)+1.5, 3, 1))
                     .times(Mat4.scale(1.5, .75, .75)).times(Mat4.rotation(-Math.PI/4, 0, 0, 1));
         this.shapes.triangle.draw(context, program_state, bigfish_model, this.materials.big_fish_texture);
+        this.shapes.triangle.draw(context, program_state, bigfish_tail_model, this.materials.big_fish_texture);
     }
 
     draw_table(context, program_state, model_transform) {
@@ -120,13 +122,13 @@ export class Assignment4 extends Scene {
             program_state.set_camera(desired);
         
             // fishbowl
-          //  if (t <= 7) {
+           if (t <= 7) {
             this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.9, .7, .7).times(Mat4.translation(0, 1, 1.5))), this.materials.fishbowl_texture);
-          //  }
-            // if (t > 7) {
-            //     let fishbowl_color = color(175, 223, 239, 1-(1/8)*(t));
-            //     this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.9, .7, .7).times(Mat4.translation(0, 1, 1.5))), this.materials.fishbowl_texture.override({color: fishbowl_color}));
-            // }
+           }
+            if (t > 7) {
+                let fishbowl_color = color(175, 223, 239, 1-(3/8)*(t));
+                this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.9, .7, .7).times(Mat4.translation(0, 1, 1.5))), this.materials.fishbowl_texture.override({color: fishbowl_color}));
+            }
         }
         else {
             program_state.set_camera(Mat4.translation(0, 0, -12));
@@ -167,8 +169,10 @@ export class Assignment4 extends Scene {
             }
 
             //big fish
-            let bigfish_model = Mat4.identity().times(Mat4.translation(5.2*Math.sin(t/3), 3, 1))
-                    .times(Mat4.scale(3, 1.5, 1.5)).times(Mat4.rotation(-Math.PI/4, 0, 0, 1));
+             let bigfish_model = Mat4.identity().times(Mat4.translation(5.2*Math.sin(t/3), 3, 1))
+                     .times(Mat4.scale(3, 1.5, 1.5)).times(Mat4.rotation(-Math.PI/4, 0, 0, 1));
+            // let bigfish_model = Mat4.identity().times(Mat4.rotation(Math.PI*t/50, 0, 1, 0)).times(Mat4.translation(5.2*Math.sin(t/6), 0, 5.2*Math.cos(t/6)))
+            //                 .times(Mat4.scale(3, 1.5, 1.5)).times(Mat4.rotation(-Math.PI/4, 0, 0, 1));
             this.draw_big_fish(context, program_state, bigfish_model);
         }
     }
