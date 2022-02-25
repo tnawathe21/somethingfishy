@@ -20,7 +20,8 @@ export class Assignment4 extends Scene {
             cone: new Rounded_Closed_Cone(( 5, 10,  [[0,2],[0,1]] )),
             sphere: new Subdivision_Sphere(4),
             triangle: new Triangle(),
-            cone_tip: new Closed_Cone( 4, 10, [[  0 ,.33 ], [ 0,1 ]] )
+            cone_tip: new Closed_Cone( 4, 10, [[  0 ,.33 ], [ 0,1 ]] ),
+            cave: new (defs.Subdivision_Sphere.prototype.make_flat_shaded_version())(2),
         }
 
         this.materials = {
@@ -55,6 +56,10 @@ export class Assignment4 extends Scene {
                 ambient: 1, diffusivity: 0.1, specularity: 0,
                 texture: new Texture("assets/table.png", "NEAREST")
             }),        
+            cave_texture: new Material(new Textured_Phong(), {
+                color: hex_color("4d493a"),
+                ambient: 1, diffusivity: 0.1,
+            }),
         }
 
         this.initial_camera_location = Mat4.look_at(vec3(0, 10, 20), vec3(0, 0, 0), vec3(0, 1, 0));
@@ -97,6 +102,11 @@ export class Assignment4 extends Scene {
         this.shapes.cube.draw(context, program_state, model_transform.times(Mat4.translation(2,-1.1,1.8)).times(Mat4.scale(1/20, 1.1, 1/20)), this.materials.table_texture);            
         this.shapes.cube.draw(context, program_state, model_transform.times(Mat4.translation(2, -1.1,-1.8)).times(Mat4.scale(1/20, 1.1, 1/20)), this.materials.table_texture);
         this.shapes.cube.draw(context, program_state, model_transform.times(Mat4.translation(-2, -1.1,-1.8)).times(Mat4.scale(1/20, 1.1, 1/20)), this.materials.table_texture);
+    }
+    draw_bubble_group(context, program_state, bubble_model) {
+        this.shapes.sphere.draw(context, program_state, bubble_model.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(7, 1, 2))), this.materials.fishbowl_texture);
+        this.shapes.sphere.draw(context, program_state, bubble_model.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(10, 1, 2))), this.materials.fishbowl_texture);
+        this.shapes.sphere.draw(context, program_state, bubble_model.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(8.5, 2.8, 2))), this.materials.fishbowl_texture);
     }
 
     display(context, program_state) {
@@ -174,11 +184,22 @@ export class Assignment4 extends Scene {
             // let bigfish_model = Mat4.identity().times(Mat4.rotation(Math.PI*t/50, 0, 1, 0)).times(Mat4.translation(5.2*Math.sin(t/6), 0, 5.2*Math.cos(t/6)))
             //                 .times(Mat4.scale(3, 1.5, 1.5)).times(Mat4.rotation(-Math.PI/4, 0, 0, 1));
             this.draw_big_fish(context, program_state, bigfish_model);
+            // water bubble
+            // this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(7, 1, 2))), this.materials.fishbowl_texture);
+            // this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(10, 1, 2))), this.materials.fishbowl_texture);
+            // this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(8.5, 2.8, 2))), this.materials.fishbowl_texture);
+            this.draw_bubble_group(context, program_state, Mat4.identity());
+            for (let i = 0; i < 5; i++) {
+                for (let j = 0; j < i; j++) {
+                    this.draw_bubble_group(context, program_state, Mat4.identity().times(Mat4.translation(.2+.2*i, .2+.2*i, 0)).times(Mat4.rotation(0, .5, .5, 0)));
+                }
+            }
+
+            // cave
+            this.shapes.cave.draw(context, program_state, model_transform.times(Mat4.scale(1.6, 1.6, 1.6).times(Mat4.translation(2.5, -.5, 2))), this.materials.cave_texture);
         }
     }
 }
-
-
 class Texture_Scroll_X extends Textured_Phong {
     fragment_glsl_code() {
         return this.shared_glsl_code() + `
