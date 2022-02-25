@@ -192,7 +192,7 @@ export class Assignment4 extends Scene {
         this.shapes.sphere.draw(context, program_state, right_foot, this.materials.crab_texture);
 
         let crab_pincer_left = Mat4.identity().times(Mat4.translation(0, Math.sin(2*t)/8 + .1, 0))
-                .times(Mat4.scale(.3, .1, .1).times(Mat4.translation(9.5, -20, 2.5)));
+                .times(Mat4.scale(.3, .1, .1).times(Mat4.translation(9.7, -20, 2.5)));
         this.shapes.sphere.draw(context, program_state, crab_pincer_left, this.materials.crab_texture);
         let crab_pincer_right = Mat4.identity().times(Mat4.translation(0, Math.cos(2*t)/8 + 0.01, 0))
                 .times(Mat4.scale(.2, .075, .075).times(Mat4.translation(21, -25, 19)));
