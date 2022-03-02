@@ -133,7 +133,8 @@ export class Assignment4 extends Scene {
         let bigfish_model = Mat4.identity().times(Mat4.translation(x, 3, 1))
                      .times(Mat4.scale(1.5, 0.75, 0.75)).times(Mat4.rotation(-Math.PI/4, 0, 1, 0));
 
-        let bigfish_tail_model = Mat4.identity().times(Mat4.translation(x+1.5, 3, 1))
+        let tail_function = 0.15 * Math.cos(program_state.animation_time / 1000);
+        let bigfish_tail_model = Mat4.identity().times(Mat4.translation(x+1.4, 3, 0.9)).times(Mat4.rotation(tail_function, 0, 1, 0))
                     .times(Mat4.scale(1.5, .75, .75)).times(Mat4.rotation(-Math.PI/4, 0, 0, 1));
                
         //eyes
@@ -146,10 +147,17 @@ export class Assignment4 extends Scene {
         this.shapes.triangle.draw(context, program_state, eyebrow_model, this.materials.body_part_texture);
 
         //mouth
-        let mouth_model = Mat4.identity().times(Mat4.translation(x, 2.5, 1.3)) .times(Mat4.scale(.4, .4, .4))
-                            .times(Mat4.rotation(3*Math.PI/8, 0, 0, 1));
-        this.shapes.triangle.draw(context, program_state, mouth_model, this.materials.body_part_texture);
+        // let mouth_model = Mat4.identity().times(Mat4.translation(x, 2.5, 1.3)) .times(Mat4.scale(.4, .4, .4))
+                             //   .times(Mat4.rotation(3*Math.PI/8, 0, 0, 1));
+        // this.shapes.triangle.draw(context, program_state, mouth_model, this.materials.body_part_texture);
 
+        //side fin
+        let fin_function = 0.3 * Math.cos(1.5*program_state.animation_time / 1000);
+        let fin_model = Mat4.identity().times(Mat4.translation(x, 2.35, 2)).times(Mat4.rotation(fin_function, 0, 1, 0))
+                    .times(Mat4.scale(1, .5, .5)).times(Mat4.rotation(-Math.PI/8, 0, 0, 1));
+        this.shapes.triangle.draw(context, program_state, fin_model, this.materials.big_fish_tail_texture);
+
+        //draw body and tail
         this.shapes.cone.draw(context, program_state, bigfish_model, this.materials.big_fish_texture);
         this.shapes.triangle.draw(context, program_state, bigfish_tail_model, this.materials.big_fish_tail_texture);
     }
