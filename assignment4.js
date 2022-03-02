@@ -75,6 +75,11 @@ export class Assignment4 extends Scene {
                 color: hex_color("#e88472"), 
                 ambient: 1, diffusivity: 1, specularity: 1,
             }),
+            crab_dots_texture: new Material(new defs.Phong_Shader(), {
+                color: hex_color("#e88472"), 
+                ambient: 1, diffusivity: 1, specularity: 1,
+                texture: new Texture("assets/crab-texture.jpg", "LINEAR_MIPMAP_LINEAR")
+            }),
             fish_texture_orange: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"),
                 ambient: 1, diffusivity: 0.1, specularity: 0.1,
