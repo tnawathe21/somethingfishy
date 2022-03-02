@@ -173,33 +173,36 @@ export class Assignment4 extends Scene {
 
     }
 
-    draw_crab(context, program_state, crab_model) {
+    draw_crab(context, program_state) {
         let t = program_state.animation_time / 1000;
-        this.shapes.sphere.draw(context, program_state, crab_model, this.materials.crab_texture);
+        let horiz_movement = Mat4.translation(Math.sin(t/3) + 1, 0, 0);
 
-        let left_eye_stick = Mat4.identity().times(Mat4.scale(.05, .2, .05).times(Mat4.translation(72, -6.8, 2.5)));
+        let crab_transform = Mat4.identity().times(horiz_movement).times(Mat4.scale(.7, .5, .7).times(Mat4.translation(5, -3.7, 1)));
+        this.shapes.sphere.draw(context, program_state, crab_transform, this.materials.crab_texture);
+
+        let left_eye_stick = Mat4.identity().times(horiz_movement).times(Mat4.scale(.05, .2, .05).times(Mat4.translation(72, -6.8, 2.5)));
         this.shapes.sphere.draw(context, program_state, left_eye_stick, this.materials.crab_texture);
 
-        let right_eye_stick = Mat4.identity().times(Mat4.scale(.05, .2, .05).times(Mat4.translation(80, -6.8, 2.5)));
+        let right_eye_stick = Mat4.identity().times(horiz_movement).times(Mat4.scale(.05, .2, .05).times(Mat4.translation(80, -6.8, 2.5)));
         this.shapes.sphere.draw(context, program_state, right_eye_stick, this.materials.crab_texture);
 
-        let left_eyeball = Mat4.identity().times(Mat4.scale(.12, .12, .12).times(Mat4.translation(29, -9, 2.5)));
+        let left_eyeball = Mat4.identity().times(horiz_movement).times(Mat4.scale(.12, .12, .12).times(Mat4.translation(29, -9, 2.5)));
         this.shapes.sphere.draw(context, program_state, left_eyeball, this.materials.cave_hole_texture);
 
-        let right_eyeball = Mat4.identity().times(Mat4.scale(.12, .12, .12).times(Mat4.translation(32.5, -9, 2.5)));
+        let right_eyeball = Mat4.identity().times(horiz_movement).times(Mat4.scale(.12, .12, .12).times(Mat4.translation(32.5, -9, 2.5)));
         this.shapes.sphere.draw(context, program_state, right_eyeball, this.materials.cave_hole_texture);
 
-        let left_foot = Mat4.identity().times(Mat4.scale(.1, .2, .1).times(Mat4.translation(29, -10.75, 14)));
+        let left_foot = Mat4.identity().times(horiz_movement).times(Mat4.scale(.1, .2, .1).times(Mat4.translation(29.5, -10.5, 10)));
         this.shapes.sphere.draw(context, program_state, left_foot, this.materials.crab_texture);
 
-        let right_foot = Mat4.identity().times(Mat4.scale(.1, .2, .1).times(Mat4.translation(37, -10.75, 17)));
+        let right_foot = Mat4.identity().times(horiz_movement).times(Mat4.scale(.1, .2, .1).times(Mat4.translation(38, -10.75, 12)));
         this.shapes.sphere.draw(context, program_state, right_foot, this.materials.crab_texture);
 
-        let crab_pincer_left = Mat4.identity().times(Mat4.translation(0, Math.sin(2*t)/8 + .1, 0))
-                .times(Mat4.scale(.3, .1, .1).times(Mat4.translation(9.7, -20, 2.5)));
+        let crab_pincer_left = Mat4.identity().times(horiz_movement).times(Mat4.translation(0, Math.sin(2*t)/8 + .1, 0))
+                .times(Mat4.scale(.3, .1, .1).times(Mat4.translation(9.4, -18, 7)));
         this.shapes.sphere.draw(context, program_state, crab_pincer_left, this.materials.crab_texture);
-        let crab_pincer_right = Mat4.identity().times(Mat4.translation(0, Math.cos(2*t)/8 + 0.01, 0))
-                .times(Mat4.scale(.2, .075, .075).times(Mat4.translation(21, -25, 19)));
+        let crab_pincer_right = Mat4.identity().times(horiz_movement).times(Mat4.translation(0, Math.cos(2*t)/8 + 0.01, 0))
+                .times(Mat4.scale(.25, .09, .09).times(Mat4.translation(16.5, -20.5, 12)));
         this.shapes.sphere.draw(context, program_state, crab_pincer_right, this.materials.crab_texture);
 
         // let claw_left_up =  Mat4.identity().times(Mat4.scale(.3, .1, .1).times(Mat4.translation(9.5, -20, 2.5)));
@@ -407,8 +410,7 @@ export class Assignment4 extends Scene {
            fish_model =  Mat4.identity().times(Mat4.translation(-2, -.3+.1*Math.cos(t), 2)).times(Mat4.scale(0.5, 0.3, 0.3));
            this.draw_generic_fish(context, program_state, fish_model, this.materials.fish_texture_rainbow, -2, -.3+.1*Math.cos(t), 2);
 
-           let crab_transform = model_transform.times(Mat4.scale(.7, .5, .7).times(Mat4.translation(5, -2.5, 2.5)));
-           this.draw_crab(context, program_state, crab_transform);
+           this.draw_crab(context, program_state);
         //}
     }
 }
