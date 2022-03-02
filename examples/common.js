@@ -780,7 +780,6 @@ const Textured_Phong = defs.Textured_Phong =
         }
     }
 
-
 const Fake_Bump_Map = defs.Fake_Bump_Map =
     class Fake_Bump_Map extends Textured_Phong {
         // **Fake_Bump_Map** Same as Phong_Shader, except adds a line of code to

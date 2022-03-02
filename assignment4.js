@@ -1,10 +1,12 @@
 import {defs, tiny} from './examples/common.js';
 
+import {Shadow_Textured_Phong_Shader} from './examples/shadow-demo-shaders.js';
+
 const {
     Vector, Vector3, vec, vec3, vec4, color, hex_color, Shader, Matrix, Mat4, Light, Shape, Material, Scene, Texture,
 } = tiny;
 
-const {Cube, Rounded_Closed_Cone, Closed_Cone, Cone_Tip, Textured_Phong, Subdivision_Sphere, Triangle} = defs
+const {Cube, Rounded_Closed_Cone, Closed_Cone, Cone_Tip, Fake_Bump_Map, Textured_Phong, Subdivision_Sphere, Triangle} = defs
 
 export class Assignment4 extends Scene {
     /**
@@ -17,10 +19,9 @@ export class Assignment4 extends Scene {
 
         this.shapes = {
             cube: new Cube(),
-            cone: new Rounded_Closed_Cone(( 5, 10,  [[0,2],[0,1]] )),
+            cone : new defs.Cone_Tip ( 2, 10,  [[0.5,0],[0.5,0]] ),
             sphere: new Subdivision_Sphere(4),
             triangle: new Triangle(),
-            cone_tip: new Closed_Cone( 4, 10, [[  0 ,.33 ], [ 0,1 ]] ),
             cave: new (defs.Subdivision_Sphere.prototype.make_flat_shaded_version())(2),
             cave_hole: new (defs.Subdivision_Sphere.prototype.make_flat_shaded_version())(4)
         }
@@ -45,6 +46,7 @@ export class Assignment4 extends Scene {
             seaweed_texture: new Material(new Textured_Phong(), {
                 ambient: 0.5, diffusivity: 0.1, specularity: 0.1,
                 color: hex_color("#18aa6c"),
+                texture: new Texture("assets/seaweed.jpeg", "LINEAR_MIPMAP_LINEAR")
             }),
             sand_texture: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"),
@@ -53,19 +55,30 @@ export class Assignment4 extends Scene {
             }),
             big_fish_texture: new Material(new Textured_Phong(), {
                 color: hex_color("#00468b"),
-                ambient: 1, diffusivity: 0.1, specularity: 0,
-                texture: new Texture("assets/blue_fish_scales.png", "LINEAR_MIPMAP_LINEAR")
-            }),        
-            cave_texture: new Material(new Textured_Phong(), {
+                ambient: 0.6, diffusivity: 0.1, specularity: 0,
+                texture: new Texture("assets/blue-fish-scales.jpeg", "LINEAR_MIPMAP_LINEAR")
+            }), 
+            big_fish_tail_texture: new Material(new Textured_Phong(), {
+                color: hex_color("#00468b"),
+                ambient: 0.5, diffusivity: 0.1, specularity: 0,
+                texture: new Texture("assets/fish-tail.jpg", "LINEAR_MIPMAP_LINEAR")
+            }),       
+            cave_texture: new Material(new Fake_Bump_Map(), {
                 color: hex_color("#4c4c4c"),
-                ambient: 1, diffusivity: 1, specularity: 1,
+                ambient: 0.5, diffusivity: 1, specularity: 1,
+                texture: new Texture("assets/rock.jpg", "LINEAR_MIPMAP_LINEAR")
             }),
-            cave_hole_texture: new Material(new defs.Phong_Shader(), {
+            body_part_texture: new Material(new defs.Phong_Shader(), {
                 color: hex_color("000000"), 
             }),
             crab_texture: new Material(new defs.Phong_Shader(), {
                 color: hex_color("#e88472"), 
                 ambient: 1, diffusivity: 1, specularity: 1,
+            }),
+            crab_dots_texture: new Material(new defs.Phong_Shader(), {
+                color: hex_color("#e88472"), 
+                ambient: 1, diffusivity: 1, specularity: 1,
+                texture: new Texture("assets/crab-texture.jpg", "LINEAR_MIPMAP_LINEAR")
             }),
             fish_texture_orange: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"),
@@ -113,24 +126,31 @@ export class Assignment4 extends Scene {
         return seaweed_model;
     }
 
-    draw_big_fish(context, program_state, bigfish_model, x, t) {
-        // let t = program_state.animation_time / 1000;
+    draw_big_fish(context, program_state, x) {
+        // let bigfish_model = Mat4.identity().times(Mat4.translation(3+2.2*Math.sin(t/3), 3, 1))
+        //              .times(Mat4.scale(3, 1.5, 1.5)).times(Mat4.rotation(-Math.PI/4, 0, 0, 1));
+        let bigfish_model = Mat4.identity().times(Mat4.translation(x, 3, 1))
+                     .times(Mat4.scale(1.5, 0.75, 0.75)).times(Mat4.rotation(-Math.PI/4, 0, 1, 0));
+
         let bigfish_tail_model = Mat4.identity().times(Mat4.translation(x+1.5, 3, 1))
                     .times(Mat4.scale(1.5, .75, .75)).times(Mat4.rotation(-Math.PI/4, 0, 0, 1));
-                    
-        let eye_model = Mat4.identity().times(Mat4.translation(x+.7, 3.1, 1.2)) .times(Mat4.scale(.1, .1, .1));
-        this.shapes.sphere.draw(context, program_state, eye_model, this.materials.cave_hole_texture);
+               
+        //eyes
+        let eye_model = Mat4.identity().times(Mat4.translation(x, 3.1, 1.3)) .times(Mat4.scale(.1, .1, .1));
+        this.shapes.sphere.draw(context, program_state, eye_model, this.materials.body_part_texture);
 
-        let eyebrow_model = Mat4.identity().times(Mat4.translation(x+.5, 3.3, 1.3)) .times(Mat4.scale(.5, .1, .1))
+        //eyebrow
+        let eyebrow_model = Mat4.identity().times(Mat4.translation(x-0.3, 3.3, 1.5)) .times(Mat4.scale(.5, .1, .1))
                             .times(Mat4.rotation(-5*Math.PI/11, 0, 0, 1));
-        this.shapes.triangle.draw(context, program_state, eyebrow_model, this.materials.cave_hole_texture);
+        this.shapes.triangle.draw(context, program_state, eyebrow_model, this.materials.body_part_texture);
 
-        let mouth_model = Mat4.identity().times(Mat4.translation(x+0.95, 2.5, 1.3)) .times(Mat4.scale(.4, .4, .4))
+        //mouth
+        let mouth_model = Mat4.identity().times(Mat4.translation(x, 2.5, 1.3)) .times(Mat4.scale(.4, .4, .4))
                             .times(Mat4.rotation(3*Math.PI/8, 0, 0, 1));
-        this.shapes.triangle.draw(context, program_state, mouth_model, this.materials.cave_hole_texture);
+        this.shapes.triangle.draw(context, program_state, mouth_model, this.materials.body_part_texture);
 
-        this.shapes.triangle.draw(context, program_state, bigfish_model, this.materials.big_fish_texture);
-        this.shapes.triangle.draw(context, program_state, bigfish_tail_model, this.materials.big_fish_texture);
+        this.shapes.cone.draw(context, program_state, bigfish_model, this.materials.big_fish_texture);
+        this.shapes.triangle.draw(context, program_state, bigfish_tail_model, this.materials.big_fish_tail_texture);
     }
 
     draw_generic_fish_left(context, program_state, fish_model, material, x, y,z) {
@@ -204,33 +224,36 @@ export class Assignment4 extends Scene {
 
     }
 
-    draw_crab(context, program_state, crab_model) {
+    draw_crab(context, program_state) {
         let t = program_state.animation_time / 1000;
-        this.shapes.sphere.draw(context, program_state, crab_model, this.materials.crab_texture);
+        let horiz_movement = Mat4.translation(Math.sin(t/3) + 1, 0, 0);
 
-        let left_eye_stick = Mat4.identity().times(Mat4.scale(.05, .2, .05).times(Mat4.translation(72, -6.8, 2.5)));
+        let crab_transform = Mat4.identity().times(horiz_movement).times(Mat4.scale(.7, .5, .7).times(Mat4.translation(5, -3.7, 1)));
+        this.shapes.sphere.draw(context, program_state, crab_transform, this.materials.crab_texture);
+
+        let left_eye_stick = Mat4.identity().times(horiz_movement).times(Mat4.scale(.05, .2, .05).times(Mat4.translation(72, -6.8, 2.5)));
         this.shapes.sphere.draw(context, program_state, left_eye_stick, this.materials.crab_texture);
 
-        let right_eye_stick = Mat4.identity().times(Mat4.scale(.05, .2, .05).times(Mat4.translation(80, -6.8, 2.5)));
+        let right_eye_stick = Mat4.identity().times(horiz_movement).times(Mat4.scale(.05, .2, .05).times(Mat4.translation(80, -6.8, 2.5)));
         this.shapes.sphere.draw(context, program_state, right_eye_stick, this.materials.crab_texture);
 
-        let left_eyeball = Mat4.identity().times(Mat4.scale(.12, .12, .12).times(Mat4.translation(29, -9, 2.5)));
-        this.shapes.sphere.draw(context, program_state, left_eyeball, this.materials.cave_hole_texture);
+        let left_eyeball = Mat4.identity().times(horiz_movement).times(Mat4.scale(.12, .12, .12).times(Mat4.translation(29, -9, 2.5)));
+        this.shapes.sphere.draw(context, program_state, left_eyeball, this.materials.body_part_texture);
 
-        let right_eyeball = Mat4.identity().times(Mat4.scale(.12, .12, .12).times(Mat4.translation(32.5, -9, 2.5)));
-        this.shapes.sphere.draw(context, program_state, right_eyeball, this.materials.cave_hole_texture);
+        let right_eyeball = Mat4.identity().times(horiz_movement).times(Mat4.scale(.12, .12, .12).times(Mat4.translation(32.5, -9, 2.5)));
+        this.shapes.sphere.draw(context, program_state, right_eyeball, this.materials.body_part_texture);
 
-        let left_foot = Mat4.identity().times(Mat4.scale(.1, .2, .1).times(Mat4.translation(29, -10.75, 14)));
+        let left_foot = Mat4.identity().times(horiz_movement).times(Mat4.scale(.1, .2, .1).times(Mat4.translation(29.5, -10.5, 10)));
         this.shapes.sphere.draw(context, program_state, left_foot, this.materials.crab_texture);
 
-        let right_foot = Mat4.identity().times(Mat4.scale(.1, .2, .1).times(Mat4.translation(37, -10.75, 17)));
+        let right_foot = Mat4.identity().times(horiz_movement).times(Mat4.scale(.1, .2, .1).times(Mat4.translation(38, -10.75, 12)));
         this.shapes.sphere.draw(context, program_state, right_foot, this.materials.crab_texture);
 
-        let crab_pincer_left = Mat4.identity().times(Mat4.translation(0, Math.sin(2*t)/8 + .1, 0))
-                .times(Mat4.scale(.3, .1, .1).times(Mat4.translation(9.7, -20, 2.5)));
+        let crab_pincer_left = Mat4.identity().times(horiz_movement).times(Mat4.translation(0, Math.sin(2*t)/8 + .1, 0))
+                .times(Mat4.scale(.3, .1, .1).times(Mat4.translation(9.4, -18, 7)));
         this.shapes.sphere.draw(context, program_state, crab_pincer_left, this.materials.crab_texture);
-        let crab_pincer_right = Mat4.identity().times(Mat4.translation(0, Math.cos(2*t)/8 + 0.01, 0))
-                .times(Mat4.scale(.2, .075, .075).times(Mat4.translation(21, -25, 19)));
+        let crab_pincer_right = Mat4.identity().times(horiz_movement).times(Mat4.translation(0, Math.cos(2*t)/8 + 0.01, 0))
+                .times(Mat4.scale(.25, .09, .09).times(Mat4.translation(16.5, -20.5, 12)));
         this.shapes.sphere.draw(context, program_state, crab_pincer_right, this.materials.crab_texture);
 
         // let claw_left_up =  Mat4.identity().times(Mat4.scale(.3, .1, .1).times(Mat4.translation(9.5, -20, 2.5)));
@@ -411,11 +434,7 @@ export class Assignment4 extends Scene {
             }
 
             //big fish
-             let bigfish_model = Mat4.identity().times(Mat4.translation(3+2.2*Math.sin(t/3), 3, 1))
-                     .times(Mat4.scale(3, 1.5, 1.5)).times(Mat4.rotation(-Math.PI/4, 0, 0, 1));
-            // let bigfish_model = Mat4.identity().times(Mat4.rotation(Math.PI*t/50, 0, 1, 0)).times(Mat4.translation(5.2*Math.sin(t/6), 0, 5.2*Math.cos(t/6)))
-            //                 .times(Mat4.scale(3, 1.5, 1.5)).times(Mat4.rotation(-Math.PI/4, 0, 0, 1));
-            this.draw_big_fish(context, program_state, bigfish_model, 3+2.2*Math.sin(t/3), t);
+            this.draw_big_fish(context, program_state, 3+2.2*Math.sin(t/3));
             // water bubble
             // this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(7, 1, 2))), this.materials.fishbowl_texture);
             // this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(10, 1, 2))), this.materials.fishbowl_texture);
@@ -429,7 +448,7 @@ export class Assignment4 extends Scene {
 
             // cave
             this.shapes.cave.draw(context, program_state, model_transform.times(Mat4.scale(2, 2, 2).times(Mat4.translation(3, -0.75, 0.2))), this.materials.cave_texture);
-           // this.shapes.cave_hole.draw(context, program_state, model_transform.times(Mat4.translation(5, -0.75, 2)), this.materials.cave_hole_texture);
+           // this.shapes.cave_hole.draw(context, program_state, model_transform.times(Mat4.translation(5, -0.75, 2)), this.materials.body_part_texture);
 
            //generic fish 
            let fish_model =  Mat4.identity().times(Mat4.translation(-2.3*Math.sin(t/3), -1.3+.1*Math.cos(2*t), 2)).times(Mat4.scale(0.5, 0.3, 0.3));
@@ -438,9 +457,7 @@ export class Assignment4 extends Scene {
            fish_model =  Mat4.identity().times(Mat4.translation(-2*Math.sin(t/3), -.3+.1*Math.cos(t), 2)).times(Mat4.scale(0.5, 0.3, 0.3));
            this.draw_generic_fish_right(context, program_state, fish_model, this.materials.fish_texture_rainbow, -2*Math.sin(t/3), -.3+.1*Math.cos(t), 2);
 
-           let crab_transform = model_transform.times(Mat4.scale(.7, .5, .7).times(Mat4.translation(5, -2.5, 2.5)));
-           this.draw_crab(context, program_state, crab_transform);
-
+           this.draw_crab(context, program_state);
         //}
     }
 }
