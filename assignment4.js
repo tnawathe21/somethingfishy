@@ -148,7 +148,7 @@ export class Assignment4 extends Scene {
         this.shapes.triangle.draw(context, program_state, eyebrow_model, this.materials.body_part_texture);
 
         //mouth
-        let mouth_model = Mat4.identity().times(Mat4.translation(x-0.3, 2.62, 1.5)) .times(Mat4.scale(.2, .025, .05))
+        let mouth_model = Mat4.identity().times(Mat4.translation(x-0.3, 2.62, 1.4)) .times(Mat4.scale(.2, .025, .05))
                                .times(Mat4.rotation(3*Math.PI/8, 0, 0, 1));
         this.shapes.cube.draw(context, program_state, mouth_model, this.materials.body_part_texture);
 
