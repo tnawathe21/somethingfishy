@@ -1,10 +1,12 @@
 import {defs, tiny} from './examples/common.js';
 
+import {Shadow_Textured_Phong_Shader} from './examples/shadow-demo-shaders.js';
+
 const {
     Vector, Vector3, vec, vec3, vec4, color, hex_color, Shader, Matrix, Mat4, Light, Shape, Material, Scene, Texture,
 } = tiny;
 
-const {Cube, Rounded_Closed_Cone, Closed_Cone, Cone_Tip, Textured_Phong, Subdivision_Sphere, Triangle} = defs
+const {Cube, Rounded_Closed_Cone, Closed_Cone, Cone_Tip, Fake_Bump_Map, Textured_Phong, Subdivision_Sphere, Triangle} = defs
 
 export class Assignment4 extends Scene {
     /**
@@ -45,6 +47,7 @@ export class Assignment4 extends Scene {
             seaweed_texture: new Material(new Textured_Phong(), {
                 ambient: 0.5, diffusivity: 0.1, specularity: 0.1,
                 color: hex_color("#18aa6c"),
+                texture: new Texture("assets/seaweed.jpeg", "LINEAR_MIPMAP_LINEAR")
             }),
             sand_texture: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"),
@@ -56,9 +59,10 @@ export class Assignment4 extends Scene {
                 ambient: 1, diffusivity: 0.1, specularity: 0,
                 texture: new Texture("assets/blue_fish_scales.png", "LINEAR_MIPMAP_LINEAR")
             }),        
-            cave_texture: new Material(new Textured_Phong(), {
+            cave_texture: new Material(new Fake_Bump_Map(), {
                 color: hex_color("#4c4c4c"),
-                ambient: 1, diffusivity: 1, specularity: 1,
+                ambient: 0.5, diffusivity: 1, specularity: 1,
+                texture: new Texture("assets/rock.jpg", "LINEAR_MIPMAP_LINEAR")
             }),
             cave_hole_texture: new Material(new defs.Phong_Shader(), {
                 color: hex_color("000000"), 
