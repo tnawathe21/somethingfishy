@@ -26,9 +26,11 @@ export class Assignment4 extends Scene {
             cave_hole: new (defs.Subdivision_Sphere.prototype.make_flat_shaded_version())(4)
         }
 
+        this.bubble_model = Mat4.identity();
+
         this.materials = {
             phong: new Material(new Textured_Phong(), {
-                color: hex_color("#ffffff"),
+                ambient: .4, diffusivity: 0.5, specularity: 0.2, color: hex_color("#ffffff"),
             }),
             table_texture: new Material(new Textured_Phong(), {
                 color: hex_color("#964B00"),
@@ -272,6 +274,20 @@ export class Assignment4 extends Scene {
         this.shapes.sphere.draw(context, program_state, bubble_model.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(10, 1, 2))), this.materials.fishbowl_texture);
         this.shapes.sphere.draw(context, program_state, bubble_model.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(8.5, 2.8, 2))), this.materials.fishbowl_texture);
     }
+    draw_bubble(context, program_state, t) {
+        // this.bubble_model = Mat4.identity().times(Mat4.translation(-2*Math.sin(t/3), -.3+.1*Math.cos(t), 2)).times(Mat4.translation(0, .3*t, 0)).times(Mat4.translation(.6,-4,0)).times(Mat4.scale(.1,.1,.1));
+        this.bubble_model = Mat4.identity().times(Mat4.translation(-2*Math.sin(t/3), -.3+.1*Math.cos(t), 2)).times(Mat4.translation(0.5, t%2, 0)).times(Mat4.scale(.1,.1,.1));
+        this.shapes.sphere.draw(context, program_state, this.bubble_model, this.materials.phong.override({color:hex_color("ADD8E6")}));
+    }
+
+    make_control_panel(context, program_state) {
+        // TODO:  Implement requirement #5 using a key_triggered_button that responds to the 'c' key.
+        // this.key_triggered_button("Bubbles!", ["c"], () => {
+        //     console.log("entered trigger");
+        //     this.draw_bubble(context, program_state, t);
+        //     console.log("drew bubbles");
+        // });
+    }
 
     display(context, program_state) {
         if (!context.scratchpad.controls) {
@@ -457,6 +473,11 @@ export class Assignment4 extends Scene {
            fish_model =  Mat4.identity().times(Mat4.translation(-2*Math.sin(t/3), -.3+.1*Math.cos(t), 2)).times(Mat4.scale(0.5, 0.3, 0.3));
            this.draw_generic_fish_right(context, program_state, fish_model, this.materials.fish_texture_rainbow, -2*Math.sin(t/3), -.3+.1*Math.cos(t), 2);
 
+        //    if (t % 2 <= 0.5) {
+               this.draw_bubble(context, program_state, t);
+        //    }
+
+        //    this.draw_bubble(context, program_state, t);
            this.draw_crab(context, program_state);
         //}
     }
