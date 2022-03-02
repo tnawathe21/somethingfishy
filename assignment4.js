@@ -50,6 +50,7 @@ export class Assignment4 extends Scene {
             water_texture: new Material(new defs.Phong_Shader(), {
                 color: hex_color("#4BBAFF"),
                 ambient: 0.7, diffusivity: 0, specularity: 0.2,
+                texture: new Texture("assets/water.png", "LINEAR_MIPMAP_LINEAR")
             }),
             seaweed_texture: new Material(new Textured_Phong(), {
                 ambient: 0.5, diffusivity: 0.1, specularity: 0.1,
