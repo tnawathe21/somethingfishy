@@ -63,9 +63,9 @@ export class Assignment4 extends Scene {
                 ambient: 0.5, diffusivity: 0.1, specularity: 0,
                 texture: new Texture("assets/fish-tail.jpg", "LINEAR_MIPMAP_LINEAR")
             }),       
-            cave_texture: new Material(new Fake_Bump_Map(), {
+            cave_texture: new Material(new Textured_Phong(), {
                 color: hex_color("#4c4c4c"),
-                ambient: 0.5, diffusivity: 1, specularity: 1,
+                ambient: 0.3, diffusivity: 1, specularity: .4,
                 texture: new Texture("assets/rock.jpg", "LINEAR_MIPMAP_LINEAR")
             }),
             body_part_texture: new Material(new defs.Phong_Shader(), {
@@ -235,11 +235,12 @@ export class Assignment4 extends Scene {
 
     draw_crab(context, program_state) {
         let t = program_state.animation_time / 1000;
-        let horiz_movement = Mat4.translation(Math.sin(t/3) + 1, 0, 0);
+        let horiz_movement = Mat4.translation(.3*Math.sin(t/2)-0.26, 0, 0);
 
         let crab_transform = Mat4.identity().times(horiz_movement).times(Mat4.scale(.7, .5, .7).times(Mat4.translation(5, -3.7, 1)));
         this.shapes.sphere.draw(context, program_state, crab_transform, this.materials.crab_texture);
 
+        //eyes
         let left_eye_stick = Mat4.identity().times(horiz_movement).times(Mat4.scale(.05, .2, .05).times(Mat4.translation(72, -6.8, 2.5)));
         this.shapes.sphere.draw(context, program_state, left_eye_stick, this.materials.crab_texture);
 
@@ -252,21 +253,38 @@ export class Assignment4 extends Scene {
         let right_eyeball = Mat4.identity().times(horiz_movement).times(Mat4.scale(.12, .12, .12).times(Mat4.translation(32.5, -9, 2.5)));
         this.shapes.sphere.draw(context, program_state, right_eyeball, this.materials.body_part_texture);
 
+        //feet
         let left_foot = Mat4.identity().times(horiz_movement).times(Mat4.scale(.1, .2, .1).times(Mat4.translation(29.5, -10.5, 10)));
         this.shapes.sphere.draw(context, program_state, left_foot, this.materials.crab_texture);
 
         let right_foot = Mat4.identity().times(horiz_movement).times(Mat4.scale(.1, .2, .1).times(Mat4.translation(38, -10.75, 12)));
         this.shapes.sphere.draw(context, program_state, right_foot, this.materials.crab_texture);
+        
+        //left claw
+        let left_claw_l = Mat4.identity().times(horiz_movement).times(Mat4.translation(0, Math.sin(2*t)/8 + 0.1, 0)).times(Mat4.scale(.13, .24, .13)
+        .times(Mat4.translation(19.4, -7.25, 5))).times(Mat4.rotation(-Math.PI/6, 0, 0, 1));
+        this.shapes.triangle.draw(context, program_state, left_claw_l, this.materials.crab_texture);
 
+        let left_claw_r = Mat4.identity().times(horiz_movement).times(Mat4.translation(0, Math.sin(2*t)/8 + 0.1, 0)).times(Mat4.scale(.08, .36, .08)
+        .times(Mat4.translation(33.5, -4.15, 9))).times(Mat4.rotation(-Math.PI/6, 0, 0, 1)).times(Mat4.rotation(6*Math.PI/4, 0, 0, 1));
+        this.shapes.triangle.draw(context, program_state, left_claw_r, this.materials.crab_texture);
+
+        //right claw
+        let right_claw_l = Mat4.identity().times(horiz_movement).times(Mat4.translation(0, Math.cos(2*t)/8 + 0.01, 0)).times(Mat4.scale(.13, .23, .13)
+                        .times(Mat4.translation(32.2, -7.6, 8))).times(Mat4.rotation(-Math.PI/6, 0, 0, 1));
+        this.shapes.triangle.draw(context, program_state, right_claw_l, this.materials.crab_texture);
+
+        let right_claw_r = Mat4.identity().times(horiz_movement).times(Mat4.translation(0, Math.cos(2*t)/8 + 0.01, 0)).times(Mat4.scale(.08, .35, .08)
+                .times(Mat4.translation(54.1, -4.6, 14))).times(Mat4.rotation(-Math.PI/6, 0, 0, 1)).times(Mat4.rotation(6*Math.PI/4, 0, 0, 1));
+        this.shapes.triangle.draw(context, program_state, right_claw_r, this.materials.crab_texture);
+
+        //pincers
         let crab_pincer_left = Mat4.identity().times(horiz_movement).times(Mat4.translation(0, Math.sin(2*t)/8 + .1, 0))
                 .times(Mat4.scale(.3, .1, .1).times(Mat4.translation(9.4, -18, 7)));
         this.shapes.sphere.draw(context, program_state, crab_pincer_left, this.materials.crab_texture);
         let crab_pincer_right = Mat4.identity().times(horiz_movement).times(Mat4.translation(0, Math.cos(2*t)/8 + 0.01, 0))
                 .times(Mat4.scale(.25, .09, .09).times(Mat4.translation(16.5, -20.5, 12)));
         this.shapes.sphere.draw(context, program_state, crab_pincer_right, this.materials.crab_texture);
-
-        // let claw_left_up =  Mat4.identity().times(Mat4.scale(.3, .1, .1).times(Mat4.translation(9.5, -20, 2.5)));
-        // this.shapes.triangle.draw(context, program_state, claw_left_up, this.materials.crab_texture);
     }
 
     draw_table(context, program_state, model_transform) {
