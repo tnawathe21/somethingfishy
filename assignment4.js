@@ -78,10 +78,6 @@ export class Assignment4 extends Scene {
              // For the first pass
         pure: new Material(new Color_Phong_Shader(), {
         }),
-        fishbowl_pure: new Material(new Color_Phong_Shader(), {
-            color: color(175, 223, 239, .75),
-                ambient: 1, diffusivity: .5, specularity: 0.2
-        }),
         // For light source
         light_src: new Material(new defs.Phong_Shader(), {
             color: color(1, 1, 1, 1), ambient: 1, diffusivity: 0, specularity: 0
@@ -91,10 +87,13 @@ export class Assignment4 extends Scene {
             color: color(0, 0, .0, 1),
             ambient: 1, diffusivity: 0, specularity: 0, texture: null
         }),
-            fishbowl_texture: new Material(new Textured_Phong(), {
-                color: color(175, 223, 239, .75),
-                ambient: 1, diffusivity: .5, specularity: 0.2
-            }),
+        fishbowl_texture: new Material(new Shadow_Textured_Phong_Shader(1), {
+            color: color(.5, .5, .5, 0.75),
+            ambient: .4, diffusivity: .5, specularity: .5,
+            color_texture: new Texture("assets/water.png"),
+            light_depth_texture: null
+
+        }),
             water_texture: new Material(new defs.Phong_Shader(), {
                 color: hex_color("#4BBAFF"),
                 ambient: 0.7, diffusivity: 0, specularity: 0.2,
@@ -450,10 +449,6 @@ export class Assignment4 extends Scene {
         this.shapes.cube.draw(context, program_state, model_transform.times(Mat4.translation(2,-1.1,1.8)).times(Mat4.scale(1/20, 1.1, 1/20)), shadow_pass? this.materials.table_texture : this.materials.pure);            
         this.shapes.cube.draw(context, program_state, model_transform.times(Mat4.translation(2, -1.1,-1.8)).times(Mat4.scale(1/20, 1.1, 1/20)), shadow_pass? this.materials.table_texture : this.materials.pure);
         this.shapes.cube.draw(context, program_state, model_transform.times(Mat4.translation(-2, -1.1,-1.8)).times(Mat4.scale(1/20, 1.1, 1/20)), shadow_pass? this.materials.table_texture : this.materials.pure);
-        
-        //bowl
-        // let bowl_transform = model_transform.times(Mat4.scale(.9, .7, .7).times(Mat4.translation(0, 1.2, 1.5)));
-        // this.shapes.sphere.draw(context, program_state, bowl_transform, shadow_pass? this.materials.fishbowl_texture : this.materials.fishbowl_pure);
 
     }
 
@@ -473,15 +468,9 @@ export class Assignment4 extends Scene {
 
         //bowl
         let bowl_transform = model_transform.times(Mat4.scale(.9, .7, .7).times(Mat4.translation(0, 1.2, 1.5)));
-
-        let fishbowl_materials = this.materials.fishbowl_texture;
-        if (fishbowl_color) {
-            fishbowl_materials.override({color: fishbowl_color});
-        }
-        this.shapes.sphere.draw(context, program_state, bowl_transform, shadow_pass? fishbowl_materials : this.materials.pure);
+        this.shapes.sphere.draw(context, program_state, bowl_transform, shadow_pass? this.materials.fishbowl_texture : this.materials.pure);
 
     }
-
 
     display(context, program_state) {
         let t = program_state.animation_time / 1000, dt = program_state.animation_delta_time / 1000;
@@ -553,6 +542,7 @@ export class Assignment4 extends Scene {
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
         program_state.view_mat = program_state.camera_inverse;
         program_state.projection_transform = Mat4.perspective(Math.PI / 4, context.width / context.height, 0.5, 500);
+        
         this.render_table_scene(context, program_state, true,true, true);
             let desired = Mat4.translation(0,-.5,t-12);
             program_state.set_camera(desired);
