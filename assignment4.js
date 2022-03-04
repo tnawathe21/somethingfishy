@@ -103,9 +103,9 @@ export class Assignment4 extends Scene {
 
         }),
             water_texture: new Material(new defs.Phong_Shader(), {
-                color: hex_color("#4BBAFF"),
-                ambient: 0.7, diffusivity: 0, specularity: 0.2,
-                texture: new Texture("assets/water.png", "LINEAR_MIPMAP_LINEAR")
+                color: hex_color("#81d4fa"),
+                ambient: 0.8, diffusivity: 0, specularity: 0.2,
+                texture: new Texture("assets/water.jpeg", "LINEAR_MIPMAP_LINEAR")
             }),
             seaweed_texture: new Material(new Textured_Phong(), {
                 ambient: 0.5, diffusivity: 0.1, specularity: 0.1,
@@ -155,9 +155,9 @@ export class Assignment4 extends Scene {
                 ambient: 1, diffusivity: 0.1, specularity: 0.1,
                 texture: new Texture("assets/pink_fish.jpg", "LINEAR_MIPMAP_LINEAR")
             }),
-            fish_texture_rainbow: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"),
-                ambient: 1, diffusivity: 0.1, specularity: 0.1,
+            bubbles_rainbow: new Material(new Textured_Phong(), {
+                color: color(173, 216, 230, 0.5),
+                ambient: .5, diffusivity: 0.1, specularity: 0.1,
                 texture: new Texture("assets/rainbow_fish.png", "LINEAR_MIPMAP_LINEAR")
             }),
             fish_features: new Material(new defs.Phong_Shader(), {
@@ -417,9 +417,9 @@ export class Assignment4 extends Scene {
         }
         this.bubble_start = false;
 
-        this.shapes.sphere.draw(context, program_state, bubble_model.times(Mat4.translation(this.r1, .5*this.bubble_time, 0)), this.materials.phong.override({color:hex_color("ADD8E6")}));
-        this.shapes.sphere.draw(context, program_state, bubble_model.times(Mat4.translation(this.r2, this.bubble_time+.8, 0)), this.materials.phong.override({color:hex_color("ADD8E6")}));
-        this.shapes.sphere.draw(context, program_state, bubble_model.times(Mat4.translation(this.r3, 1.5*this.bubble_time+1.6, 0)), this.materials.phong.override({color:hex_color("ADD8E6")}));
+        this.shapes.sphere.draw(context, program_state, bubble_model.times(Mat4.translation(this.r1, .5*this.bubble_time, 0)), this.materials.bubbles_rainbow);
+        this.shapes.sphere.draw(context, program_state, bubble_model.times(Mat4.translation(this.r2, this.bubble_time+.8, 0)), this.materials.bubbles_rainbow);
+        this.shapes.sphere.draw(context, program_state, bubble_model.times(Mat4.translation(this.r3, 1.5*this.bubble_time+1.6, 0)), this.materials.bubbles_rainbow);
     }
 
     make_control_panel() {
