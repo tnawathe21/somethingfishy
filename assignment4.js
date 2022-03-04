@@ -180,7 +180,7 @@ export class Assignment4 extends Scene {
         let tail_model = Mat4.identity().times(Mat4.translation(x + 0.95 - this.move, y, z)).times(Mat4.rotation(tail_function, 0, 1, 0)).times(Mat4.rotation(-0.8, 0, 0, 1)).times(Mat4.scale(0.5, 0.5, 0.01));
 
         // fins
-        let upper_fin_model = Mat4.identity().times(Mat4.translation(x + 0.5 - this.move, y + 0.09, z + 0.2)).times(Mat4.rotation(1.2, 0, 0, 1))
+        let upper_fin_model = Mat4.identity().times(Mat4.translation(x + 0.5 - this.move, y + 0.09, z + 0.07)).times(Mat4.rotation(1.2, 0, 0, 1))
                                                 .times(Mat4.scale(0.3, 0.4, 0.1));
 
         // eye
