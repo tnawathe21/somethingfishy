@@ -6,7 +6,7 @@ const {
     Vector, Vector3, vec, vec3, vec4, color, hex_color, Shader, Matrix, Mat4, Light, Shape, Material, Scene, Texture,
 } = tiny;
 
-const {Cube, Rounded_Closed_Cone, Closed_Cone, Cone_Tip, Fake_Bump_Map, Textured_Phong, Subdivision_Sphere, Triangle} = defs
+const {Cube, Capped_Cylinder, Rounded_Closed_Cone, Closed_Cone, Cone_Tip, Fake_Bump_Map, Textured_Phong, Subdivision_Sphere, Triangle} = defs
 
 export class Assignment4 extends Scene {
     /**
@@ -19,6 +19,7 @@ export class Assignment4 extends Scene {
 
         this.shapes = {
             cube: new Cube(),
+            //cylinder: new Capped_Cylinder(),
             cone : new defs.Cone_Tip ( 2, 10,  [[0.5,0],[0.5,0]] ),
             sphere: new Subdivision_Sphere(4),
             triangle: new Triangle(),
@@ -134,7 +135,7 @@ export class Assignment4 extends Scene {
         // body
         let fish_function = 0.1 * Math.cos(2 * t) + 0.5;
         let upper_body_model = Mat4.identity().times(Mat4.translation(-2 - this.move, fish_function, 2)).times(Mat4.scale(0.5, 0.3, 0.1));
-        let lower_body_model = Mat4.identity().times(Mat4.translation(-1.5 - this.move, fish_function, 2)).times(Mat4.rotation(tail_function, 0, 1, 0))
+        let lower_body_model = Mat4.identity().times(Mat4.translation(-1.5 - this.move, fish_function, 2)).times(Mat4.rotation(0.7 * tail_function, 0, 1, 0))
                                 .times(Mat4.scale(0.3, 0.15, 0.01));
         let upper_part_model = Mat4.identity().times(Mat4.translation(-1.6 - this.move, fish_function + 0.1, 2)).times(Mat4.rotation(-0.25, 0, 0, 0.01))
                                 .times(Mat4.scale(0.2, 0.1, 0.05));
@@ -441,9 +442,7 @@ export class Assignment4 extends Scene {
 
             // coral
             let coral_model = Mat4.identity().times(Mat4.translation(4, -3.2, 3)).times(Mat4.scale(0.1, 0.2, 0.007));
-            for (let i = 0; i < 5; i++) {
-                //coral_model = this.draw_coral(context, program_state, coral_model, i);
-            }
+            //coral_model = this.draw_coral(context, program_state, coral_model);
 
             //big fish
             this.draw_big_fish(context, program_state, 3+2.2*Math.sin(t/3));
