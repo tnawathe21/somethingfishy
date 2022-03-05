@@ -84,24 +84,23 @@ export class Assignment4 extends Scene {
                 light_depth_texture: null
             }),
              // For the first pass
-        pure: new Material(new Color_Phong_Shader(), {
-        }),
-        // For light source
-        light_src: new Material(new defs.Phong_Shader(), {
-            color: color(1, 1, 1, 1), ambient: 1, diffusivity: 0, specularity: 0
-        }),
-        // For depth texture display
-        depth_tex:  new Material(new Depth_Texture_Shader_2D(), {
-            color: color(0, 0, .0, 1),
-            ambient: 1, diffusivity: 0, specularity: 0, texture: null
-        }),
-        fishbowl_texture: new Material(new Shadow_Textured_Phong_Shader(1), {
-            color: color(.5, .5, .5, 0.75),
-            ambient: .4, diffusivity: .5, specularity: .5,
-            color_texture: new Texture("assets/water.png"),
-            light_depth_texture: null
-
-        }),
+            pure: new Material(new Color_Phong_Shader(), {
+            }),
+            // For light source
+            light_src: new Material(new defs.Phong_Shader(), {
+                color: color(1, 1, 1, 1), ambient: 1, diffusivity: 0, specularity: 0
+            }),
+            // For depth texture display
+            depth_tex:  new Material(new Depth_Texture_Shader_2D(), {
+                color: color(0, 0, .0, 1),
+                ambient: 1, diffusivity: 0, specularity: 0, texture: null
+            }),
+            fishbowl_texture: new Material(new Shadow_Textured_Phong_Shader(1), {
+                color: color(.5, .5, .5, 0.75),
+                ambient: .4, diffusivity: .5, specularity: .5,
+                color_texture: new Texture("assets/water.png"),
+                light_depth_texture: null
+            }),
             water_texture: new Material(new defs.Phong_Shader(), {
                 color: hex_color("#81d4fa"),
                 ambient: 0.8, diffusivity: 0, specularity: 0.2,
@@ -156,8 +155,8 @@ export class Assignment4 extends Scene {
                 texture: new Texture("assets/pink_fish.jpg", "LINEAR_MIPMAP_LINEAR")
             }),
             bubbles_rainbow: new Material(new Textured_Phong(), {
-                color: color(173, 216, 230, 0.5),
-                ambient: .5, diffusivity: 0.1, specularity: 0.1,
+                color: hex_color("#ADD8E6"),
+                ambient: .7, diffusivity: .5, specularity: .1,
                 texture: new Texture("assets/rainbow_fish.png", "LINEAR_MIPMAP_LINEAR")
             }),
             fish_features: new Material(new defs.Phong_Shader(), {
