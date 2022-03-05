@@ -84,24 +84,23 @@ export class Assignment4 extends Scene {
                 light_depth_texture: null
             }),
              // For the first pass
-        pure: new Material(new Color_Phong_Shader(), {
-        }),
-        // For light source
-        light_src: new Material(new defs.Phong_Shader(), {
-            color: color(1, 1, 1, 1), ambient: 1, diffusivity: 0, specularity: 0
-        }),
-        // For depth texture display
-        depth_tex:  new Material(new Depth_Texture_Shader_2D(), {
-            color: color(0, 0, .0, 1),
-            ambient: 1, diffusivity: 0, specularity: 0, texture: null
-        }),
-        fishbowl_texture: new Material(new Shadow_Textured_Phong_Shader(1), {
-            color: color(.5, .5, .5, 0.75),
-            ambient: .4, diffusivity: .5, specularity: .5,
-            color_texture: new Texture("assets/water.png"),
-            light_depth_texture: null
-
-        }),
+            pure: new Material(new Color_Phong_Shader(), {
+            }),
+            // For light source
+            light_src: new Material(new defs.Phong_Shader(), {
+                color: color(1, 1, 1, 1), ambient: 1, diffusivity: 0, specularity: 0
+            }),
+            // For depth texture display
+            depth_tex:  new Material(new Depth_Texture_Shader_2D(), {
+                color: color(0, 0, .0, 1),
+                ambient: 1, diffusivity: 0, specularity: 0, texture: null
+            }),
+            fishbowl_texture: new Material(new Shadow_Textured_Phong_Shader(1), {
+                color: color(.5, .5, .5, 0.75),
+                ambient: .4, diffusivity: .5, specularity: .5,
+                color_texture: new Texture("assets/water.png"),
+                light_depth_texture: null
+            }),
             water_texture: new Material(new defs.Phong_Shader(), {
                 color: hex_color("#81d4fa"),
                 ambient: 0.8, diffusivity: 0, specularity: 0.2,
@@ -156,8 +155,8 @@ export class Assignment4 extends Scene {
                 texture: new Texture("assets/pink_fish.jpg", "LINEAR_MIPMAP_LINEAR")
             }),
             bubbles_rainbow: new Material(new Textured_Phong(), {
-                color: color(173, 216, 230, 0.5),
-                ambient: .5, diffusivity: 0.1, specularity: 0.1,
+                color: hex_color("#ADD8E6"),
+                ambient: .7, diffusivity: .5, specularity: .1,
                 texture: new Texture("assets/rainbow_fish.png", "LINEAR_MIPMAP_LINEAR")
             }),
             fish_features: new Material(new defs.Phong_Shader(), {
@@ -659,6 +658,8 @@ export class Assignment4 extends Scene {
                 this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.9, .7, .7).times(Mat4.translation(0, 1.2, 1.5))), this.materials.fishbowl_texture.override({color: fishbowl_color}));
            }
        }
+
+       // camera transitions
         if (t >= 10 && t < 20) { // intro to the scene
             program_state.set_camera(Mat4.translation(0, 0, -12));
         }
@@ -672,17 +673,46 @@ export class Assignment4 extends Scene {
             // }
             program_state.set_camera(Mat4.translation(5.8-.2*t, .8, -8));
         }
-
-        else if (t >= 35) { // fish feeding -- zoom out
-            let u = t;
-            if (u > 38) {
-                u = 38;
+        else if (t >= 35 && t < 42) { // fish feeding -- zoom out
+            let u = t-35;
+            if (u > 3) {
+                u = 3;
             }
             // start -1.2, .8, -8
             // end 0, 0, -12
             // in 3
-            program_state.set_camera(Mat4.translation(-15.2+.4*u, 152/15-4/15*u, (13+1/3)-2/3*u));
+            program_state.set_camera(Mat4.translation(-1.2+.4*u, .8-.8/3*u, -8-4/3*u));
             //background
+        }
+        else if (t >= 42 && t < 50) {
+            let u = t - 42;
+            if (u > 3) {
+                u = 3;
+            }
+            // start 0, 0, -12
+            // end 3, -1, -8
+            // in 3
+            program_state.set_camera(Mat4.translation(u, -u/3, -12+4/3*u));
+        }
+        else if (t >= 50 && t < 60) {
+            let u = t - 50;
+            if (u > 3) {
+                u = 3;
+            }
+            // start 3, -1, -8
+            // end 0, -1, -8
+            // in 5
+            program_state.set_camera(Mat4.translation(3-u, -1, -8))
+        }
+        else if (t >= 60) {
+            let u = t - 60;
+            if (u > 5) {
+                u = 5;
+            }
+            // start 0, -1, -8
+            // end 0, 0, -12
+            // in 5
+            program_state.set_camera(Mat4.translation(0, -1+1/5*u, -8-4/5*u));
         }
 
         if (t >= 9) {
