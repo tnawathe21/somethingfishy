@@ -183,7 +183,7 @@ export class Assignment4 extends Scene {
         let white_eye_model = Mat4.identity().times(Mat4.translation(x + 0.1 + this.move, y + 0.04, z + 0.2)).times(Mat4.scale(0.09, 0.09, 0.1));
         let pupil_model = Mat4.identity().times(Mat4.translation(x + 0.1 + this.move, y + 0.04, z + 0.2)).times(Mat4.scale(0.089, 0.089, 0.101));
 
-        if (t > 2 && t < 10) {
+        if (t >= 2 && t < 10) {
             this.move -= 0.02;
         }
 
@@ -282,6 +282,8 @@ export class Assignment4 extends Scene {
         let tail_function = 0.15 * Math.cos(t);
 
         let upper_body_model = Mat4.identity().times(Mat4.translation(x, 3, 1)).times(Mat4.scale(1.2, 0.7, 0.6));
+        let front_body_model = Mat4.identity().times(Mat4.translation(x - 1.58, 3, 1)).times(Mat4.rotation(tail_function, 0, 1, 0))
+                                .times(Mat4.scale(1, 0.7, 0.7)).times(Mat4.rotation(-0.78, 0, 0, 1));
         let lower_body_model = Mat4.identity().times(Mat4.translation(x + 1.4, 3, 1)).times(Mat4.rotation(tail_function, 0, 1, 0))
                                 .times(Mat4.scale(0.5, 0.4, 0.01));
         let upper_part_model = Mat4.identity().times(Mat4.translation(x + 1, 3.2, 1)).times(Mat4.rotation(-0.26, 0, 0, 0.01))
@@ -290,7 +292,7 @@ export class Assignment4 extends Scene {
                                 .times(Mat4.scale(0.7, 0.3, 0.05));
         
         let tail_model = Mat4.identity().times(Mat4.translation(x + 1.1, 3, 1)).times(Mat4.rotation(tail_function, 0, 1, 0))
-                    .times(Mat4.scale(1.5, 1, 1)).times(Mat4.rotation(-Math.PI/4, 0, 0, 1));
+                            .times(Mat4.scale(1.5, 1, 1)).times(Mat4.rotation(-0.78, 0, 0, 1));
                
         //eyes
         let eye_model = Mat4.identity().times(Mat4.translation(x - 0.6, 3, 2)) .times(Mat4.scale(.1, .1, .1));
@@ -306,6 +308,7 @@ export class Assignment4 extends Scene {
                     .times(Mat4.scale(1, .5, .5)).times(Mat4.rotation(-Math.PI/8, 0, 0, 1));
 
         this.shapes.sphere.draw(context, program_state, upper_body_model, this.materials.big_fish_texture);
+        this.shapes.triangle.draw(context, program_state, front_body_model, this.materials.big_fish_texture);
         this.shapes.cube.draw(context, program_state, lower_body_model, this.materials.big_fish_tail_texture);
         this.shapes.cube.draw(context, program_state, upper_part_model, this.materials.big_fish_tail_texture);
         this.shapes.cube.draw(context, program_state, lower_part_model, this.materials.big_fish_tail_texture);
