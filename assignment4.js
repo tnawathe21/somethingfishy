@@ -6,7 +6,7 @@ const {
     Vector, Vector3, vec, vec3, vec4, color, hex_color, Shader, Matrix, Mat4, Light, Shape, Material, Scene, Texture,
 } = tiny;
 
-const {Cube, Capped_Cylinder, Rounded_Closed_Cone, Closed_Cone, Cone_Tip, Fake_Bump_Map, Textured_Phong, Subdivision_Sphere, Triangle} = defs
+const {Cube, Rounded_Closed_Cone, Closed_Cone, Cone_Tip, Fake_Bump_Map, Textured_Phong, Subdivision_Sphere, Triangle} = defs
 
 export class Assignment4 extends Scene {
     /**
@@ -19,7 +19,6 @@ export class Assignment4 extends Scene {
 
         this.shapes = {
             cube: new Cube(),
-            //cylinder: new Capped_Cylinder(),
             cone : new defs.Cone_Tip ( 2, 10,  [[0.5,0],[0.5,0]] ),
             sphere: new Subdivision_Sphere(4),
             triangle: new Triangle(),
@@ -184,7 +183,7 @@ export class Assignment4 extends Scene {
         let white_eye_model = Mat4.identity().times(Mat4.translation(x + 0.1 - this.move, y + 0.04, z + 0.2)).times(Mat4.scale(0.09, 0.09, 0.1));
         let pupil_model = Mat4.identity().times(Mat4.translation(x + 0.1 - this.move, y + 0.04, z + 0.2)).times(Mat4.scale(0.089, 0.089, 0.101));
 
-        if (t > 2 && t < 5) {
+        if (t > 2 && t < 7) {
             this.move += 0.02;
         }
 
