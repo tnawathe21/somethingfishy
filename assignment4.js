@@ -106,6 +106,13 @@ export class Assignment4 extends Scene {
                 ambient: 0.8, diffusivity: 0, specularity: 0.2,
                 texture: new Texture("assets/water.jpeg", "LINEAR_MIPMAP_LINEAR")
             }),
+            coral_texture: new Material(new Textured_Phong(), {
+                ambient: 0.5, diffusivity: 0.1, specularity: 0.1,
+                color: hex_color("#ff7a9e"),
+                ambient: 1, diffusivity: 0.1, specularity: 0.5,
+                color: hex_color("#000000"),
+                texture: new Texture("assets/coral.jpg", "LINEAR_MIPMAP_LINEAR")
+            }),
             seaweed_texture: new Material(new Textured_Phong(), {
                 ambient: 0.5, diffusivity: 0.1, specularity: 0.1,
                 color: hex_color("#18aa6c"),
@@ -193,6 +200,37 @@ export class Assignment4 extends Scene {
                                         .times(Mat4.rotation(angle, 0, 0, 1)).times(Mat4.translation(0.1, 0.5, 0)).times(Mat4.scale(0.1, 0.5, 0.1));
         this.shapes.cube.draw(context, program_state, seaweed_model, this.materials.seaweed_texture.override({color:color}));
         return seaweed_model;
+    }
+
+    draw_coral(context, program_state) {
+        let branch1_model = Mat4.identity().times(Mat4.translation(-5.5, -2.5, 1)).times(Mat4.rotation(0.5, 0, 0, 1))
+                            .times(Mat4.scale(0.05, 0.4, 0.05));
+        let branch2_model = branch1_model.times(Mat4.scale(10, 2, 10)).times(Mat4.translation(0, 1, 0)).times(Mat4.translation(-0.1, -0.5, 0))
+                            .times(Mat4.rotation(-0.7, 0, 0, 1)).times(Mat4.translation(0.1, 0.5, 0)).times(Mat4.scale(0.1, 0.5, 0.1));
+        let branch3_model = Mat4.identity().times(Mat4.translation(-5.4, -2, 1)).times(Mat4.rotation(0.1, 0, 0, 1))
+                            .times(Mat4.scale(0.05, 0.8, 0.05));
+        let branch4_model = branch3_model.times(Mat4.scale(10, 1, 10)).times(Mat4.translation(0, 1, 0)).times(Mat4.translation(-0.05, -0.5, 0))
+                            .times(Mat4.rotation(0.5, 0, 0, 1)).times(Mat4.translation(0.25, 0.8, 0)).times(Mat4.scale(0.1, 0.5, 0.1));
+        let branch5_model = branch3_model.times(Mat4.scale(10, 0.8, 10)).times(Mat4.translation(0, 1, 0)).times(Mat4.translation(-0.05, -0.5, 0))
+                            .times(Mat4.rotation(-0.3, 0, 0, 1)).times(Mat4.translation(-0.1, 1, 0)).times(Mat4.scale(0.1, 0.5, 0.1));
+        let branch6_model = Mat4.identity().times(Mat4.translation(-5.2, -2.4, 1)).times(Mat4.rotation(-0.2, 0, 0, 1))
+                            .times(Mat4.scale(0.05, 0.5, 0.05));
+        let branch7_model = branch6_model.times(Mat4.scale(10, 2, 10)).times(Mat4.translation(0, 1, 0)).times(Mat4.translation(-0.05, -0.5, 0))
+                            .times(Mat4.rotation(-0.4, 0, 0, 1)).times(Mat4.translation(0.07, 0.5, 0)).times(Mat4.scale(0.1, 0.5, 0.1));
+        let branch8_model = branch6_model.times(Mat4.scale(10, 1, 10)).times(Mat4.translation(0, 1, 0)).times(Mat4.translation(-0.05, -0.5, 0))
+                            .times(Mat4.rotation(0.8, 0, 0, 1)).times(Mat4.translation(1, 1.2, 0)).times(Mat4.scale(0.1, 0.5, 0.1));
+        let branch9_model = Mat4.identity().times(Mat4.translation(-5, -2.45, 1)).times(Mat4.rotation(-0.5, 0, 0, 1))
+                            .times(Mat4.scale(0.05, 0.5, 0.05));
+
+        this.shapes.cube.draw(context, program_state, branch1_model, this.materials.coral_texture);
+        this.shapes.cube.draw(context, program_state, branch2_model, this.materials.coral_texture);
+        this.shapes.cube.draw(context, program_state, branch3_model, this.materials.coral_texture);
+        this.shapes.cube.draw(context, program_state, branch4_model, this.materials.coral_texture);
+        this.shapes.cube.draw(context, program_state, branch5_model, this.materials.coral_texture);
+        this.shapes.cube.draw(context, program_state, branch6_model, this.materials.coral_texture);
+        this.shapes.cube.draw(context, program_state, branch7_model, this.materials.coral_texture);
+        this.shapes.cube.draw(context, program_state, branch8_model, this.materials.coral_texture);
+        this.shapes.cube.draw(context, program_state, branch9_model, this.materials.coral_texture);
     }
 
     draw_big_fish(context, program_state, x) {
@@ -803,6 +841,8 @@ export class Assignment4 extends Scene {
             //         this.draw_bubble_group(context, program_state, Mat4.identity().times(Mat4.translation(.2+.2*i, .2+.2*i, 0)).times(Mat4.rotation(0, .5, .5, 0)));
             //     }
             // }
+
+            this.draw_coral(context, program_state);
 
             // cave
             this.shapes.cave.draw(context, program_state, model_transform.times(Mat4.scale(2, 2, 2).times(Mat4.translation(3, -0.75, 0.2))), this.materials.cave_texture);
