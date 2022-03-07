@@ -276,6 +276,18 @@ export class Assignment4 extends Scene {
 
     draw_generic_fish(context, program_state, material, x, y, z, left) {
         let t = program_state.animation_time / 1000;
+        let drawleftside = true;
+        if (t >= 2 && t < 10) {
+            this.move -= 0.02;
+        }
+        else if (t >= 10 && t < 18) {
+            this.move += 0.02;
+            drawleftside = false;
+        }
+        else if (t >= 18 && t < 22) {
+            this.move -= 0.02;
+            drawleftside = false;
+        }
         let fish_function = 0.1 * Math.cos(2 * t) + 0.5;   
         let tail_function = 0.5 * Math.cos(2 * t);
         let fin_function = 0.3 * Math.cos(1.5 * t);
@@ -300,7 +312,7 @@ export class Assignment4 extends Scene {
         // eye
         let white_eye_model = Mat4.identity().times(Mat4.translation(x + 0.1 + this.move, y + 0.04, z + 0.2)).times(Mat4.scale(0.09, 0.09, 0.1));
         let pupil_model = Mat4.identity().times(Mat4.translation(x + 0.1 + this.move, y + 0.04, z + 0.2)).times(Mat4.scale(0.089, 0.089, 0.101));
-        if (left === true) {
+        if (drawleftside === true) {
             upper_body_model = Mat4.identity().times(Mat4.translation(x + 0.3 + this.move, fish_function, 2)).times(Mat4.scale(0.5, 0.3, 0.1));
             lower_body_model = Mat4.identity().times(Mat4.translation(x + 0.8 + this.move, fish_function, 2)).times(Mat4.rotation(0.7 * tail_function, 0, 1, 0))
                                     .times(Mat4.scale(0.3, 0.15, 0.01));
@@ -346,58 +358,29 @@ export class Assignment4 extends Scene {
             white_eye_model = Mat4.identity().times(Mat4.translation(x - 0.05 + this.move, y + 0.04 - this.move / 2, z + 0.2)).times(Mat4.scale(0.09, 0.09, 0.1));
             pupil_model = Mat4.identity().times(Mat4.translation(x - 0.05 + this.move, y + 0.04 - this.move / 2, z + 0.2)).times(Mat4.scale(0.089, 0.089, 0.101));
         }
+        // let movement_model = Mat4.inverse(Mat4.translation(x - 0.05 + this.move, y + 0.04 - this.move / 2, z + 0.2)).times(Mat4.rotation(Math.PI / 4, 1, 0, 0)).times(Mat4.translation(x - 0.05 + this.move, y + 0.04 - this.move / 2, z + 0.2));
+        // if (left === true) {
+        //     movement_model = Mat4.inverse(Mat4.translation(x + 0.3 + this.move, y - 0.25, z - 0.2)).times(Mat4.rotation(Math.PI / 4, 1, 0, 0)).times(Mat4.translation(x + 0.3 + this.move, y - 0.25, z - 0.2));
+        // }
 
-        this.shapes.sphere.draw(context, program_state, upper_body_model, material);
-        this.shapes.cube.draw(context, program_state, lower_body_model, material);
-        this.shapes.cube.draw(context, program_state, upper_part_model, material);
-        this.shapes.cube.draw(context, program_state, lower_part_model, material);
-        this.shapes.triangle.draw(context, program_state, tail_model, material);
-        this.shapes.triangle.draw(context, program_state, left_fin_model, material);
-        this.shapes.triangle.draw(context, program_state, right_fin_model, material);
-        this.shapes.sphere.draw(context, program_state, white_eye_model, this.materials.fish_features.override({color: hex_color("#FFFFFF")}));
-        this.shapes.sphere.draw(context, program_state, pupil_model, this.materials.fish_features);
+        // let movement_model = Mat4.translation(0.1*t, 0.1*t, 0);
+        let movement_model = Mat4.identity();
+
+        this.shapes.sphere.draw(context, program_state, upper_body_model.times(movement_model), material);
+        this.shapes.cube.draw(context, program_state, lower_body_model.times(movement_model), material);
+        this.shapes.cube.draw(context, program_state, upper_part_model.times(movement_model), material);
+        this.shapes.cube.draw(context, program_state, lower_part_model.times(movement_model), material);
+        this.shapes.triangle.draw(context, program_state, tail_model.times(movement_model), material);
+        this.shapes.triangle.draw(context, program_state, left_fin_model.times(movement_model), material);
+        this.shapes.triangle.draw(context, program_state, right_fin_model.times(movement_model), material);
+        this.shapes.sphere.draw(context, program_state, white_eye_model.times(movement_model), this.materials.fish_features.override({color: hex_color("#FFFFFF")}));
+        this.shapes.sphere.draw(context, program_state, pupil_model.times(movement_model), this.materials.fish_features);
         
         let initial_model = upper_body_model.times(Mat4.translation(-2, 0, 0)).times(Mat4.scale(1/.5, 1/.3, 1/.3));
 
         if (this.bubbles) {
             this.draw_bubble(context, program_state, initial_model, t);
         }
-    }
-
-    draw_generic_fish_right(context, program_state, fish_model, material, x, y,z) {
-        let t = program_state.animation_time / 1000;
-        //fish
-        this.shapes.sphere.draw(context, program_state, fish_model, material);
-
-        //tails
-       let middle_tail_model = Mat4.identity().times(Mat4.translation(x-0.7, y, z)).times(Mat4.scale(0.3, 0.06, 0.1));
-
-        let upper_tail_model = Mat4.identity().times(Mat4.translation(x-0.6, y+0.2, z)).times(Mat4.rotation(-1, 0, 0, 1))
-        .times(Mat4.scale(0.3, 0.06, 0.1));
-        let lower_tail_model = Mat4.identity().times(Mat4.translation(x-0.6, y-0.2, z)).times(Mat4.rotation(1, 0, 0, 1))
-        .times(Mat4.scale(0.3, 0.06, 0.1));
-
-        this.shapes.sphere.draw(context, program_state, middle_tail_model, material);
-        this.shapes.sphere.draw(context, program_state, upper_tail_model, material);
-        this.shapes.sphere.draw(context, program_state, lower_tail_model, material);
-
-        //fins
-        let right_fin = Mat4.identity().times(Mat4.translation(x+0.2, y-0.2, z+0.2)).times(Mat4.rotation(1, 0, 0, 1))
-        .times(Mat4.scale(0.2, 0.06, 0.1));
-        let left_fin = Mat4.identity().times(Mat4.translation(x+0.2, y-0.2, z -0.2)).times(Mat4.rotation(1, 0, 0, 1))
-        .times(Mat4.scale(0.2, 0.06, 0.1));
-
-        this.shapes.sphere.draw(context, program_state, right_fin, material);
-        this.shapes.sphere.draw(context, program_state, left_fin, material);
-
-        //eye
-        let white_eye = Mat4.identity().times(Mat4.translation(x+0.2, y+0.04, z +0.2)).times(Mat4.rotation(1, 0, 0, 1))
-        .times(Mat4.scale(0.08, 0.07, 0.1));
-        this.shapes.sphere.draw(context, program_state, white_eye, this.materials.fish_features.override({color: hex_color("#FFFFFF")}));
-        let pupil = Mat4.identity().times(Mat4.translation(x+0.2, y+0.04, z+0.2)).times(Mat4.rotation(1, 0, 0, 1))
-        .times(Mat4.scale(0.06, 0.06, 0.102));
-        this.shapes.sphere.draw(context, program_state, pupil, this.materials.fish_features);
-
     }
 
     draw_crab(context, program_state) {
