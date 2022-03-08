@@ -1,34 +1,12 @@
 import {defs, tiny} from './examples/common.js';
 
-import {Color_Phong_Shader, Shadow_Textured_Phong_Shader,
-    Depth_Texture_Shader_2D, Buffered_Texture, LIGHT_DEPTH_TEX_SIZE} from './examples/shadow-demo-shaders.js';
+import {Shadow_Textured_Phong_Shader} from './examples/shadow-demo-shaders.js';
 
 const {
     Vector, Vector3, vec, vec3, vec4, color, hex_color, Shader, Matrix, Mat4, Light, Shape, Material, Scene, Texture,
 } = tiny;
 
 const {Cube, Rounded_Closed_Cone, Closed_Cone, Cone_Tip, Fake_Bump_Map, Textured_Phong, Subdivision_Sphere, Triangle} = defs
-
-
-// 2D shape, to display the texture buffer
-const Square =
-    class Square extends tiny.Vertex_Buffer {
-        constructor() {
-            super("position", "normal", "texture_coord");
-            this.arrays.position = [
-                vec3(0, 0, 0), vec3(1, 0, 0), vec3(0, 1, 0),
-                vec3(1, 1, 0), vec3(1, 0, 0), vec3(0, 1, 0)
-            ];
-            this.arrays.normal = [
-                vec3(0, 0, 1), vec3(0, 0, 1), vec3(0, 0, 1),
-                vec3(0, 0, 1), vec3(0, 0, 1), vec3(0, 0, 1),
-            ];
-            this.arrays.texture_coord = [
-                vec(0, 0), vec(1, 0), vec(0, 1),
-                vec(1, 1), vec(1, 0), vec(0, 1)
-            ]
-        }
-    }
 
 export class Assignment4 extends Scene {
     /**
@@ -45,66 +23,25 @@ export class Assignment4 extends Scene {
             sphere: new Subdivision_Sphere(4),
             triangle: new Triangle(),
             cave: new (defs.Subdivision_Sphere.prototype.make_flat_shaded_version())(2),
-            cave_hole: new (defs.Subdivision_Sphere.prototype.make_flat_shaded_version())(4),
-            square_2d: new Square(),
+            cave_hole: new (defs.Subdivision_Sphere.prototype.make_flat_shaded_version())(4)
         }
-
-        this.bubbles = false;
-        this.bubble_time = 0;
-        this.bubble_start = false;
-
-        this.r1 = 0;
-        this.r2 = 0;
-        this.r3 = 0;
 
         this.materials = {
             phong: new Material(new Textured_Phong(), {
-                ambient: .4, diffusivity: 0.5, specularity: 0.2, color: hex_color("#ffffff"),
+                color: hex_color("#ffffff"),
             }),
             table_texture: new Material(new Textured_Phong(), {
                 color: hex_color("#964B00"),
                 ambient: 0.5, diffusivity: 0.1, specularity: 0.1,
                 texture: new Texture("assets/table.jpg", "LINEAR_MIPMAP_LINEAR")
             }),
-            tabletop_texture: new Material(new Shadow_Textured_Phong_Shader(1), {
-                color: color(.5, .5, .5, 1),
-                ambient: .4, diffusivity: .5, specularity: .5,
-                color_texture: new Texture("assets/table.jpg"),
-                light_depth_texture: null
-    
-            }),
-            floor: new Material(new Shadow_Textured_Phong_Shader(1), {
-                color: color(1, 1, 1, 1), ambient: .3, diffusivity: 0.6, specularity: 0.4, smoothness: 64,
-                color_texture: new Texture("assets/rug.jpg"),
-                light_depth_texture: null
-            }),
-            wall: new Material(new Shadow_Textured_Phong_Shader(1), {
-                color: color(1, 1, 1, 1), ambient: .3, diffusivity: 0.6, specularity: 0.4, smoothness: 64,
-                color_texture: new Texture("assets/wall.jpg"),
-                light_depth_texture: null
-            }),
-             // For the first pass
-            pure: new Material(new Color_Phong_Shader(), {
-            }),
-            // For light source
-            light_src: new Material(new defs.Phong_Shader(), {
-                color: color(1, 1, 1, 1), ambient: 1, diffusivity: 0, specularity: 0
-            }),
-            // For depth texture display
-            depth_tex:  new Material(new Depth_Texture_Shader_2D(), {
-                color: color(0, 0, .0, 1),
-                ambient: 1, diffusivity: 0, specularity: 0, texture: null
-            }),
-            fishbowl_texture: new Material(new Shadow_Textured_Phong_Shader(1), {
-                color: color(.5, .5, .5, 0.75),
-                ambient: .4, diffusivity: .5, specularity: .5,
-                color_texture: new Texture("assets/water.png"),
-                light_depth_texture: null
+            fishbowl_texture: new Material(new Textured_Phong(), {
+                color: color(175, 223, 239, .75),
+                ambient: 1, diffusivity: .5, specularity: 0.2
             }),
             water_texture: new Material(new defs.Phong_Shader(), {
-                color: hex_color("#81d4fa"),
-                ambient: 0.8, diffusivity: 0, specularity: 0.2,
-                texture: new Texture("assets/water.jpeg", "LINEAR_MIPMAP_LINEAR")
+                color: hex_color("#4BBAFF"),
+                ambient: 0.7, diffusivity: 0, specularity: 0.2,
             }),
             seaweed_texture: new Material(new Textured_Phong(), {
                 ambient: 0.5, diffusivity: 0.1, specularity: 0.1,
@@ -154,9 +91,9 @@ export class Assignment4 extends Scene {
                 ambient: 1, diffusivity: 0.1, specularity: 0.1,
                 texture: new Texture("assets/pink_fish.jpg", "LINEAR_MIPMAP_LINEAR")
             }),
-            bubbles_rainbow: new Material(new Textured_Phong(), {
-                color: hex_color("#ADD8E6"),
-                ambient: .7, diffusivity: .5, specularity: .1,
+            fish_texture_rainbow: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"),
+                ambient: 1, diffusivity: 0.1, specularity: 0.1,
                 texture: new Texture("assets/rainbow_fish.png", "LINEAR_MIPMAP_LINEAR")
             }),
             fish_features: new Material(new defs.Phong_Shader(), {
@@ -167,10 +104,6 @@ export class Assignment4 extends Scene {
 
         this.initial_camera_location = Mat4.look_at(vec3(0, 10, 20), vec3(0, 0, 0), vec3(0, 1, 0));
         this.move = 0;
-    }
-
-    getRandomNum() {
-        return Math.random();
     }
 
     draw_sand(context, program_state, sand_model, i, j) {
@@ -272,11 +205,6 @@ export class Assignment4 extends Scene {
         this.shapes.sphere.draw(context, program_state, white_eye_model, this.materials.fish_features.override({color: hex_color("#FFFFFF")}));
         this.shapes.sphere.draw(context, program_state, pupil_model, this.materials.fish_features);
         
-        let initial_model = upper_body_model.times(Mat4.translation(-2, 0, 0)).times(Mat4.scale(1/.5, 1/.3, 1/.3));
-
-        if (this.bubbles) {
-            this.draw_bubble(context, program_state, initial_model, t);
-        }
         /*let upper_tail_model = Mat4.identity().times(Mat4.translation(x+0.6, y+0.2, z)).times(Mat4.rotation(1, 0, 0, 1))
         .times(Mat4.scale(0.3, 0.06, 0.1));
         let lower_tail_model = Mat4.identity().times(Mat4.translation(x+0.6, y-0.2, z)).times(Mat4.rotation(-1, 0, 0, 1))
@@ -302,42 +230,6 @@ export class Assignment4 extends Scene {
         let pupil = Mat4.identity().times(Mat4.translation(x-0.2, y+0.04, z+0.2)).times(Mat4.rotation(1, 0, 0, 1))
         .times(Mat4.scale(0.06, 0.06, 0.102));
         this.shapes.sphere.draw(context, program_state, pupil, this.materials.fish_features);*/
-
-    }
-
-    draw_generic_fish_right(context, program_state, fish_model, material, x, y,z) {
-        let t = program_state.animation_time / 1000;
-        //fish
-        this.shapes.sphere.draw(context, program_state, fish_model, material);
-
-        //tails
-       let middle_tail_model = Mat4.identity().times(Mat4.translation(x-0.7, y, z)).times(Mat4.scale(0.3, 0.06, 0.1));
-
-        let upper_tail_model = Mat4.identity().times(Mat4.translation(x-0.6, y+0.2, z)).times(Mat4.rotation(-1, 0, 0, 1))
-        .times(Mat4.scale(0.3, 0.06, 0.1));
-        let lower_tail_model = Mat4.identity().times(Mat4.translation(x-0.6, y-0.2, z)).times(Mat4.rotation(1, 0, 0, 1))
-        .times(Mat4.scale(0.3, 0.06, 0.1));
-
-        this.shapes.sphere.draw(context, program_state, middle_tail_model, material);
-        this.shapes.sphere.draw(context, program_state, upper_tail_model, material);
-        this.shapes.sphere.draw(context, program_state, lower_tail_model, material);
-
-        //fins
-        let right_fin = Mat4.identity().times(Mat4.translation(x+0.2, y-0.2, z+0.2)).times(Mat4.rotation(1, 0, 0, 1))
-        .times(Mat4.scale(0.2, 0.06, 0.1));
-        let left_fin = Mat4.identity().times(Mat4.translation(x+0.2, y-0.2, z -0.2)).times(Mat4.rotation(1, 0, 0, 1))
-        .times(Mat4.scale(0.2, 0.06, 0.1));
-
-        this.shapes.sphere.draw(context, program_state, right_fin, material);
-        this.shapes.sphere.draw(context, program_state, left_fin, material);
-
-        //eye
-        let white_eye = Mat4.identity().times(Mat4.translation(x+0.2, y+0.04, z +0.2)).times(Mat4.rotation(1, 0, 0, 1))
-        .times(Mat4.scale(0.08, 0.07, 0.1));
-        this.shapes.sphere.draw(context, program_state, white_eye, this.materials.fish_features.override({color: hex_color("#FFFFFF")}));
-        let pupil = Mat4.identity().times(Mat4.translation(x+0.2, y+0.04, z+0.2)).times(Mat4.rotation(1, 0, 0, 1))
-        .times(Mat4.scale(0.06, 0.06, 0.102));
-        this.shapes.sphere.draw(context, program_state, pupil, this.materials.fish_features);
 
     }
 
@@ -407,160 +299,8 @@ export class Assignment4 extends Scene {
         this.shapes.sphere.draw(context, program_state, bubble_model.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(10, 1, 2))), this.materials.fishbowl_texture);
         this.shapes.sphere.draw(context, program_state, bubble_model.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(8.5, 2.8, 2))), this.materials.fishbowl_texture);
     }
-    draw_bubble(context, program_state, initial_model) {
-        let bubble_model = initial_model.times(Mat4.translation(0.5, this.bubble_time, 0)).times(Mat4.scale(.1,.1,.1));
-        if (this.bubble_start) {
-            this.r1 = this.getRandomNum();
-            this.r2 = this.getRandomNum();
-            this.r3 = this.getRandomNum();
-        }
-        this.bubble_start = false;
-
-        this.shapes.sphere.draw(context, program_state, bubble_model.times(Mat4.translation(this.r1, .5*this.bubble_time, 0)), this.materials.bubbles_rainbow);
-        this.shapes.sphere.draw(context, program_state, bubble_model.times(Mat4.translation(this.r2, this.bubble_time+.8, 0)), this.materials.bubbles_rainbow);
-        this.shapes.sphere.draw(context, program_state, bubble_model.times(Mat4.translation(this.r3, 1.5*this.bubble_time+1.6, 0)), this.materials.bubbles_rainbow);
-    }
-
-    make_control_panel() {
-        this.key_triggered_button("Bubbles!", ["c"], () => {
-            console.log("entered trigger");
-            this.bubbles = !this.bubbles;
-            this.bubble_time = 0;
-            this.bubble_start = true;
-        });
-    }
-
-    texture_buffer_init(gl) {
-        // Depth Texture
-        this.lightDepthTexture = gl.createTexture();
-        // Bind it to TinyGraphics
-        this.light_depth_texture = new Buffered_Texture(this.lightDepthTexture);
-        this.materials.tabletop_texture.light_depth_texture = this.light_depth_texture
-        this.materials.floor.light_depth_texture = this.light_depth_texture
-
-        this.lightDepthTextureSize = LIGHT_DEPTH_TEX_SIZE;
-        gl.bindTexture(gl.TEXTURE_2D, this.lightDepthTexture);
-        gl.texImage2D(
-            gl.TEXTURE_2D,      // target
-            0,                  // mip level
-            gl.DEPTH_COMPONENT, // internal format
-            this.lightDepthTextureSize,   // width
-            this.lightDepthTextureSize,   // height
-            0,                  // border
-            gl.DEPTH_COMPONENT, // format
-            gl.UNSIGNED_INT,    // type
-            null);              // data
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-
-        // Depth Texture Buffer
-        this.lightDepthFramebuffer = gl.createFramebuffer();
-        gl.bindFramebuffer(gl.FRAMEBUFFER, this.lightDepthFramebuffer);
-        gl.framebufferTexture2D(
-            gl.FRAMEBUFFER,       // target
-            gl.DEPTH_ATTACHMENT,  // attachment point
-            gl.TEXTURE_2D,        // texture target
-            this.lightDepthTexture,         // texture
-            0);                   // mip level
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-
-        // create a color texture of the same size as the depth texture
-        // see article why this is needed_
-        this.unusedTexture = gl.createTexture();
-        gl.bindTexture(gl.TEXTURE_2D, this.unusedTexture);
-        gl.texImage2D(
-            gl.TEXTURE_2D,
-            0,
-            gl.RGBA,
-            this.lightDepthTextureSize,
-            this.lightDepthTextureSize,
-            0,
-            gl.RGBA,
-            gl.UNSIGNED_BYTE,
-            null,
-        );
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-        // attach it to the framebuffer
-        gl.framebufferTexture2D(
-            gl.FRAMEBUFFER,        // target
-            gl.COLOR_ATTACHMENT0,  // attachment point
-            gl.TEXTURE_2D,         // texture target
-            this.unusedTexture,         // texture
-            0);                    // mip level
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    }
-
-    render_table_scene(context, program_state, shadow_pass, draw_light_source=false, draw_shadow=false) {
-        // shadow_pass: true if this is the second pass that draw the shadow.
-        // draw_light_source: true if we want to draw the light source.
-        // draw_shadow: true if we want to draw the shadow
-
-        let light_position = this.light_position;
-        let light_color = this.light_color;
-        const t = program_state.animation_time;
-
-        program_state.draw_shadow = draw_shadow;
-
-        let model_transform = Mat4.rotation(.4,1,0,0);
-
-        //walls
-        let model_trans_floor = Mat4.rotation(0.4,1,0,0).times(Mat4.translation(0,-2.1,0)).times(Mat4.scale(8, 0.1, 5));
-        let model_trans_wall_1 = Mat4.rotation(0.4,1,0,0).times(Mat4.translation(-8, 2 - 0.1, 0)).times(Mat4.scale(0.33, 4, 5));
-        let model_trans_wall_2 = Mat4.rotation(0.4,1,0,0).times(Mat4.translation(+8, 2 - 0.1, 0)).times(Mat4.scale(0.33, 4, 5));
-        let model_trans_wall_3 = Mat4.rotation(0.4,1,0,0).times(Mat4.translation(0, 2 - 0.1, -5)).times(Mat4.scale(8.3, 4, 0.33));
-        this.shapes.cube.draw(context, program_state, model_trans_floor, shadow_pass? this.materials.floor : this.materials.pure);
-        this.shapes.cube.draw(context, program_state, model_trans_wall_1, shadow_pass? this.materials.wall : this.materials.pure);
-        this.shapes.cube.draw(context, program_state, model_trans_wall_2, shadow_pass? this.materials.wall : this.materials.pure);
-        this.shapes.cube.draw(context, program_state, model_trans_wall_3, shadow_pass? this.materials.wall : this.materials.pure);
-
-        //table
-        this.shapes.cube.draw(context, program_state, model_transform.times(Mat4.scale(2, 1/20, 2)), shadow_pass? this.materials.tabletop_texture : this.materials.pure);
-        this.shapes.cube.draw(context, program_state, model_transform.times(Mat4.translation(-2,-1.1,1.8)).times(Mat4.scale(1/20, 1.1, 1/20)), shadow_pass? this.materials.table_texture : this.materials.pure);
-        this.shapes.cube.draw(context, program_state, model_transform.times(Mat4.translation(2,-1.1,1.8)).times(Mat4.scale(1/20, 1.1, 1/20)), shadow_pass? this.materials.table_texture : this.materials.pure);            
-        this.shapes.cube.draw(context, program_state, model_transform.times(Mat4.translation(2, -1.1,-1.8)).times(Mat4.scale(1/20, 1.1, 1/20)), shadow_pass? this.materials.table_texture : this.materials.pure);
-        this.shapes.cube.draw(context, program_state, model_transform.times(Mat4.translation(-2, -1.1,-1.8)).times(Mat4.scale(1/20, 1.1, 1/20)), shadow_pass? this.materials.table_texture : this.materials.pure);
-
-    }
-
-    
-    render_bowl(context, program_state, shadow_pass, draw_light_source=false, draw_shadow=false, fishbowl_color) {
-        // shadow_pass: true if this is the second pass that draw the shadow.
-        // draw_light_source: true if we want to draw the light source.
-        // draw_shadow: true if we want to draw the shadow
-
-        let light_position = this.light_position;
-        let light_color = this.light_color;
-        const t = program_state.animation_time;
-
-        program_state.draw_shadow = draw_shadow;
-
-        let model_transform = Mat4.rotation(.4,1,0,0);
-
-        //bowl
-        let bowl_transform = model_transform.times(Mat4.scale(.9, .7, .7).times(Mat4.translation(0, 1.2, 1.5)));
-        this.shapes.sphere.draw(context, program_state, bowl_transform, shadow_pass? this.materials.fishbowl_texture : this.materials.pure);
-
-    }
 
     display(context, program_state) {
-        let t = program_state.animation_time / 1000, dt = program_state.animation_delta_time / 1000;
-        const gl = context.context;
-
-        if (!this.init_ok) {
-            const ext = gl.getExtension('WEBGL_depth_texture');
-            if (!ext) {
-                return alert('need WEBGL_depth_texture');  // eslint-disable-line
-            }
-            this.texture_buffer_init(gl);
-
-            this.init_ok = true;
-        }
-
         if (!context.scratchpad.controls) {
             this.children.push(context.scratchpad.controls = new defs.Movement_Controls());
             // Define the global camera and projection matrices, which are stored in program_state.
@@ -573,53 +313,12 @@ export class Assignment4 extends Scene {
         const light_position = vec4(10, 10, 10, 1);
         program_state.lights = [new Light(light_position, color(1, 1, 1, 1), 1000)];
 
-        this.bubble_time += dt;
+        let t = program_state.animation_time / 1000, dt = program_state.animation_delta_time / 1000;
         let model_transform = Mat4.rotation(.4,1,0,0);
+    
+        if (t < 0) { // fishbowl fade
+            this.draw_table(context, program_state, model_transform);
 
-        this.light_position = Mat4.translation(4, 3, 4, 0).times(vec4(3, 6, 0, 1));
-        // The color of the light
-        this.light_color = color(
-            1,1,1,1
-        );
-
-        // This is a rough target of the light.
-        // Although the light is point light, we need a target to set the POV of the light
-        this.light_view_target = vec4(0, 0, 0, 1);
-        this.light_field_of_view = 130 * Math.PI / 180; // 130 degree
-
-        program_state.lights = [new Light(this.light_position, this.light_color, 1000)];
-
-        // Step 1: set the perspective and camera to the POV of light
-        const light_view_mat = Mat4.look_at(
-            vec3(this.light_position[0], this.light_position[1], this.light_position[2]),
-            vec3(this.light_view_target[0], this.light_view_target[1], this.light_view_target[2]),
-            vec3(0, 2, 0), // assume the light to target will have a up dir of +y, maybe need to change according to your case
-        );
-       
-
-        if (t < 10) { // fishbowl fade
-
-        const light_proj_mat = Mat4.perspective(this.light_field_of_view, 1, 0.5, 500);
-        // Bind the Depth Texture Buffer
-        gl.bindFramebuffer(gl.FRAMEBUFFER, this.lightDepthFramebuffer);
-        gl.viewport(0, 0, this.lightDepthTextureSize, this.lightDepthTextureSize);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-        // Prepare uniforms
-        program_state.light_view_mat = light_view_mat;
-        program_state.light_proj_mat = light_proj_mat;
-        program_state.light_tex_mat = light_proj_mat;
-        program_state.view_mat = light_view_mat;
-        program_state.projection_transform = light_proj_mat;
-        this.render_table_scene(context, program_state, false,false, false);
-        this.render_bowl(context, program_state, false,false, false);
-
-        // Step 2: unbind, draw to the canvas
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-        program_state.view_mat = program_state.camera_inverse;
-        program_state.projection_transform = Mat4.perspective(Math.PI / 4, context.width / context.height, 0.5, 500);
-        
-        this.render_table_scene(context, program_state, true,true, true);
             let desired = Mat4.translation(0,-.5,t-12);
             program_state.set_camera(desired);
 
@@ -628,6 +327,7 @@ export class Assignment4 extends Scene {
             for (let i = 0; i < 4; i++) {
                 seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
             }
+            //this.shapes.cone.draw(context, program_state, seaweed_model.times(Mat4.translation(0, 1, 0)), this.materials.seaweed_texture);
 
             seaweed_model = Mat4.identity().times(Mat4.translation(-.5, -.15, 1.1)).times(Mat4.scale(0.03, 0.05, 0.01));
             for (let i = 0; i < 6; i++) {
@@ -651,15 +351,13 @@ export class Assignment4 extends Scene {
         
             // fishbowl fade
            if (t <= 9) {
-            this.render_bowl(context, program_state, true,true, true);
+                this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.9, .7, .7).times(Mat4.translation(0, 1.2, 1.5))), this.materials.fishbowl_texture);
            }
-           if (t > 9) {
+            if (t > 9) {
                 let fishbowl_color = color(50, 50, 50, 1-1/12*t);
                 this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.9, .7, .7).times(Mat4.translation(0, 1.2, 1.5))), this.materials.fishbowl_texture.override({color: fishbowl_color}));
            }
-       }
-
-       // camera transitions
+        }
         if (t >= 10 && t < 20) { // intro to the scene
             program_state.set_camera(Mat4.translation(0, 0, -12));
         }
@@ -673,49 +371,20 @@ export class Assignment4 extends Scene {
             // }
             program_state.set_camera(Mat4.translation(5.8-.2*t, .8, -8));
         }
-        else if (t >= 35 && t < 42) { // fish feeding -- zoom out
-            let u = t-35;
-            if (u > 3) {
-                u = 3;
+
+        else if (t >= 35) { // fish feeding -- zoom out
+            let u = t;
+            if (u > 38) {
+                u = 38;
             }
             // start -1.2, .8, -8
             // end 0, 0, -12
             // in 3
-            program_state.set_camera(Mat4.translation(-1.2+.4*u, .8-.8/3*u, -8-4/3*u));
+            program_state.set_camera(Mat4.translation(-15.2+.4*u, 152/15-4/15*u, (13+1/3)-2/3*u));
             //background
         }
-        else if (t >= 42 && t < 50) {
-            let u = t - 42;
-            if (u > 3) {
-                u = 3;
-            }
-            // start 0, 0, -12
-            // end 3, -1, -8
-            // in 3
-            program_state.set_camera(Mat4.translation(u, -u/3, -12+4/3*u));
-        }
-        else if (t >= 50 && t < 60) {
-            let u = t - 50;
-            if (u > 3) {
-                u = 3;
-            }
-            // start 3, -1, -8
-            // end 0, -1, -8
-            // in 5
-            program_state.set_camera(Mat4.translation(3-u, -1, -8))
-        }
-        else if (t >= 60) {
-            let u = t - 60;
-            if (u > 5) {
-                u = 5;
-            }
-            // start 0, -1, -8
-            // end 0, 0, -12
-            // in 5
-            program_state.set_camera(Mat4.translation(0, -1+1/5*u, -8-4/5*u));
-        }
 
-        if (t >= 9) {
+        if (t >= 0) {
             //background
             let background_model = Mat4.identity().times(Mat4.scale(1, 1, -0.5));
             for (let i = -17; i < 18; i++) {
@@ -814,17 +483,12 @@ export class Assignment4 extends Scene {
 
            /*fish_model =  Mat4.identity().times(Mat4.translation(-2, -.3+.1*Math.cos(t), 2)).times(Mat4.scale(0.5, 0.3, 0.3));
            this.draw_generic_fish(context, program_state, fish_model, this.materials.fish_texture_rainbow, -2, -.3+.1*Math.cos(t), 2);*/
-        //    let fish1_model =  Mat4.identity().times(Mat4.translation(-2.3*Math.sin(t/3), -1.3+.1*Math.cos(2*t), 2)).times(Mat4.scale(0.5, 0.3, 0.3));
-        //    this.draw_generic_fish_left(context, program_state, fish1_model, this.materials.fish_texture_pink, -2.3*Math.sin(t/3), -1.3+.1*Math.cos(2*t),2);
 
-        //    let fish2_model =  Mat4.identity().times(Mat4.translation(-2*Math.sin(t/3), -.3+.1*Math.cos(t), 2)).times(Mat4.scale(0.5, 0.3, 0.3));
-        //    this.draw_generic_fish_right(context, program_state, fish2_model, this.materials.fish_texture_rainbow, -2*Math.sin(t/3), -.3+.1*Math.cos(t), 2);
-        //    this.draw_bubble(context, program_state, t);
            this.draw_crab(context, program_state);
-        }
+        //}
     }
 }
-
+}
 class Texture_Scroll_X extends Textured_Phong {
     fragment_glsl_code() {
         return this.shared_glsl_code() + `
