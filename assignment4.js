@@ -57,6 +57,14 @@ export class Assignment4 extends Scene {
         this.r2 = 0;
         this.r3 = 0;
 
+        this.feed_fish = false;
+        this.particles_time = 3;
+        this.particles_start = false;
+
+        this.r_1 = 0;
+        this.r_2 = 0;
+        this.r_3 = 0;
+
         this.materials = {
             phong: new Material(new Textured_Phong(), {
                 ambient: .4, diffusivity: 0.5, specularity: 0.2, color: hex_color("#ffffff"),
@@ -159,6 +167,10 @@ export class Assignment4 extends Scene {
                 color: color(173, 216, 230, 0.5),
                 ambient: .5, diffusivity: 0.1, specularity: 0.1,
                 texture: new Texture("assets/rainbow_fish.png", "LINEAR_MIPMAP_LINEAR")
+            }),
+            food_particles: new Material(new Textured_Phong(), {
+                color: hex_color("#765424"),
+                ambient: .4, diffusivity: 0.1, specularity: 0.1
             }),
             fish_features: new Material(new defs.Phong_Shader(), {
                 color: hex_color("#000000"),
@@ -277,6 +289,10 @@ export class Assignment4 extends Scene {
 
         if (this.bubbles) {
             this.draw_bubble(context, program_state, initial_model, t);
+        } 
+        
+        if (this.feed_fish) {
+            this.draw_food_particles(context, program_state, initial_model);
         }
         /*let upper_tail_model = Mat4.identity().times(Mat4.translation(x+0.6, y+0.2, z)).times(Mat4.rotation(1, 0, 0, 1))
         .times(Mat4.scale(0.3, 0.06, 0.1));
@@ -422,12 +438,40 @@ export class Assignment4 extends Scene {
         this.shapes.sphere.draw(context, program_state, bubble_model.times(Mat4.translation(this.r3, 1.5*this.bubble_time+1.6, 0)), this.materials.bubbles_rainbow);
     }
 
+    draw_food_particles(context, program_state, initial_model) {
+        let particle_model = initial_model.times(Mat4.translation(0.5, this.particles_time, 0)).times(Mat4.scale(.1,.1,.1));
+        if (this.feed_fish_start) {
+            this.r_1 = this.getRandomNum();
+            this.r_2 = this.getRandomNum();
+            this.r_3 = this.getRandomNum();
+        }
+        this.feed_fish_start = false;
+
+        this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_1-5, .5*this.particles_time, -5)), this.materials.food_particles);
+        this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_2-6, this.particles_time+.8, -5)), this.materials.food_particles);
+        this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_3-4, 1.5*this.particles_time+1.6, -5)), this.materials.food_particles);
+        this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_1-9, 2.5*this.particles_time+0.1, -5)), this.materials.food_particles);
+        this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_2-3, 3.5*this.particles_time+.8, -5)), this.materials.food_particles);
+        this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_3-6, 3*this.particles_time+1.6, -5)), this.materials.food_particles);
+        this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_1-11, 0.1*this.particles_time, -5)), this.materials.food_particles);
+        this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_2-17, 4.5*this.particles_time-.8, -5)),this.materials.food_particles);
+        this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_3-2, 7*this.particles_time+1.6, -5)), this.materials.food_particles);
+        this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_1-15, 2.5*this.particles_time, -5)), this.materials.food_particles);
+        this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_2-12, 4.5*this.particles_time+.8, -5)), this.materials.food_particles);
+        this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_3-8, 8*this.particles_time+1.6, -5)), this.materials.food_particles);
+    }
+
     make_control_panel() {
-        this.key_triggered_button("Bubbles!", ["c"], () => {
+        this.key_triggered_button("Bubbles!", ["b"], () => {
             console.log("entered trigger");
             this.bubbles = !this.bubbles;
             this.bubble_time = 0;
             this.bubble_start = true;
+        });
+        this.key_triggered_button("Feed the fish! *when prompted*", ["f"], () => {
+            this.feed_fish = !this.feed_fish;
+            this.particles_time = 3;  
+            this.particles_start = true;          
         });
     }
 
@@ -575,6 +619,8 @@ export class Assignment4 extends Scene {
         program_state.lights = [new Light(light_position, color(1, 1, 1, 1), 1000)];
 
         this.bubble_time += dt;
+        this.particles_time -= dt/3;
+
         let model_transform = Mat4.rotation(.4,1,0,0);
 
         this.light_position = Mat4.translation(4, 3, 4, 0).times(vec4(3, 6, 0, 1));
@@ -763,34 +809,15 @@ export class Assignment4 extends Scene {
 
             //big fish
             this.draw_big_fish(context, program_state, 3+2.2*Math.sin(t/3));
-            // water bubble
-            // this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(7, 1, 2))), this.materials.fishbowl_texture);
-            // this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(10, 1, 2))), this.materials.fishbowl_texture);
-            // this.shapes.sphere.draw(context, program_state, model_transform.times(Mat4.scale(.1, .1, .1).times(Mat4.translation(8.5, 2.8, 2))), this.materials.fishbowl_texture);
-            // this.draw_bubble_group(context, program_state, Mat4.identity());
-            // for (let i = 0; i < 5; i++) {
-            //     for (let j = 0; j < i; j++) {
-            //         this.draw_bubble_group(context, program_state, Mat4.identity().times(Mat4.translation(.2+.2*i, .2+.2*i, 0)).times(Mat4.rotation(0, .5, .5, 0)));
-            //     }
-            // }
 
             // cave
             this.shapes.cave.draw(context, program_state, model_transform.times(Mat4.scale(2, 2, 2).times(Mat4.translation(3, -0.75, 0.2))), this.materials.cave_texture);
-           // this.shapes.cave_hole.draw(context, program_state, model_transform.times(Mat4.translation(5, -0.75, 2)), this.materials.body_part_texture);
 
-           //generic fish 
-           let fish_function = 0.1 * Math.cos(2 * t) + 0.5;
-           this.draw_generic_fish(context, program_state, this.materials.fish_texture_orange, -2.3, fish_function, 2);
+            //generic fish 
+            let fish_function = 0.1 * Math.cos(2 * t) + 0.5;
+            this.draw_generic_fish(context, program_state, this.materials.fish_texture_orange, -2.3, fish_function, 2);
 
-           /*fish_model =  Mat4.identity().times(Mat4.translation(-2, -.3+.1*Math.cos(t), 2)).times(Mat4.scale(0.5, 0.3, 0.3));
-           this.draw_generic_fish(context, program_state, fish_model, this.materials.fish_texture_rainbow, -2, -.3+.1*Math.cos(t), 2);*/
-        //    let fish1_model =  Mat4.identity().times(Mat4.translation(-2.3*Math.sin(t/3), -1.3+.1*Math.cos(2*t), 2)).times(Mat4.scale(0.5, 0.3, 0.3));
-        //    this.draw_generic_fish_left(context, program_state, fish1_model, this.materials.fish_texture_pink, -2.3*Math.sin(t/3), -1.3+.1*Math.cos(2*t),2);
-
-        //    let fish2_model =  Mat4.identity().times(Mat4.translation(-2*Math.sin(t/3), -.3+.1*Math.cos(t), 2)).times(Mat4.scale(0.5, 0.3, 0.3));
-        //    this.draw_generic_fish_right(context, program_state, fish2_model, this.materials.fish_texture_rainbow, -2*Math.sin(t/3), -.3+.1*Math.cos(t), 2);
-        //    this.draw_bubble(context, program_state, t);
-           this.draw_crab(context, program_state);
+            this.draw_crab(context, program_state);
         }
     }
 }
