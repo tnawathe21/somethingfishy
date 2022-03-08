@@ -159,6 +159,7 @@ export class Assignment4 extends Scene {
 
         this.initial_camera_location = Mat4.look_at(vec3(0, 10, 20), vec3(0, 0, 0), vec3(0, 1, 0));
         this.move = 0;
+        this.init_ok = false;
     }
 
     draw_sand(context, program_state, sand_model, i, j) {
@@ -287,6 +288,53 @@ export class Assignment4 extends Scene {
         this.shapes.sphere.draw(context, program_state, pupil, this.materials.fish_features);*/
 
     }
+
+    draw_fish_inside_bowl(context, program_state, material, x, y, z, shadow_pass, draw_shadow=false, fish_transform) {
+        let t = program_state.animation_time / 1000;
+
+        let model_transform = Mat4.identity();
+        if (fish_transform) {
+            model_transform = fish_transform;
+        }
+
+        // body
+        let fish_function = 0.1 * Math.cos(2 * t) + 0.5;
+        let upper_body_model = model_transform.times(Mat4.translation(-2 - this.move, fish_function, 2)).times(Mat4.scale(0.5, 0.3, 0.1));
+        let lower_body_model = model_transform.times(Mat4.translation(-1.5 - this.move, fish_function, 2)).times(Mat4.scale(0.3, 0.15, 0.01));
+        let part1_model = model_transform.times(Mat4.translation(-1.6 - this.move, fish_function + 0.1, 2)).times(Mat4.rotation(-0.25, 0, 0, 0.01))
+                                                .times(Mat4.scale(0.2, 0.1, 0.05));
+        let part2_model = model_transform.times(Mat4.translation(-1.6 - this.move, fish_function - 0.1, 2)).times(Mat4.rotation(0.25, 0, 0, 0.01))
+                                                .times(Mat4.scale(0.2, 0.1, 0.05));
+
+        // tail
+        let tail_function = 0.4 * Math.cos(2 * t);
+        let tail_model = model_transform.times(Mat4.translation(x + 0.95 - this.move, y, z)).times(Mat4.rotation(tail_function, 0, 1, 0)).times(Mat4.rotation(-0.8, 0, 0, 1)).times(Mat4.scale(0.5, 0.5, 0.01));
+
+        // fins
+        let upper_fin_model =model_transform.times(Mat4.translation(x + 0.5 - this.move, y + 0.09, z + 0.2)).times(Mat4.rotation(1.2, 0, 0, 1))
+                                                .times(Mat4.scale(0.3, 0.4, 0.1));
+
+        // eye
+        let white_eye_model = model_transform.times(Mat4.translation(x + 0.1 - this.move, y + 0.04, z + 0.2)).times(Mat4.rotation(1, 0, 0, 1))
+                                                .times(Mat4.scale(0.09, 0.09, 0.1));
+        
+        let pupil_model = model_transform.times(Mat4.translation(x + 0.1 - this.move, y + 0.04, z + 0.2)).times(Mat4.rotation(1, 0, 0, 1))
+                                            .times(Mat4.scale(0.088, 0.088, 0.101));
+
+        if (t > 2 && t < 5) {
+            this.move += 0.02;
+        }
+
+        this.shapes.sphere.draw(context, program_state, upper_body_model, material);
+        this.shapes.cube.draw(context, program_state, lower_body_model, material);
+        this.shapes.cube.draw(context, program_state, part1_model, material);
+        this.shapes.cube.draw(context, program_state, part2_model,material);
+        this.shapes.triangle.draw(context, program_state, tail_model, material);
+        this.shapes.triangle.draw(context, program_state, upper_fin_model, material);
+        this.shapes.sphere.draw(context, program_state, white_eye_model, this.materials.fish_features.override({color: hex_color("#FFFFFF")}));
+        this.shapes.sphere.draw(context, program_state, pupil_model, this.materials.fish_features);
+    }
+
 
     draw_crab(context, program_state) {
         let t = program_state.animation_time / 1000;
@@ -536,7 +584,15 @@ export class Assignment4 extends Scene {
         program_state.projection_transform = light_proj_mat;
         this.render_table_scene(context, program_state, false,false, false);
         this.render_bowl(context, program_state, false,false, false);
+        
+        let fish_function = 0.1 * Math.cos(2 * t) + 0.5;
+        this.move = 0;
+        let first_fish_transform = Mat4.identity().times(Mat4.translation(.6, 0, 1.1)).times(Mat4.scale(0.2, 0.2, 0.01));
+        this.draw_fish_inside_bowl(context, program_state, this.materials.fish_texture_pink, -2.3, fish_function, 2, false, false, first_fish_transform);
 
+        this.move = 0;
+        let second_fish_transform = Mat4.identity().times(Mat4.translation(-0.1, 0.1, 1.1)).times(Mat4.scale(0.2, 0.2, 0.01));
+        this.draw_fish_inside_bowl(context, program_state, this.materials.fish_texture_orange, -2.3, fish_function, 2, false, false, second_fish_transform);
         // Step 2: unbind, draw to the canvas
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
@@ -573,6 +629,13 @@ export class Assignment4 extends Scene {
                 seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
             }
         
+            //fish inside bowl
+            this.move = 0;
+            this.draw_fish_inside_bowl(context, program_state, this.materials.fish_texture_pink, -2.3, fish_function, 2, true, true, first_fish_transform);
+            
+            this.move = 0;
+            this.draw_fish_inside_bowl(context, program_state, this.materials.fish_texture_orange, -2.3, fish_function, 2, false, false, second_fish_transform);
+            
             // fishbowl fade
            if (t <= 9) {
             this.render_bowl(context, program_state, true,true, true);
