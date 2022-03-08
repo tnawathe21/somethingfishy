@@ -103,6 +103,11 @@ export class Assignment4 extends Scene {
             color: color(0, 0, .0, 1),
             ambient: 1, diffusivity: 0, specularity: 0, texture: null
         }),
+        bubbles_rainbow: new Material(new Textured_Phong(), {
+            color: hex_color("#ADD8E6"),
+            ambient: .7, diffusivity: .5, specularity: .1,
+            texture: new Texture("assets/rainbow_fish.png", "LINEAR_MIPMAP_LINEAR")
+        }),
         fishbowl_texture: new Material(new Shadow_Textured_Phong_Shader(1), {
             color: color(.5, .5, .5, 0.75),
             ambient: .4, diffusivity: .5, specularity: .5,
@@ -180,6 +185,10 @@ export class Assignment4 extends Scene {
         this.initial_camera_location = Mat4.look_at(vec3(0, 10, 20), vec3(0, 0, 0), vec3(0, 1, 0));
         this.move = 0;
         this.init_ok = false;
+    }
+
+    getRandomNum() {
+        return Math.random();
     }
 
     draw_sand(context, program_state, sand_model, i, j) {
