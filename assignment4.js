@@ -252,38 +252,39 @@ export class Assignment4 extends Scene {
         this.shapes.cube.draw(context, program_state, branch9_model, this.materials.coral_texture);
     }
 
-    draw_big_fish(context, program_state, x) {
+    draw_big_fish(context, program_state, x, y) {
         let t = program_state.animation_time / 1000;
         let tail_function = 0.15 * Math.cos(t);
 
-        let upper_body_model = Mat4.identity().times(Mat4.translation(x, 3, 1)).times(Mat4.scale(1.2, 0.7, 0.6));
-        let front_body_model = Mat4.identity().times(Mat4.translation(x - 1.58, 3, 1)).times(Mat4.rotation(tail_function, 0, 1, 0))
-                                .times(Mat4.scale(1, 0.7, 0.7)).times(Mat4.rotation(-0.78, 0, 0, 1));
-        let lower_body_model = Mat4.identity().times(Mat4.translation(x + 1.4, 3, 1)).times(Mat4.rotation(tail_function, 0, 1, 0))
-                                .times(Mat4.scale(0.5, 0.4, 0.01));
-        let upper_part_model = Mat4.identity().times(Mat4.translation(x + 1, 3.2, 1)).times(Mat4.rotation(-0.26, 0, 0, 0.01))
+        let upper_body_model = Mat4.identity().times(Mat4.translation(x, y + 3, 1)).times(Mat4.scale(1.2, 0.7, 0.6));
+        let front_upper_model = Mat4.identity().times(Mat4.translation(x - 0.9, y + 3.16, 1)).times(Mat4.rotation(0.4, 0, 0, 0.01))
+                                .times(Mat4.scale(0.4, 0.3, 0.05));
+        let front_lower_model = Mat4.identity().times(Mat4.translation(x - 0.9, y + 2.84, 1)).times(Mat4.rotation(-0.4, 0, 0, 0.01))
+                                .times(Mat4.scale(0.4, 0.3, 0.05));
+        let lower_body_model = Mat4.identity().times(Mat4.translation(x + 1.8, y + 3, 1)).times(Mat4.rotation(tail_function, 0, 1, 0))
+                                .times(Mat4.scale(0.2, 0.32, 0.01));
+        let upper_part_model = Mat4.identity().times(Mat4.translation(x + 1, y + 3.2, 1)).times(Mat4.rotation(-0.26, 0, 0, 0.01))
                                 .times(Mat4.scale(0.7, 0.3, 0.05));
-        let lower_part_model = Mat4.identity().times(Mat4.translation(x + 1, 2.8, 1)).times(Mat4.rotation(0.26, 0, 0, 0.01))
+        let lower_part_model = Mat4.identity().times(Mat4.translation(x + 1, y + 2.8, 1)).times(Mat4.rotation(0.26, 0, 0, 0.01))
                                 .times(Mat4.scale(0.7, 0.3, 0.05));
-        
-        let tail_model = Mat4.identity().times(Mat4.translation(x + 1.1, 3, 1)).times(Mat4.rotation(tail_function, 0, 1, 0))
-                            .times(Mat4.scale(1.5, 1, 1)).times(Mat4.rotation(-0.78, 0, 0, 1));
+        let tail_model = Mat4.identity().times(Mat4.translation(x + 1.5, y + 3, 1)).times(Mat4.rotation(tail_function, 0, 1, 0))
+                            .times(Mat4.scale(1.3, 0.8, 1)).times(Mat4.rotation(-0.78, 0, 0, 1));
                
         //eyes
-        let eye_model = Mat4.identity().times(Mat4.translation(x - 0.6, 3, 2)) .times(Mat4.scale(.1, .1, .1));
+        let eye_model = Mat4.identity().times(Mat4.translation(x - 0.6, y + 3, 2)) .times(Mat4.scale(.1, .1, .1));
 
         //eyebrow
-        let eyebrow_model = Mat4.identity().times(Mat4.translation(x - 0.8, 3.1, 2.5)).times(Mat4.rotation(0.4, 0, 0, 1))
+        let eyebrow_model = Mat4.identity().times(Mat4.translation(x - 0.8, y + 3.1, 2.5)).times(Mat4.rotation(0.4, 0, 0, 1))
                             .times(Mat4.scale(.5, .1, .1));
 
         //side fin
         let fin_function = 0.3 * Math.cos(1.5 * t);
-        
-        let fin_model = Mat4.identity().times(Mat4.translation(x, 2.35, 2)).times(Mat4.rotation(fin_function, 0, 1, 0))
+        let fin_model = Mat4.identity().times(Mat4.translation(x, y + 2.35, 2)).times(Mat4.rotation(fin_function, 0, 1, 0))
                     .times(Mat4.scale(1, .5, .5)).times(Mat4.rotation(-Math.PI/8, 0, 0, 1));
 
         this.shapes.sphere.draw(context, program_state, upper_body_model, this.materials.big_fish_texture);
-        this.shapes.triangle.draw(context, program_state, front_body_model, this.materials.big_fish_texture);
+        this.shapes.cube.draw(context, program_state, front_upper_model, this.materials.big_fish_tail_texture);
+        this.shapes.cube.draw(context, program_state, front_lower_model, this.materials.big_fish_tail_texture);
         this.shapes.cube.draw(context, program_state, lower_body_model, this.materials.big_fish_tail_texture);
         this.shapes.cube.draw(context, program_state, upper_part_model, this.materials.big_fish_tail_texture);
         this.shapes.cube.draw(context, program_state, lower_part_model, this.materials.big_fish_tail_texture);
@@ -964,7 +965,9 @@ export class Assignment4 extends Scene {
                 seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#18aa6c"), i);
             }
 
-            this.draw_big_fish(context, program_state, 3+2.2*Math.sin(t/3));
+            let x_function = 3 + 2.2 * Math.sin(t / 3);
+            let y_function = 0.05 * Math.sin(2 * t);
+            this.draw_big_fish(context, program_state, x_function, y_function);
             this.draw_coral(context, program_state);
             this.shapes.cave.draw(context, program_state, model_transform.times(Mat4.scale(2, 2, 2).times(Mat4.translation(3, -0.75, 0.2))), this.materials.cave_texture);
             this.draw_crab(context, program_state);
