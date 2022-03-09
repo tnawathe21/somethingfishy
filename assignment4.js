@@ -187,6 +187,10 @@ export class Assignment4 extends Scene {
                 color: hex_color("#000000"),
                 ambient: 1, diffusivity: 0.1, specularity: 0.1,
             }),
+            scared_texture: new Material(new defs.Phong_Shader(), {
+                color: hex_color("#000000"),
+                ambient: 1, diffusivity: 1, specularity: 1,
+            }),
         }
 
         this.initial_camera_location = Mat4.look_at(vec3(0, 10, 20), vec3(0, 0, 0), vec3(0, 1, 0));
@@ -271,10 +275,10 @@ export class Assignment4 extends Scene {
                             .times(Mat4.scale(1.3, 0.8, 1)).times(Mat4.rotation(-0.78, 0, 0, 1));
                
         //eyes
-        let eye_model = Mat4.identity().times(Mat4.translation(x - 0.6, y + 3, 2)) .times(Mat4.scale(.1, .1, .1));
+        let eye_model = Mat4.identity().times(Mat4.translation(x / 1.1 - 0.6, y + 3, 2)) .times(Mat4.scale(.1, .1, .1));
 
         //eyebrow
-        let eyebrow_model = Mat4.identity().times(Mat4.translation(x - 0.8, y + 3.1, 2.5)).times(Mat4.rotation(0.4, 0, 0, 1))
+        let eyebrow_model = Mat4.identity().times(Mat4.translation(x / 1.1 - 0.8, y + 3.1, 2.5)).times(Mat4.rotation(0.4, 0, 0, 1))
                             .times(Mat4.scale(.5, .1, .1));
 
         //side fin
@@ -297,6 +301,7 @@ export class Assignment4 extends Scene {
     draw_generic_fish(context, program_state, material, x, y, z, left) {
         let t = program_state.animation_time / 1000;
         let drawleftside = false;
+        let draw_scared = false;
         // fish animation starts at t = 10
         if (t >= 10 && t < 14) {
             this.move_vertical += 0.009*Math.sin(2*Math.PI*t/3);
@@ -328,12 +333,14 @@ export class Assignment4 extends Scene {
             this.move_vertical -= 0.007*Math.sin(2*Math.PI*t/3);
             drawleftside = false;
         }
-        if (t >= 30 && t <= 33) {
+        if (t >= 30 && t < 33) {
             this.move_vertical -= 0.007*Math.sin(2*Math.PI*t/3);
             drawleftside = false;
         }
+        if (t >= 32 && t < 33) {
+            draw_scared = true;
+        }
         // TODO: ADD SCARY FACE TO CRAB AROUND 32 SECONDS
-        // TODO: ADD SCARED FACE TO FISH AT 33 SECONDS
         if (t >= 33 && t < 34) {
             this.move_horizontal -= 0.1;
             this.move_vertical -= 0.01;
@@ -402,6 +409,16 @@ export class Assignment4 extends Scene {
             // eye
             white_eye_model = Mat4.identity().times(Mat4.translation(x - 0.05 + this.move_horizontal, y + 0.04 + this.move_vertical, z + 0.2)).times(Mat4.scale(0.09, 0.09, 0.1));
             pupil_model = Mat4.identity().times(Mat4.translation(x - 0.05 + this.move_horizontal, y + 0.04 + this.move_vertical, z + 0.2)).times(Mat4.scale(0.089, 0.089, 0.101));
+        }
+
+        if (draw_scared == true) {
+            let line1_model = Mat4.identity().times(Mat4.translation(x - 0.4 + this.move_horizontal, fish_function + this.move_vertical + 0.6, 2)).times(Mat4.rotation(0.2, 0, 0, 1)).times(Mat4.scale(0.02, 0.1, 0.01));
+            let line2_model = Mat4.identity().times(Mat4.translation(x - 0.2 + this.move_horizontal, fish_function + this.move_vertical + 0.58, 2)).times(Mat4.rotation(-0.1, 0, 0, 1)).times(Mat4.scale(0.02, 0.1, 0.01));
+            let line3_model = Mat4.identity().times(Mat4.translation(x + this.move_horizontal, fish_function + this.move_vertical + 0.54, 2)).times(Mat4.rotation(-0.4, 0, 0, 1)).times(Mat4.scale(0.02, 0.1, 0.01));
+            
+            this.shapes.cube.draw(context, program_state, line1_model, this.materials.scared_texture);
+            this.shapes.cube.draw(context, program_state, line2_model, this.materials.scared_texture);
+            this.shapes.cube.draw(context, program_state, line3_model, this.materials.scared_texture);
         }
 
         this.shapes.sphere.draw(context, program_state, upper_body_model, material);
