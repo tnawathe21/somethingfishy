@@ -173,7 +173,8 @@ export class Assignment4 extends Scene {
         }
 
         this.initial_camera_location = Mat4.look_at(vec3(0, 10, 20), vec3(0, 0, 0), vec3(0, 1, 0));
-        this.move = 0;
+        this.move_horizontal = 0;
+        this.move_vertical = 0;
     }
 
     getRandomNum() {
@@ -276,107 +277,126 @@ export class Assignment4 extends Scene {
 
     draw_generic_fish(context, program_state, material, x, y, z, left) {
         let t = program_state.animation_time / 1000;
-        let drawleftside = true;
-        if (t >= 2 && t < 10) {
-            this.move -= 0.02;
-        }
-        else if (t >= 10 && t < 18) {
-            this.move += 0.02;
+        let drawleftside = false;
+        // fish animation starts at t = 10
+        if (t >= 10 && t < 14) {
+            this.move_vertical += 0.009*Math.sin(2*Math.PI*t/3);
+            this.move_horizontal += 0.02;
             drawleftside = false;
         }
-        else if (t >= 18 && t < 22) {
-            this.move -= 0.02;
+        if (t >= 14 && t <= 18) {
+            this.move_vertical += 0.009*Math.sin(2*Math.PI*t/3);
+            this.move_horizontal -= 0.02;
+            drawleftside = true;
+        }
+        if (t >= 18 && t < 22) {
+            this.move_horizontal += 0.005*Math.sin(2*Math.PI*t/3);
+            this.move_vertical += 0.009*Math.sin(2*Math.PI*t/3);
             drawleftside = false;
         }
+        if (t >= 22 && t < 25) {
+            this.move_horizontal += 0.007*Math.sin(2*Math.PI*t/3);
+            this.move_vertical -= 0.01;
+            drawleftside = false;
+        }
+        if (t >= 25 && t < 26) {
+            this.move_horizontal += 0.007*Math.sin(2*Math.PI*t/3);
+            this.move_vertical -= 0.007*Math.sin(2*Math.PI*t/3);
+            drawleftside = false;
+        }
+        if (t >= 26 && t < 30) {
+            this.move_horizontal += 0.015;
+            this.move_vertical -= 0.007*Math.sin(2*Math.PI*t/3);
+            drawleftside = false;
+        }
+        if (t >= 30 && t <= 33) {
+            this.move_vertical -= 0.007*Math.sin(2*Math.PI*t/3);
+            drawleftside = false;
+        }
+        // TODO: ADD SCARY FACE TO CRAB AROUND 32 SECONDS
+        // TODO: ADD SCARED FACE TO FISH AT 33 SECONDS
+        if (t >= 33 && t < 34) {
+            this.move_horizontal -= 0.1;
+            this.move_vertical -= 0.01;
+            drawleftside = true;
+        }
+        if (t >= 34 && t < 39) {
+            this.move_vertical += 0.025*Math.sin(3*Math.PI*t);
+            drawleftside = false;
+        }
+        if (t >= 39 && t < 42) {
+            this.move_vertical += 0.015 + 0.007*Math.sin(3*Math.PI*t);
+            this.move_horizontal += 0.02 + 0.003*Math.sin(3*Math.PI*t);
+            drawleftside = false;
+        }
+        if (t >= 42 && t < 60) {
+            // TODO: animate feeding the fish
+            drawleftside = true;
+        }
+        if (t > 60) {
+
+        }
+
         let fish_function = 0.1 * Math.cos(2 * t) + 0.5;   
         let tail_function = 0.5 * Math.cos(2 * t);
         let fin_function = 0.3 * Math.cos(1.5 * t);
-        let upper_body_model = Mat4.identity().times(Mat4.translation(x + 0.3 + this.move, fish_function, 2)).times(Mat4.scale(0.5, 0.3, 0.1));
-        let lower_body_model = Mat4.identity().times(Mat4.translation(x + 0.8 + this.move, fish_function, 2)).times(Mat4.rotation(0.7 * tail_function, 0, 1, 0))
+        let upper_body_model = Mat4.identity().times(Mat4.translation(x + 0.3 + this.move_horizontal, fish_function + this.move_vertical, 2)).times(Mat4.scale(0.5, 0.3, 0.1));
+        let lower_body_model = Mat4.identity().times(Mat4.translation(x + 0.8 + this.move_horizontal, fish_function + this.move_vertical, 2)).times(Mat4.rotation(0.7 * tail_function, 0, 1, 0))
                                 .times(Mat4.scale(0.3, 0.15, 0.01));
-        let upper_part_model = Mat4.identity().times(Mat4.translation(x + 0.7 + this.move, fish_function + 0.1, 2)).times(Mat4.rotation(-0.25, 0, 0, 0.01))
+        let upper_part_model = Mat4.identity().times(Mat4.translation(x + 0.7 + this.move_horizontal, fish_function + 0.1 + this.move_vertical, 2)).times(Mat4.rotation(-0.25, 0, 0, 0.01))
                                 .times(Mat4.scale(0.2, 0.1, 0.05));
-        let lower_part_model = Mat4.identity().times(Mat4.translation(x + 0.7 + this.move, fish_function - 0.1, 2)).times(Mat4.rotation(0.25, 0, 0, 0.01))
+        let lower_part_model = Mat4.identity().times(Mat4.translation(x + 0.7 + this.move_horizontal, fish_function - 0.1 + this.move_vertical, 2)).times(Mat4.rotation(0.25, 0, 0, 0.01))
                                 .times(Mat4.scale(0.2, 0.1, 0.05));
 
         // tail
-        let tail_model = Mat4.identity().times(Mat4.translation(x + 0.95 + this.move, y, z)).times(Mat4.rotation(tail_function, 0, 1, 0))
+        let tail_model = Mat4.identity().times(Mat4.translation(x + 0.95 + this.move_horizontal, y + this.move_vertical, z)).times(Mat4.rotation(tail_function, 0, 1, 0))
                             .times(Mat4.rotation(-0.8, 0, 0, 1)).times(Mat4.scale(0.5, 0.5, 0.01));
 
         // fins
-        let left_fin_model = Mat4.identity().times(Mat4.translation(x + 0.3 + this.move, y - 0.25, z + 0.2)).times(Mat4.rotation(fin_function, 0, 1, 0))
+        let left_fin_model = Mat4.identity().times(Mat4.translation(x + 0.3 + this.move_horizontal, y - 0.25 + this.move_vertical, z + 0.2)).times(Mat4.rotation(fin_function, 0, 1, 0))
                                 .times(Mat4.scale(0.3, .2, .2)).times(Mat4.rotation(-0.4, 0, 0, 1));
-        let right_fin_model = Mat4.identity().times(Mat4.translation(x + 0.3 + this.move, y - 0.25, z - 0.2)).times(Mat4.rotation(fin_function, 0, 1, 0))
+        let right_fin_model = Mat4.identity().times(Mat4.translation(x + 0.3 + this.move_horizontal, y - 0.25 + this.move_vertical, z - 0.2)).times(Mat4.rotation(fin_function, 0, 1, 0))
                                 .times(Mat4.scale(0.3, .2, .2)).times(Mat4.rotation(-0.4, 0, 0, 1));
 
         // eye
-        let white_eye_model = Mat4.identity().times(Mat4.translation(x + 0.1 + this.move, y + 0.04, z + 0.2)).times(Mat4.scale(0.09, 0.09, 0.1));
-        let pupil_model = Mat4.identity().times(Mat4.translation(x + 0.1 + this.move, y + 0.04, z + 0.2)).times(Mat4.scale(0.089, 0.089, 0.101));
-        if (drawleftside === true) {
-            upper_body_model = Mat4.identity().times(Mat4.translation(x + 0.3 + this.move, fish_function, 2)).times(Mat4.scale(0.5, 0.3, 0.1));
-            lower_body_model = Mat4.identity().times(Mat4.translation(x + 0.8 + this.move, fish_function, 2)).times(Mat4.rotation(0.7 * tail_function, 0, 1, 0))
+        let white_eye_model = Mat4.identity().times(Mat4.translation(x + 0.1 + this.move_horizontal, y + 0.04 + this.move_vertical, z + 0.2)).times(Mat4.scale(0.09, 0.09, 0.1));
+        let pupil_model = Mat4.identity().times(Mat4.translation(x + 0.1 + this.move_horizontal, y + 0.04 + this.move_vertical, z + 0.2)).times(Mat4.scale(0.089, 0.089, 0.101));
+        if (drawleftside !== true) {
+            upper_body_model = Mat4.identity().times(Mat4.translation(x - 0.3 + this.move_horizontal, fish_function + this.move_vertical, 2)).times(Mat4.scale(0.5, 0.3, 0.1));
+            lower_body_model = Mat4.identity().times(Mat4.translation(x - 0.8 + this.move_horizontal, fish_function + this.move_vertical, 2)).times(Mat4.rotation(0.7 * tail_function, 0, 1, 0))
                                     .times(Mat4.scale(0.3, 0.15, 0.01));
-            upper_part_model = Mat4.identity().times(Mat4.translation(x + 0.7 + this.move, fish_function + 0.1, 2)).times(Mat4.rotation(-0.25, 0, 0, 0.01))
+            upper_part_model = Mat4.identity().times(Mat4.translation(x - 0.7 + this.move_horizontal, fish_function + 0.1 + this.move_vertical, 2)).times(Mat4.rotation(0.25, 0, 0, 0.01))
                                     .times(Mat4.scale(0.2, 0.1, 0.05));
-            lower_part_model = Mat4.identity().times(Mat4.translation(x + 0.7 + this.move, fish_function - 0.1, 2)).times(Mat4.rotation(0.25, 0, 0, 0.01))
+            lower_part_model = Mat4.identity().times(Mat4.translation(x - 0.7 + this.move_horizontal, fish_function - 0.1 + this.move_vertical, 2)).times(Mat4.rotation(-0.25, 0, 0, 0.01))
                                     .times(Mat4.scale(0.2, 0.1, 0.05));
 
             // tail
-            tail_model = Mat4.identity().times(Mat4.translation(x + 0.95 + this.move, y, z)).times(Mat4.rotation(tail_function, 0, 1, 0))
-                                .times(Mat4.rotation(-0.8, 0, 0, 1)).times(Mat4.scale(0.5, 0.5, 0.01));
-
-            // fins
-            left_fin_model = Mat4.identity().times(Mat4.translation(x + 0.3 + this.move, y - 0.25, z + 0.2)).times(Mat4.rotation(fin_function, 0, 1, 0))
-                                    .times(Mat4.scale(0.3, .2, .2)).times(Mat4.rotation(-0.4, 0, 0, 1));
-            right_fin_model = Mat4.identity().times(Mat4.translation(x + 0.3 + this.move, y - 0.25, z - 0.2)).times(Mat4.rotation(fin_function, 0, 1, 0))
-                                    .times(Mat4.scale(0.3, .2, .2)).times(Mat4.rotation(-0.4, 0, 0, 1));
-
-            // eye
-            white_eye_model = Mat4.identity().times(Mat4.translation(x + 0.1 + this.move, y + 0.04, z + 0.2)).times(Mat4.scale(0.09, 0.09, 0.1));
-            pupil_model = Mat4.identity().times(Mat4.translation(x + 0.1 + this.move, y + 0.04, z + 0.2)).times(Mat4.scale(0.089, 0.089, 0.101));
-        }
-        else {
-            upper_body_model = Mat4.identity().times(Mat4.translation(x - 0.3 + this.move, fish_function - this.move / 2, 2)).times(Mat4.scale(0.5, 0.3, 0.1));
-            lower_body_model = Mat4.identity().times(Mat4.translation(x - 0.8 + this.move, fish_function - this.move / 2, 2)).times(Mat4.rotation(0.7 * tail_function, 0, 1, 0))
-                                    .times(Mat4.scale(0.3, 0.15, 0.01));
-            upper_part_model = Mat4.identity().times(Mat4.translation(x - 0.7 + this.move, fish_function + 0.1 - this.move / 2, 2)).times(Mat4.rotation(0.25, 0, 0, 0.01))
-                                    .times(Mat4.scale(0.2, 0.1, 0.05));
-            lower_part_model = Mat4.identity().times(Mat4.translation(x - 0.7 + this.move, fish_function - 0.1 - this.move / 2, 2)).times(Mat4.rotation(-0.25, 0, 0, 0.01))
-                                    .times(Mat4.scale(0.2, 0.1, 0.05));
-
-            // tail
-            tail_model = Mat4.identity().times(Mat4.translation(x - 0.95 + this.move, y - this.move / 2, z)).times(Mat4.rotation(tail_function, 0, 1, 0))
+            tail_model = Mat4.identity().times(Mat4.translation(x - 0.95 + this.move_horizontal, y + this.move_vertical, z)).times(Mat4.rotation(tail_function, 0, 1, 0))
                                 .times(Mat4.rotation(2.3, 0, 0, 1)).times(Mat4.scale(0.5, 0.5, 0.01));
 
             // fins
-            left_fin_model = Mat4.identity().times(Mat4.translation(x - 0.3 + this.move, y - 0.25 - this.move / 2, z + 0.2)).times(Mat4.rotation(fin_function, 0, 1, 0))
+            left_fin_model = Mat4.identity().times(Mat4.translation(x - 0.3 + this.move_horizontal, y - 0.25 + this.move_vertical, z + 0.2)).times(Mat4.rotation(fin_function, 0, 1, 0))
                                     .times(Mat4.scale(0.3, .2, .2)).times(Mat4.rotation(8.2, 0, 0, 1));
-            right_fin_model = Mat4.identity().times(Mat4.translation(x - 0.3 + this.move, y - 0.25 - this.move / 2, z - 0.2)).times(Mat4.rotation(fin_function, 0, 1, 0))
+            right_fin_model = Mat4.identity().times(Mat4.translation(x - 0.3 + this.move_horizontal, y - 0.25 + this.move_vertical, z - 0.2)).times(Mat4.rotation(fin_function, 0, 1, 0))
                                     .times(Mat4.scale(0.3, .2, .2)).times(Mat4.rotation(8.2, 0, 0, 1));
 
             // eye
-            white_eye_model = Mat4.identity().times(Mat4.translation(x - 0.05 + this.move, y + 0.04 - this.move / 2, z + 0.2)).times(Mat4.scale(0.09, 0.09, 0.1));
-            pupil_model = Mat4.identity().times(Mat4.translation(x - 0.05 + this.move, y + 0.04 - this.move / 2, z + 0.2)).times(Mat4.scale(0.089, 0.089, 0.101));
+            white_eye_model = Mat4.identity().times(Mat4.translation(x - 0.05 + this.move_horizontal, y + 0.04 + this.move_vertical, z + 0.2)).times(Mat4.scale(0.09, 0.09, 0.1));
+            pupil_model = Mat4.identity().times(Mat4.translation(x - 0.05 + this.move_horizontal, y + 0.04 + this.move_vertical, z + 0.2)).times(Mat4.scale(0.089, 0.089, 0.101));
         }
-        // let movement_model = Mat4.inverse(Mat4.translation(x - 0.05 + this.move, y + 0.04 - this.move / 2, z + 0.2)).times(Mat4.rotation(Math.PI / 4, 1, 0, 0)).times(Mat4.translation(x - 0.05 + this.move, y + 0.04 - this.move / 2, z + 0.2));
-        // if (left === true) {
-        //     movement_model = Mat4.inverse(Mat4.translation(x + 0.3 + this.move, y - 0.25, z - 0.2)).times(Mat4.rotation(Math.PI / 4, 1, 0, 0)).times(Mat4.translation(x + 0.3 + this.move, y - 0.25, z - 0.2));
-        // }
 
-        // let movement_model = Mat4.translation(0.1*t, 0.1*t, 0);
-        let movement_model = Mat4.identity();
-
-        this.shapes.sphere.draw(context, program_state, upper_body_model.times(movement_model), material);
-        this.shapes.cube.draw(context, program_state, lower_body_model.times(movement_model), material);
-        this.shapes.cube.draw(context, program_state, upper_part_model.times(movement_model), material);
-        this.shapes.cube.draw(context, program_state, lower_part_model.times(movement_model), material);
-        this.shapes.triangle.draw(context, program_state, tail_model.times(movement_model), material);
-        this.shapes.triangle.draw(context, program_state, left_fin_model.times(movement_model), material);
-        this.shapes.triangle.draw(context, program_state, right_fin_model.times(movement_model), material);
-        this.shapes.sphere.draw(context, program_state, white_eye_model.times(movement_model), this.materials.fish_features.override({color: hex_color("#FFFFFF")}));
-        this.shapes.sphere.draw(context, program_state, pupil_model.times(movement_model), this.materials.fish_features);
+        this.shapes.sphere.draw(context, program_state, upper_body_model, material);
+        this.shapes.cube.draw(context, program_state, lower_body_model, material);
+        this.shapes.cube.draw(context, program_state, upper_part_model, material);
+        this.shapes.cube.draw(context, program_state, lower_part_model, material);
+        this.shapes.triangle.draw(context, program_state, tail_model, material);
+        this.shapes.triangle.draw(context, program_state, left_fin_model, material);
+        this.shapes.triangle.draw(context, program_state, right_fin_model, material);
+        this.shapes.sphere.draw(context, program_state, white_eye_model, this.materials.fish_features.override({color: hex_color("#FFFFFF")}));
+        this.shapes.sphere.draw(context, program_state, pupil_model, this.materials.fish_features);
         
-        let initial_model = upper_body_model.times(Mat4.translation(-2, 0, 0)).times(Mat4.scale(1/.5, 1/.3, 1/.3));
+        // TODO: Fix this translation
+        let initial_model = upper_body_model.times(Mat4.translation(-1.7, 0, 0)).times(Mat4.scale(1/.5, 1/.3, 1/.3));
 
         if (this.bubbles) {
             this.draw_bubble(context, program_state, initial_model, t);
