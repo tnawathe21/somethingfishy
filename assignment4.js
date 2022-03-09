@@ -939,27 +939,27 @@ export class Assignment4 extends Scene {
             }
 
             // seaweed next to cave
-            seaweed_model = Mat4.identity().times(Mat4.translation(4.7, -3.4, 3)).times(Mat4.scale(0.1, 0.25, 0.007));
+            seaweed_model = Mat4.identity().times(Mat4.translation(4.5, -3.4, 3)).times(Mat4.scale(0.15, 0.25, 0.007));
             for (let i = 0; i < 4; i++) {
                 seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
             }
 
-            seaweed_model = Mat4.identity().times(Mat4.translation(4.5, -3.4, 3)).times(Mat4.scale(0.1, 0.25, 0.007));
+            seaweed_model = Mat4.identity().times(Mat4.translation(4.9, -3.4, 2)).times(Mat4.scale(0.15, 0.25, 0.007));
             for (let i = 0; i < 6; i++) {
                 seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#18aa6c"), i);
             }
 
-            seaweed_model = Mat4.identity().times(Mat4.translation(4.8, -3.4, 3)).times(Mat4.scale(0.1, 0.25, 0.007));
+            seaweed_model = Mat4.identity().times(Mat4.translation(5.3, -3.4, 2)).times(Mat4.scale(0.15, 0.25, 0.007));
             for (let i = 0; i < 7; i++) {
                 seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#18aa6c"), i);
             }
 
-            seaweed_model = Mat4.identity().times(Mat4.translation(5.3, -3.4, 3)).times(Mat4.scale(0.1, 0.25, 0.007));
+            seaweed_model = Mat4.identity().times(Mat4.translation(5.7, -3.4, 2)).times(Mat4.scale(0.15, 0.25, 0.007));
             for (let i = 0; i < 8; i++) {
                 seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
             }
 
-            seaweed_model = Mat4.identity().times(Mat4.translation(5.1, -3.4, 3)).times(Mat4.scale(0.1, 0.25, 0.007));
+            seaweed_model = Mat4.identity().times(Mat4.translation(4.9, -3.4, 3)).times(Mat4.scale(0.15, 0.25, 0.007));
             for (let i = 0; i < 5; i++) {
                 seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#18aa6c"), i);
             }
