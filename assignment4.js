@@ -341,7 +341,7 @@ export class Assignment4 extends Scene {
             this.move_horizontal += 0.02 + 0.003*Math.sin(3*Math.PI*t);
             drawleftside = false;
         }
-        if (t >= 42 && t < 60) {
+        if (t >= 42 && t < 50) {
             // TODO: animate feeding the fish
             this.feed_fish = true;
             if (t >= 44 && t < 45) {
@@ -369,8 +369,10 @@ export class Assignment4 extends Scene {
             drawleftside = true;
         }
        
-        if (t > 60) {
-
+        if (t >= 50 && t < 53) {
+            drawleftside = false;
+            this.move_horizontal += 0.02;
+            this.move_vertical += 0.005;
         }
 
         let fish_function = 0.1 * Math.cos(2 * t) + 0.5;   
