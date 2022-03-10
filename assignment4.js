@@ -347,10 +347,7 @@ export class Assignment4 extends Scene {
             this.move_horizontal += 0.02 + 0.003*Math.sin(3*Math.PI*t);
             drawleftside = false;
         }
-        if (t >= 42 && t < 60) {
-            // TODO: animate feeding the fish
-            drawleftside = true;
-        }
+       //moved t > 42
         if (t > 60) {
 
         }
@@ -416,13 +413,18 @@ export class Assignment4 extends Scene {
         // TODO: Fix this translation
         let initial_model = upper_body_model.times(Mat4.translation(-1.7, 0, 0)).times(Mat4.scale(1/.5, 1/.3, 1/.3));
 
+        if (t >= 42 && t < 60) {
+            // TODO: animate feeding the fish
+            if (this.feed_fish) {
+                this.draw_food_particles(context, program_state, initial_model);
+             }
+            drawleftside = true;
+        }
+        
         if (this.bubbles) {
             this.draw_bubble(context, program_state, initial_model, t);
         } 
         
-        if (this.feed_fish) {
-            this.draw_food_particles(context, program_state, initial_model);
-        }
         /*let upper_tail_model = Mat4.identity().times(Mat4.translation(x+0.6, y+0.2, z)).times(Mat4.rotation(1, 0, 0, 1))
         .times(Mat4.scale(0.3, 0.06, 0.1));
         let lower_tail_model = Mat4.identity().times(Mat4.translation(x+0.6, y-0.2, z)).times(Mat4.rotation(-1, 0, 0, 1))
