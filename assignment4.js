@@ -347,7 +347,35 @@ export class Assignment4 extends Scene {
             this.move_horizontal += 0.02 + 0.003*Math.sin(3*Math.PI*t);
             drawleftside = false;
         }
-       //moved t > 42
+        if (t >= 42 && t < 60) {
+            // TODO: animate feeding the fish
+            if (this.feed_fish) {
+                this.draw_food_particles(context, program_state, initial_model);
+            }
+            if (t >= 44 && t < 45) {
+                this.move_horizontal -= 0.02;
+            }
+            if (t >= 45 && t < 46) {
+                this.move_horizontal += 0.02;
+            }
+            if (t >= 46 && t < 47) {
+                this.move_horizontal -= 0.02;
+                this.move_vertical += 0.02;
+            }
+            if (t >= 47 && t < 48) {
+                this.move_horizontal += 0.02;
+                this.move_vertical -= 0.02;
+            }
+            if (t >= 48 && t < 49) {
+                this.move_horizontal -= 0.02;
+                this.move_vertical -= 0.01;
+            }
+            if (t >= 49 && t < 50) {
+                this.move_horizontal += 0.02;
+                this.move_vertical += 0.01;
+            }
+            drawleftside = true;
+        }
        
         if (t > 60) {
 
@@ -413,36 +441,6 @@ export class Assignment4 extends Scene {
         
         // TODO: Fix this translation
         let initial_model = upper_body_model.times(Mat4.translation(-1.7, 0, 0)).times(Mat4.scale(1/.5, 1/.3, 1/.3));
-
-        if (t >= 42 && t < 60) {
-            // TODO: animate feeding the fish
-            if (this.feed_fish) {
-                this.draw_food_particles(context, program_state, initial_model);
-            }
-            if (t >= 44 && t < 45) {
-                this.move_horizontal -= 0.02;
-            }
-            if (t >= 45 && t < 46) {
-                this.move_horizontal += 0.02;
-            }
-            if (t >= 47 && t < 48) {
-                this.move_horizontal -= 0.02;
-                this.move_vertical += 0.02;
-            }
-            if (t >= 48 && t < 49) {
-                this.move_horizontal += 0.02;
-                this.move_vertical -= 0.02;
-            }
-            if (t >= 49 && t < 50) {
-                this.move_horizontal -= 0.02;
-                this.move_vertical -= 0.01;
-            }
-            if (t >= 50 && t < 51) {
-                this.move_horizontal += 0.02;
-                this.move_vertical += 0.01;
-            }
-            drawleftside = true;
-        }
         
         if (this.bubbles) {
             this.draw_bubble(context, program_state, initial_model, t);
