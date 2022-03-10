@@ -432,7 +432,10 @@ export class Assignment4 extends Scene {
         this.shapes.sphere.draw(context, program_state, pupil_model, this.materials.fish_features);
         
         // TODO: Fix this translation
-        let initial_model = upper_body_model.times(Mat4.translation(-1.7, 0, 0)).times(Mat4.scale(1/.5, 1/.3, 1/.3));
+        let initial_model = upper_body_model.times(Mat4.translation(0, 0, 0)).times(Mat4.scale(1/.5, 1/.3, 1/.3));
+        if (drawleftside) {
+            initial_model = upper_body_model.times(Mat4.translation(-2.1, 0, 0)).times(Mat4.scale(1/.5, 1/.3, 1/.3));
+        }
         
         if (this.bubbles) {
             this.draw_bubble(context, program_state, initial_model, t);
