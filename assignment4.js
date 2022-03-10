@@ -856,16 +856,16 @@ export class Assignment4 extends Scene {
         this.move_vertical = 0;
         this.move_horizontal = 0;
         let fish_function = 0.1 * Math.cos(2 * t) + 0.5;
-        let first_fish_transform = Mat4.identity().times(Mat4.translation(.6, 0.1, 1.1)).times(Mat4.scale(0.2, 0.2, 0.01));
+        let first_fish_transform = Mat4.identity().times(Mat4.translation(.6, 0.1, 1.1)).times(Mat4.scale(0.15, 0.15, 0.01));
         this.draw_fish_inside_bowl(context, program_state, this.materials.fish_texture_orange, -2.3, fish_function, 2, true, first_fish_transform);
 
         let x_function = 3 + 2.2 * Math.sin(t / 3);
         let y_function = 0.05 * Math.sin(2 * t);
-        let big_fish_bowl_transform = Mat4.identity().times(Mat4.translation(-0.45, 0.3, 1.1)).times(Mat4.scale(0.14, 0.14, 0.01));
+        let big_fish_bowl_transform = Mat4.identity().times(Mat4.translation(-0.45, 0.3, 1.1)).times(Mat4.scale(0.1, 0.1, 0.01));
         this.draw_big_fish(context, program_state, x_function, y_function, false, false, big_fish_bowl_transform);
 
         //draw crab inside the bowl: shadow placement
-        let crab__bowl_transform = Mat4.identity().times(Mat4.translation(-0.5, 0.2, 1.2)).times(Mat4.scale(0.16, 0.16, 0.01));
+        let crab__bowl_transform = Mat4.identity().times(Mat4.translation(-0.4, 0.14, 1.2)).times(Mat4.scale(0.12, 0.12, 0.01));
         this.draw_crab(context, program_state, false, false, crab__bowl_transform);
 
         //draw coral inside the bowl: shadow placement
@@ -873,8 +873,8 @@ export class Assignment4 extends Scene {
         this.draw_coral(context, program_state, false, false, coral_bowl_transform);
 
         //draw cave inside the bowl: shadow placement
-        let cave_bowl_transform = Mat4.rotation(.4,1,0,0).times(Mat4.translation(-0.3, 0.6, 1.1)).times(Mat4.scale(0.1, 0.1, 0.01));
-        cave_bowl_transform = cave_bowl_transform.times(model_transform.times(Mat4.scale(2, 2, 2).times(Mat4.translation(3, -0.75, 0.2))));
+        let cave_bowl_transform = Mat4.rotation(.4,1,0,0).times(Mat4.translation(-0.1, 0.6, 1)).times(Mat4.scale(0.07, 0.07, 0.01));
+        cave_bowl_transform = cave_bowl_transform.times(model_transform.times(Mat4.scale(2, 2, 2).times(Mat4.translation(3, -2, 0.2))));
         this.shapes.cave.draw(context, program_state, cave_bowl_transform, this.materials.cave_texture);
 
 
