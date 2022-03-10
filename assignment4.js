@@ -862,8 +862,10 @@ export class Assignment4 extends Scene {
         let first_fish_transform = Mat4.identity().times(Mat4.translation(.6, 0.1, 1.1)).times(Mat4.scale(0.2, 0.2, 0.01));
         this.draw_fish_inside_bowl(context, program_state, this.materials.fish_texture_orange, -2.3, fish_function, 2, true, first_fish_transform);
 
+        let x_function = 3 + 2.2 * Math.sin(t / 3);
+        let y_function = 0.05 * Math.sin(2 * t);
         let big_fish_bowl_transform = Mat4.identity().times(Mat4.translation(-0.45, 0.3, 1.1)).times(Mat4.scale(0.14, 0.14, 0.01));
-        this.draw_big_fish(context, program_state, 3+2.2*Math.sin(t/3), false, false, big_fish_bowl_transform);
+        this.draw_big_fish(context, program_state, x_function, y_function, false, false, big_fish_bowl_transform);
 
         //draw crab inside the bowl: shadow placement
         let crab__bowl_transform = Mat4.identity().times(Mat4.translation(-0.5, 0.2, 1.2)).times(Mat4.scale(0.16, 0.16, 0.01));
@@ -918,7 +920,7 @@ export class Assignment4 extends Scene {
             //fish inside bowl
             this.draw_fish_inside_bowl(context, program_state, this.materials.fish_texture_orange, -2.3, fish_function, 2, true, first_fish_transform);
 
-            //this.draw_big_fish(context, program_state, 3+2.2*Math.sin(t/3), 0.05 * Math.sin(2 * t), true, true, big_fish_bowl_transform);
+            this.draw_big_fish(context, program_state, x_function, y_function, true, true, big_fish_bowl_transform);
 
             //crab, coral and cave inside bowl
             this.draw_crab(context, program_state, true, true, crab__bowl_transform);
