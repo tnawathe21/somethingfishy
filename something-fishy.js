@@ -30,7 +30,7 @@ const Square =
         }
     }
 
-export class Assignment4 extends Scene {
+export class SomethingFishy extends Scene {
     /**
      *  **Base_scene** is a Scene that can be added to any display canvas.
      *  Setup the shapes, materials, camera, and lighting here.
@@ -57,13 +57,10 @@ export class Assignment4 extends Scene {
         this.r2 = 0;
         this.r3 = 0;
 
-        this.feed_fish = false;
+        this.big_fish_scared = false;
+
         this.particles_time = 3;
         this.particles_start = false;
-
-        this.r_1 = 0;
-        this.r_2 = 0;
-        this.r_3 = 0;
 
         this.materials = {
             phong: new Material(new Textured_Phong(), {
@@ -272,6 +269,10 @@ export class Assignment4 extends Scene {
             model_transform = big_fish_bowl_transform;
         }
 
+        if (this.big_fish_scared) {
+            x = .7*t-35;
+        }
+
         let upper_body_model = model_transform.times(Mat4.translation(x, y + 3, 1)).times(Mat4.scale(1.2, 0.7, 0.6));
         let front_upper_model = model_transform.times(Mat4.translation(x - 0.9, y + 3.16, 1)).times(Mat4.rotation(0.4, 0, 0, 0.01))
                                 .times(Mat4.scale(0.4, 0.3, 0.05));
@@ -290,9 +291,14 @@ export class Assignment4 extends Scene {
         let eye_model = model_transform.times(Mat4.translation(x / 1.1 - 0.6, y + 3, 2)) .times(Mat4.scale(.1, .1, .1));
 
         //eyebrow
-        let eyebrow_model = model_transform.times(Mat4.translation(x / 1.1 - 0.8, y + 3.1, 2.5)).times(Mat4.rotation(0.4, 0, 0, 1))
-                            .times(Mat4.scale(.5, .1, .1));
-
+        let eyebrow_model;
+        if (this.big_fish_scared) {
+            eyebrow_model = model_transform.times(Mat4.translation(x / 1.1 - 0.8, y + 3.1, 2.5)).times(Mat4.rotation(-0.4, 0, 0, 1))
+                                .times(Mat4.scale(.5, .1, .1));
+        } else {
+            eyebrow_model = model_transform.times(Mat4.translation(x / 1.1 - 0.8, y + 3.1, 2.5)).times(Mat4.rotation(0.4, 0, 0, 1))
+                                .times(Mat4.scale(.5, .1, .1));
+        }
         //side fin
         let fin_function = 0.3 * Math.cos(1.5 * t);
         let fin_model = model_transform.times(Mat4.translation(x, y + 2.35, 2)).times(Mat4.rotation(fin_function, 0, 1, 0))
@@ -369,7 +375,14 @@ export class Assignment4 extends Scene {
         }
         if (t >= 42 && t < 60) {
             // TODO: animate feeding the fish
+            this.feed_fish = true;
+            if (!this.particles_start) {
+                this.particles_time = 3;
+            }
             drawleftside = true;
+            if (t > 56) {
+                this.big_fish_scared = true;
+            }
         }
         if (t > 60) {
 
@@ -628,28 +641,25 @@ export class Assignment4 extends Scene {
     }
 
     draw_food_particles(context, program_state, initial_model) {
-        let particle_model = initial_model.times(Mat4.translation(0.5, this.particles_time, 0)).times(Mat4.scale(.1,.1,.1));
-        if (this.feed_fish_start) {
-            this.r_1 = this.getRandomNum();
-            this.r_2 = this.getRandomNum();
-            this.r_3 = this.getRandomNum();
-        }
-        this.feed_fish_start = false;
-
+        this.particles_start = true;
+        let particle_model = initial_model.times(Mat4.translation(0.5, this.particles_time, 0)).times(Mat4.scale(.1,.1,.1));  
+        let r_1 = this.getRandomNum();
+        let r_2 = this.getRandomNum();
+        let r_3 = this.getRandomNum();
         if (this.particles_time > -2) {
-            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_1-5, .5*this.particles_time, -5)), this.materials.food_particles);
-            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_2-6, this.particles_time+.8, -5)), this.materials.food_particles);
-            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_3-4, 1.5*this.particles_time+1.6, -5)), this.materials.food_particles);
-            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_1-9, 2.5*this.particles_time+0.1, -5)), this.materials.food_particles);
-            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_2-3, 3.5*this.particles_time+.8, -5)), this.materials.food_particles);
-            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_3-6, 3*this.particles_time+1.6, -5)), this.materials.food_particles);
-            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_1-11, 0.1*this.particles_time, -5)), this.materials.food_particles);
-            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_2-17, 4.5*this.particles_time-.8, -5)),this.materials.food_particles);
-            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_3-2, 7*this.particles_time+1.6, -5)), this.materials.food_particles);
-            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_1-15, 2.5*this.particles_time, -5)), this.materials.food_particles);
-            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_2-12, 4.5*this.particles_time+.8, -5)), this.materials.food_particles);
-            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_3-8, 8*this.particles_time+1.6, -5)), this.materials.food_particles);
-        }
+            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_1-5, .5*this.particles_time, -5)), this.materials.food_particles);
+            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_2-6, this.particles_time+.8, -5)), this.materials.food_particles);
+            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_3-4, 1.5*this.particles_time+1.6, -5)), this.materials.food_particles);
+            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_1-9, 2.5*this.particles_time+0.1, -5)), this.materials.food_particles);
+            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_2-3, 3.5*this.particles_time+.8, -5)), this.materials.food_particles);
+            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_3-6, 3*this.particles_time+1.6, -5)), this.materials.food_particles);
+            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_1-11, 0.1*this.particles_time, -5)), this.materials.food_particles);
+            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_2-17, 4.5*this.particles_time-.8, -5)),this.materials.food_particles);
+            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_3-2, 7*this.particles_time+1.6, -5)), this.materials.food_particles);
+            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_1-15, 2.5*this.particles_time, -5)), this.materials.food_particles);
+            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_2-12, 4.5*this.particles_time+.8, -5)), this.materials.food_particles);
+            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_3-8, 8*this.particles_time+1.6, -5)), this.materials.food_particles);
+       }
     }
 
     make_control_panel() {
@@ -658,11 +668,6 @@ export class Assignment4 extends Scene {
             this.bubbles = !this.bubbles;
             this.bubble_time = 0;
             this.bubble_start = true;
-        });
-        this.key_triggered_button("Feed the fish! *when prompted*", ["f"], () => {
-            this.feed_fish = !this.feed_fish;
-            this.particles_time = 3;  
-            this.particles_start = true;          
         });
     }
 
@@ -1035,8 +1040,8 @@ export class Assignment4 extends Scene {
                 seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#18aa6c"), i);
             }
 
-            let x_function = 3 + 2.2 * Math.sin(t / 3);
-            let y_function = 0.05 * Math.sin(2 * t);
+            let x_function = 4;
+            let y_function = 0.1 * Math.sin(2 * t);
             this.draw_big_fish(context, program_state, x_function, y_function);
             this.draw_coral(context, program_state);
             this.shapes.cave.draw(context, program_state, model_transform.times(Mat4.scale(2, 2, 2).times(Mat4.translation(3, -0.75, 0.2))), this.materials.cave_texture);
