@@ -348,6 +348,7 @@ export class Assignment4 extends Scene {
             drawleftside = false;
         }
        //moved t > 42
+       
         if (t > 60) {
 
         }
@@ -417,7 +418,29 @@ export class Assignment4 extends Scene {
             // TODO: animate feeding the fish
             if (this.feed_fish) {
                 this.draw_food_particles(context, program_state, initial_model);
-             }
+            }
+            if (t >= 44 && t < 45) {
+                this.move_horizontal -= 0.02;
+            }
+            if (t >= 45 && t < 46) {
+                this.move_horizontal += 0.02;
+            }
+            if (t >= 47 && t < 48) {
+                this.move_horizontal -= 0.02;
+                this.move_vertical += 0.02;
+            }
+            if (t >= 48 && t < 49) {
+                this.move_horizontal += 0.02;
+                this.move_vertical -= 0.02;
+            }
+            if (t >= 49 && t < 50) {
+                this.move_horizontal -= 0.02;
+                this.move_vertical -= 0.01;
+            }
+            if (t >= 50 && t < 51) {
+                this.move_horizontal += 0.02;
+                this.move_vertical += 0.01;
+            }
             drawleftside = true;
         }
         
@@ -888,6 +911,36 @@ export class Assignment4 extends Scene {
             // in 3
             program_state.set_camera(Mat4.translation(-15.2+.4*u, 152/15-4/15*u, (13+1/3)-2/3*u));
             //background
+        }
+        else if (t >= 42 && t < 50) {
+            let u = t - 42;
+            if (u > 3) {
+                u = 3;
+            }
+            // start 0, 0, -12
+            // end 3, -1, -8
+            // in 3
+            program_state.set_camera(Mat4.translation(u, -u/3, -12+4/3*u));
+        }
+        else if (t >= 50 && t < 60) {
+            let u = t - 50;
+            if (u > 3) {
+                u = 3;
+            }
+            // start 3, -1, -8
+            // end 3, -1, -8
+            // in 5
+            program_state.set_camera(Mat4.translation(3, -1, -8))
+        }
+        else if (t >= 60) {
+            let u = t - 60;
+            if (u > 5) {
+                u = 5;
+            }
+            // start 0, -1, -8
+            // end 0, 0, -12
+            // in 5
+            program_state.set_camera(Mat4.translation(3-3/5*u, -1+1/5*u, -8-4/5*u));
         }
 
         if (t >= 9) {
