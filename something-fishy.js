@@ -894,24 +894,25 @@ export class SomethingFishy extends Scene {
         this.move_vertical = 0;
         this.move_horizontal = 0;
         let fish_function = 0.1 * Math.cos(2 * t) + 0.5;
-        let first_fish_transform = Mat4.identity().times(Mat4.translation(.6, 0.1, 1.1)).times(Mat4.scale(0.15, 0.15, 0.01));
+        let first_fish_transform = Mat4.identity().times(Mat4.translation(.3, 0.1, 1.1)).times(Mat4.scale(0.15, 0.15, 0.01));
         this.draw_fish_inside_bowl(context, program_state, this.materials.fish_texture_orange, -2.3, fish_function, 2, true, first_fish_transform);
 
-        let x_function = 3 + 2.2 * Math.sin(t / 3);
+        // let x_function = 3 + 2.2 * Math.sin(t / 3);
+        let x_function = 7;
         let y_function = 0.05 * Math.sin(2 * t);
         let big_fish_bowl_transform = Mat4.identity().times(Mat4.translation(-0.45, 0.3, 1.1)).times(Mat4.scale(0.1, 0.1, 0.01));
         this.draw_big_fish(context, program_state, x_function, y_function, false, false, big_fish_bowl_transform);
 
         //draw crab inside the bowl: shadow placement
-        let crab__bowl_transform = Mat4.identity().times(Mat4.translation(-0.4, 0.14, 1.2)).times(Mat4.scale(0.12, 0.12, 0.01));
-        this.draw_crab(context, program_state, false, false, crab__bowl_transform);
+        let crab_bowl_transform = Mat4.identity().times(Mat4.translation(-0.2, 0.14, 1.1)).times(Mat4.scale(0.12, 0.12, 0.01));
+        this.draw_crab(context, program_state, false, false, crab_bowl_transform);
 
         //draw coral inside the bowl: shadow placement
-        let coral_bowl_transform = Mat4.identity().times(Mat4.translation(0.5, 0.2, 1.1)).times(Mat4.scale(0.16, 0.16, 0.01));
+        let coral_bowl_transform = Mat4.identity().times(Mat4.translation(0.5, 0.2, 1.0)).times(Mat4.scale(0.16, 0.16, 0.01));
         this.draw_coral(context, program_state, false, false, coral_bowl_transform);
 
         //draw cave inside the bowl: shadow placement
-        let cave_bowl_transform = Mat4.rotation(.4,1,0,0).times(Mat4.translation(-0.1, 0.6, 1)).times(Mat4.scale(0.07, 0.07, 0.01));
+        let cave_bowl_transform = Mat4.rotation(.4,1,0,0).times(Mat4.translation(-0.08, 0.7, 1)).times(Mat4.scale(0.08, 0.08, 0.02));
         cave_bowl_transform = cave_bowl_transform.times(model_transform.times(Mat4.scale(2, 2, 2).times(Mat4.translation(3, -2, 0.2))));
         this.shapes.cave.draw(context, program_state, cave_bowl_transform, this.materials.cave_texture);
 
@@ -927,27 +928,32 @@ export class SomethingFishy extends Scene {
             program_state.set_camera(desired);
 
             // seaweed
-            let seaweed_model = Mat4.identity().times(Mat4.translation(-.6, -.1, 1.1)).times(Mat4.scale(0.03, 0.05, 0.01));
+            let seaweed_model = Mat4.identity().times(Mat4.translation(.55, -.12, 1.15)).times(Mat4.scale(0.03, 0.05, 0.01));
             for (let i = 0; i < 4; i++) {
                 seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
             }
 
-            seaweed_model = Mat4.identity().times(Mat4.translation(-.5, -.15, 1.1)).times(Mat4.scale(0.03, 0.05, 0.01));
-            for (let i = 0; i < 6; i++) {
-                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#18aa6c"), i);
-            }
-
-            seaweed_model = Mat4.identity().times(Mat4.translation(-.4, -.17, 1.1)).times(Mat4.scale(0.03, 0.05, 0.01));
+            seaweed_model = Mat4.identity().times(Mat4.translation(.50, -.15, 1.15)).times(Mat4.scale(0.03, 0.05, 0.01));
             for (let i = 0; i < 7; i++) {
                 seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#18aa6c"), i);
             }
 
-            seaweed_model = Mat4.identity().times(Mat4.translation(-.3, -.2, 1.1)).times(Mat4.scale(0.03, 0.05, 0.01));
+            seaweed_model = Mat4.identity().times(Mat4.translation(-.58, -.17, .9)).times(Mat4.scale(0.03, 0.05, 0.01));
+            for (let i = 0; i < 6; i++) {
+                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#18aa6c"), i);
+            }
+
+            seaweed_model = Mat4.identity().times(Mat4.translation(-.52, -.2, .9)).times(Mat4.scale(0.03, 0.05, 0.01));
+            for (let i = 0; i < 7; i++) {
+                seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
+            }
+
+            seaweed_model = Mat4.identity().times(Mat4.translation(-.46, -.2, .9)).times(Mat4.scale(0.03, 0.05, 0.01));
             for (let i = 0; i < 8; i++) {
                 seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
             }
 
-            seaweed_model = Mat4.identity().times(Mat4.translation(-.2, -.2, 1.1)).times(Mat4.scale(0.03, 0.05, 0.01));
+            seaweed_model = Mat4.identity().times(Mat4.translation(-.4, -.2, .9)).times(Mat4.scale(0.03, 0.05, 0.01));
             for (let i = 0; i < 5; i++) {
                 seaweed_model = this.draw_seaweed(context, program_state, seaweed_model, hex_color("#5ec89b"), i);
             }
@@ -958,7 +964,7 @@ export class SomethingFishy extends Scene {
             this.draw_big_fish(context, program_state, x_function, y_function, true, true, big_fish_bowl_transform);
 
             //crab, coral and cave inside bowl
-            this.draw_crab(context, program_state, true, true, crab__bowl_transform);
+            this.draw_crab(context, program_state, true, true, crab_bowl_transform);
             this.draw_coral(context, program_state, true, true, coral_bowl_transform);
             this.shapes.cave.draw(context, program_state, cave_bowl_transform, this.materials.cave_texture);
 
