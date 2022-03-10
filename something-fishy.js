@@ -30,7 +30,7 @@ const Square =
         }
     }
 
-export class Assignment4 extends Scene {
+export class SomethingFishy extends Scene {
     /**
      *  **Base_scene** is a Scene that can be added to any display canvas.
      *  Setup the shapes, materials, camera, and lighting here.
