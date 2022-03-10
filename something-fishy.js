@@ -664,6 +664,10 @@ export class SomethingFishy extends Scene {
         }
         this.bubble_start = false;
 
+        if (this.bubble_time > 3) {
+            this.bubbles = false;
+        }
+
         this.shapes.sphere.draw(context, program_state, bubble_model.times(Mat4.translation(this.r1, .5*this.bubble_time, 0)), this.materials.bubbles_rainbow);
         this.shapes.sphere.draw(context, program_state, bubble_model.times(Mat4.translation(this.r2, this.bubble_time+.8, 0)), this.materials.bubbles_rainbow);
         this.shapes.sphere.draw(context, program_state, bubble_model.times(Mat4.translation(this.r3, 1.5*this.bubble_time+1.6, 0)), this.materials.bubbles_rainbow);
@@ -694,7 +698,7 @@ export class SomethingFishy extends Scene {
     make_control_panel() {
         this.key_triggered_button("Bubbles!", ["b"], () => {
             console.log("entered trigger");
-            this.bubbles = !this.bubbles;
+            this.bubbles = true;
             this.bubble_time = 0;
             this.bubble_start = true;
         });
