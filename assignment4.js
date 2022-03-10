@@ -57,6 +57,8 @@ export class Assignment4 extends Scene {
         this.r2 = 0;
         this.r3 = 0;
 
+        this.feed_fish = false;
+
         this.materials = {
             phong: new Material(new Textured_Phong(), {
                 color: hex_color("#ffffff"),
@@ -341,9 +343,7 @@ export class Assignment4 extends Scene {
         }
         if (t >= 42 && t < 60) {
             // TODO: animate feeding the fish
-            if (this.feed_fish) {
-                this.draw_food_particles(context, program_state, initial_model);
-            }
+            this.feed_fish = true;
             if (t >= 44 && t < 45) {
                 this.move_horizontal -= 0.02;
             }
@@ -437,33 +437,9 @@ export class Assignment4 extends Scene {
         if (this.bubbles) {
             this.draw_bubble(context, program_state, initial_model, t);
         } 
-        
-        /*let upper_tail_model = Mat4.identity().times(Mat4.translation(x+0.6, y+0.2, z)).times(Mat4.rotation(1, 0, 0, 1))
-        .times(Mat4.scale(0.3, 0.06, 0.1));
-        let lower_tail_model = Mat4.identity().times(Mat4.translation(x+0.6, y-0.2, z)).times(Mat4.rotation(-1, 0, 0, 1))
-        .times(Mat4.scale(0.3, 0.06, 0.1));
-
-        this.shapes.sphere.draw(context, program_state, middle_tail_model, material);
-        this.shapes.sphere.draw(context, program_state, upper_tail_model, material);
-        this.shapes.sphere.draw(context, program_state, lower_tail_model, material);*/
-
-        //fins
-        /*let right_fin = Mat4.identity().times(Mat4.translation(x-0.2, y-0.2, z+0.2)).times(Mat4.rotation(1, 0, 0, 1))
-        .times(Mat4.scale(0.2, 0.06, 0.1));
-        let left_fin = Mat4.identity().times(Mat4.translation(x-0.2, y-0.2, z -0.2)).times(Mat4.rotation(1, 0, 0, 1))
-        .times(Mat4.scale(0.2, 0.06, 0.1));
-
-        this.shapes.sphere.draw(context, program_state, right_fin, material);
-        this.shapes.sphere.draw(context, program_state, left_fin, material);
-
-        //eye
-        let white_eye = Mat4.identity().times(Mat4.translation(x-0.2, y+0.04, z +0.2)).times(Mat4.rotation(1, 0, 0, 1))
-        .times(Mat4.scale(0.08, 0.07, 0.1));
-        this.shapes.sphere.draw(context, program_state, white_eye, this.materials.fish_features.override({color: hex_color("#FFFFFF")}));
-        let pupil = Mat4.identity().times(Mat4.translation(x-0.2, y+0.04, z+0.2)).times(Mat4.rotation(1, 0, 0, 1))
-        .times(Mat4.scale(0.06, 0.06, 0.102));
-        this.shapes.sphere.draw(context, program_state, pupil, this.materials.fish_features);*/
-
+        if (this.feed_fish) {
+            this.draw_food_particles(context, program_state, initial_model);
+        }
     }
 
     draw_fish_inside_bowl(context, program_state, material, x, y, z, shadow_pass, draw_shadow=false, fish_transform) {
