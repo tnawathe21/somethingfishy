@@ -57,14 +57,6 @@ export class Assignment4 extends Scene {
         this.r2 = 0;
         this.r3 = 0;
 
-        this.feed_fish = false;
-        this.particles_time = 3;
-        this.particles_start = false;
-
-        this.r_1 = 0;
-        this.r_2 = 0;
-        this.r_3 = 0;
-
         this.materials = {
             phong: new Material(new Textured_Phong(), {
                 color: hex_color("#ffffff"),
@@ -608,18 +600,18 @@ export class Assignment4 extends Scene {
         let r_2 = this.getRandomNum();
         let r_3 = this.getRandomNum();
         if (this.particles_time > -2) {
-            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_1-5, .5*particles_time, -5)), this.materials.food_particles);
-            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_2-6, particles_time+.8, -5)), this.materials.food_particles);
-            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_3-4, 1.5*particles_time+1.6, -5)), this.materials.food_particles);
-            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_1-9, 2.5*particles_time+0.1, -5)), this.materials.food_particles);
-            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_2-3, 3.5*particles_time+.8, -5)), this.materials.food_particles);
-            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_3-6, 3*particles_time+1.6, -5)), this.materials.food_particles);
-            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_1-11, 0.1*particles_time, -5)), this.materials.food_particles);
-            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_2-17, 4.5*particles_time-.8, -5)),this.materials.food_particles);
-            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_3-2, 7*particles_time+1.6, -5)), this.materials.food_particles);
-            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_1-15, 2.5*particles_time, -5)), this.materials.food_particles);
-            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_2-12, 4.5*particles_time+.8, -5)), this.materials.food_particles);
-            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(this.r_3-8, 8*particles_time+1.6, -5)), this.materials.food_particles);
+            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_1-5, .5*particles_time, -5)), this.materials.food_particles);
+            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_2-6, particles_time+.8, -5)), this.materials.food_particles);
+            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_3-4, 1.5*particles_time+1.6, -5)), this.materials.food_particles);
+            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_1-9, 2.5*particles_time+0.1, -5)), this.materials.food_particles);
+            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_2-3, 3.5*particles_time+.8, -5)), this.materials.food_particles);
+            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_3-6, 3*particles_time+1.6, -5)), this.materials.food_particles);
+            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_1-11, 0.1*particles_time, -5)), this.materials.food_particles);
+            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_2-17, 4.5*particles_time-.8, -5)),this.materials.food_particles);
+            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_3-2, 7*particles_time+1.6, -5)), this.materials.food_particles);
+            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_1-15, 2.5*particles_time, -5)), this.materials.food_particles);
+            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_2-12, 4.5*particles_time+.8, -5)), this.materials.food_particles);
+            this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_3-8, 8*particles_time+1.6, -5)), this.materials.food_particles);
         }
     }
 
