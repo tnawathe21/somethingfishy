@@ -331,6 +331,28 @@ export class Assignment4 extends Scene {
         }
         if (t >= 42 && t < 60) {
             // TODO: animate feeding the fish
+            if (t >= 44 && t < 45) {
+                this.move_horizontal -= 0.02;
+            }
+            if (t >= 45 && t < 46) {
+                this.move_horizontal += 0.02;
+            }
+            if (t >= 47 && t < 48) {
+                this.move_horizontal -= 0.02;
+                this.move_vertical += 0.02;
+            }
+            if (t >= 48 && t < 49) {
+                this.move_horizontal += 0.02;
+                this.move_vertical -= 0.02;
+            }
+            if (t >= 49 && t < 50) {
+                this.move_horizontal -= 0.02;
+                this.move_vertical -= 0.01;
+            }
+            if (t >= 50 && t < 51) {
+                this.move_horizontal += 0.02;
+                this.move_vertical += 0.01;
+            }
             drawleftside = true;
         }
         if (t > 60) {
@@ -762,9 +784,9 @@ export class Assignment4 extends Scene {
                 u = 3;
             }
             // start 3, -1, -8
-            // end 0, -1, -8
+            // end 3, -1, -8
             // in 5
-            program_state.set_camera(Mat4.translation(3-u, -1, -8))
+            program_state.set_camera(Mat4.translation(3, -1, -8))
         }
         else if (t >= 60) {
             let u = t - 60;
@@ -774,7 +796,7 @@ export class Assignment4 extends Scene {
             // start 0, -1, -8
             // end 0, 0, -12
             // in 5
-            program_state.set_camera(Mat4.translation(0, -1+1/5*u, -8-4/5*u));
+            program_state.set_camera(Mat4.translation(3-3/5*u, -1+1/5*u, -8-4/5*u));
         }
 
         if (t >= 9) {
