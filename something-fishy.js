@@ -696,7 +696,7 @@ export class SomethingFishy extends Scene {
         this.shapes.sphere.draw(context, program_state, bubble_model.times(Mat4.translation(this.r3, 1.5*this.bubble_time+1.6, 0)), this.materials.bubbles_rainbow);
     }
 
-    getDistance(x1, y1, z1, x2, y2, y3) {
+    getDistance(x1, y1, z1, x2, y2, z2) {
         return Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) + (z1-z2)*(z1-z2));
     }
 
@@ -710,9 +710,14 @@ export class SomethingFishy extends Scene {
         let base_x = -0.5;
         let base_y = (this.particles_time-2) + 1.5;
         let base_z = 2;
-
+        let base_scale = 0.1;
         if (this.particles_time > -2) {
+            let x = r_1 - 5;
+            let y = .5*this.particles_time;
+            let z = -5;
+           // if (this.getDistance(base_x+x, base_y+y, base_z+z, ___, ____, ___) < sum of radii)
             this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_1-5, .5*this.particles_time, -5)), this.materials.food_particles);
+
             this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_2-6, this.particles_time+.8, -5)), this.materials.food_particles);
             this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_3-4, 1.5*this.particles_time+1.6, -5)), this.materials.food_particles);
             this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_1-9, 2.5*this.particles_time+0.1, -5)), this.materials.food_particles);
