@@ -888,7 +888,9 @@ export class SomethingFishy extends Scene {
         let t = program_state.animation_time / 1000, dt = program_state.animation_delta_time / 1000;
         const gl = context.context;
 
-        this.audio.play();
+        if (t < 68) {
+            this.audio.play();
+        }
 
         if (!this.init_ok) {
             const ext = gl.getExtension('WEBGL_depth_texture');
@@ -1093,7 +1095,7 @@ export class SomethingFishy extends Scene {
             program_state.set_camera(Mat4.translation(3-3/5*u, -1+1/5*u, -8-4/5*u));
         }
 
-        if (t >= 9) {
+        if (t >= 9 && t < 65) {
             //background
             let background_model = Mat4.identity().times(Mat4.scale(1, 1, -0.5));
             for (let i = -17; i < 18; i++) {
