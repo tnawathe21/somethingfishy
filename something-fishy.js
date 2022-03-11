@@ -62,6 +62,8 @@ export class SomethingFishy extends Scene {
         this.particles_time = 3;
         this.particles_start = false;
 
+        this.audio = new Audio("assets/somethingfishy.mp3");
+
         this.materials = {
             phong: new Material(new Textured_Phong(), {
                 color: hex_color("#ffffff"),
@@ -825,6 +827,8 @@ export class SomethingFishy extends Scene {
         let t = program_state.animation_time / 1000, dt = program_state.animation_delta_time / 1000;
         const gl = context.context;
 
+        this.audio.play();
+
         if (!this.init_ok) {
             const ext = gl.getExtension('WEBGL_depth_texture');
             if (!ext) {
@@ -894,7 +898,7 @@ export class SomethingFishy extends Scene {
         this.move_vertical = 0;
         this.move_horizontal = 0;
         let fish_function = 0.1 * Math.cos(2 * t) + 0.5;
-        let first_fish_transform = Mat4.identity().times(Mat4.translation(.3, 0.1, 1.1)).times(Mat4.scale(0.15, 0.15, 0.01));
+        let first_fish_transform = Mat4.identity().times(Mat4.translation(.3, 0.2, 1.1)).times(Mat4.scale(0.15, 0.15, 0.01));
         this.draw_fish_inside_bowl(context, program_state, this.materials.fish_texture_orange, -2.3, fish_function, 2, true, first_fish_transform);
 
         // let x_function = 3 + 2.2 * Math.sin(t / 3);
