@@ -62,6 +62,8 @@ export class SomethingFishy extends Scene {
         this.particles_time = 3;
         this.particles_start = false;
 
+        // this.feeding_model = Mat4.identity();
+
         this.materials = {
             phong: new Material(new Textured_Phong(), {
                 color: hex_color("#ffffff"),
@@ -503,7 +505,6 @@ export class SomethingFishy extends Scene {
         this.shapes.sphere.draw(context, program_state, white_eye_model, this.materials.fish_features.override({color: hex_color("#FFFFFF")}));
         this.shapes.sphere.draw(context, program_state, pupil_model, this.materials.fish_features);
         
-        // TODO: Fix this translation
         let initial_model = upper_body_model.times(Mat4.translation(0, 0, 0)).times(Mat4.scale(1/.5, 1/.3, 1/.3));
         if (drawleftside) {
             initial_model = upper_body_model.times(Mat4.translation(-2.1, 0, 0)).times(Mat4.scale(1/.5, 1/.3, 1/.3));
@@ -696,10 +697,10 @@ export class SomethingFishy extends Scene {
 
     draw_food_particles(context, program_state, initial_model) {
         this.particles_start = true;
-        let particle_model = Mat4.identity().times(Mat4.translation(0.5, this.particles_time - 6, 0)).times(Mat4.scale(.1,.1,.1));  
-        let r_1 = this.getRandomNum();
-        let r_2 = this.getRandomNum();
-        let r_3 = this.getRandomNum();
+        let particle_model = Mat4.identity().times(Mat4.translation(-1, 1.5, 2)).times(Mat4.scale(0.5, 0.3, 0.1)).times(Mat4.scale(1/.5, 1/.3, 1/.3)).times(Mat4.translation(0.5, this.particles_time - 2, 0)).times(Mat4.scale(.1,.1,.1));  
+        let r_1 = 0;//this.getRandomNum();
+        let r_2 = 0;//this.getRandomNum();
+        let r_3 = 0;//this.getRandomNum();
         if (this.particles_time > -2) {
             this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_1-5, .5*this.particles_time, -5)), this.materials.food_particles);
             this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_2-6, this.particles_time+.8, -5)), this.materials.food_particles);
