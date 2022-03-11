@@ -929,32 +929,27 @@ export class SomethingFishy extends Scene {
         this.render_bowl(context, program_state, false,false, false);
         
         //draw fish inside the bowl: shadow placement
-      
         this.move_vertical = 0;
         this.move_horizontal = 0;
         let fish_function = 0.1 * Math.cos(2 * t) + 0.5;
         let first_fish_transform = Mat4.identity().times(Mat4.translation(.3, 0.2, 1.1)).times(Mat4.scale(0.15, 0.15, 0.01));
         this.draw_fish_inside_bowl(context, program_state, this.materials.fish_texture_orange, -2.3, fish_function, 2, true, first_fish_transform);
 
-        // let x_function = 3 + 2.2 * Math.sin(t / 3);
+        //draw big fish inside bowl: transform
         let x_function = 7;
         let y_function = 0.05 * Math.sin(2 * t);
         let big_fish_bowl_transform = Mat4.identity().times(Mat4.translation(-0.45, 0.3, 1.1)).times(Mat4.scale(0.1, 0.1, 0.01));
         this.draw_big_fish(context, program_state, x_function, y_function, false, false, big_fish_bowl_transform);
 
-        //draw crab inside the bowl: shadow placement
+        //draw crab inside the bowl: transform
         let crab_bowl_transform = Mat4.identity().times(Mat4.translation(-0.2, 0.14, 1.1)).times(Mat4.scale(0.12, 0.12, 0.01));
-        this.draw_crab(context, program_state, false, false, crab_bowl_transform);
 
-        //draw coral inside the bowl: shadow placement
+        //draw coral inside the bowl: transform
         let coral_bowl_transform = Mat4.identity().times(Mat4.translation(0.5, 0.2, 1.0)).times(Mat4.scale(0.16, 0.16, 0.01));
-        this.draw_coral(context, program_state, false, false, coral_bowl_transform);
 
-        //draw cave inside the bowl: shadow placement
+        //draw cave inside the bowl: transform
         let cave_bowl_transform = Mat4.rotation(.4,1,0,0).times(Mat4.translation(-0.08, 0.7, 1)).times(Mat4.scale(0.08, 0.08, 0.02));
         cave_bowl_transform = cave_bowl_transform.times(model_transform.times(Mat4.scale(2, 2, 2).times(Mat4.translation(3, -2, 0.2))));
-        this.shapes.cave.draw(context, program_state, cave_bowl_transform, this.materials.cave_texture);
-
 
         // Step 2: unbind, draw to the canvas
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
