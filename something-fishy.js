@@ -711,25 +711,51 @@ export class SomethingFishy extends Scene {
         let base_y = (this.particles_time-2) + 1.5;
         let base_z = 2;
         let base_scale = 0.1;
-        if (this.particles_time > -2) {
-            let x = r_1 - 5;
-            let y = .5*this.particles_time;
-            let z = -5;
+        let hit_floor = 3;
+        // let base_x = -0.5;
+        // let base_y = (this.particles_time-2) + 1.5;
+        // let base_z = 2;
+        // let base_scale = 0.1;
+       // if (this.particles_time > -2) {
+            // let x = r_1 - 5;
+            // let y = .5*this.particles_time;
+            // let z = -5;
            // if (this.getDistance(base_x+x, base_y+y, base_z+z, ___, ____, ___) < sum of radii)
+        if (.5*this.particles_time > hit_floor)
             this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_1-5, .5*this.particles_time, -5)), this.materials.food_particles);
-
+        
+        if (this.particles_time + .8 > hit_floor)
             this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_2-6, this.particles_time+.8, -5)), this.materials.food_particles);
+        
+        if (1.5*this.particles_time+1.6 > hit_floor)
             this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_3-4, 1.5*this.particles_time+1.6, -5)), this.materials.food_particles);
+        
+        if (2.5*this.particles_time+0.1 > hit_floor)
             this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_1-9, 2.5*this.particles_time+0.1, -5)), this.materials.food_particles);
+           
+        if (3.5*this.particles_time+.8 > hit_floor)
             this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_2-3, 3.5*this.particles_time+.8, -5)), this.materials.food_particles);
+            
+        if (3*this.particles_time+1.6 > hit_floor)
             this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_3-6, 3*this.particles_time+1.6, -5)), this.materials.food_particles);
+            
+        if (.1*this.particles_time > hit_floor)
             this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_1-11, 0.1*this.particles_time, -5)), this.materials.food_particles);
+            
+        if (4.5*this.particles_time-0.8 > hit_floor)
             this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_2-17, 4.5*this.particles_time-.8, -5)),this.materials.food_particles);
+            
+        if (7*this.particles_time+1.6 > hit_floor)
             this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_3-2, 7*this.particles_time+1.6, -5)), this.materials.food_particles);
+            
+        if (2.5*this.particles_time > hit_floor)
             this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_1-15, 2.5*this.particles_time, -5)), this.materials.food_particles);
+        
+        if (4.5*this.particles_time+.8 > hit_floor)
             this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_2-12, 4.5*this.particles_time+.8, -5)), this.materials.food_particles);
+            
+        if (8*this.particles_time+1.6 > hit_floor)
             this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_3-8, 8*this.particles_time+1.6, -5)), this.materials.food_particles);
-       }
     }
 
     make_control_panel() {
