@@ -696,6 +696,10 @@ export class SomethingFishy extends Scene {
         this.shapes.sphere.draw(context, program_state, bubble_model.times(Mat4.translation(this.r3, 1.5*this.bubble_time+1.6, 0)), this.materials.bubbles_rainbow);
     }
 
+    getDistance(x1, y1, z1, x2, y2, y3) {
+        return Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) + (z1-z2)*(z1-z2));
+    }
+
     draw_food_particles(context, program_state, initial_model) {
         this.particles_start = true;
         let particle_model = Mat4.identity().times(Mat4.translation(-1, 1.5, 2)).times(Mat4.scale(0.5, 0.3, 0.1)).times(Mat4.scale(1/.5, 1/.3, 1/.3)).times(Mat4.translation(0.5, this.particles_time - 2, 0)).times(Mat4.scale(.1,.1,.1));  
