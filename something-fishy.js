@@ -63,6 +63,7 @@ export class SomethingFishy extends Scene {
         this.particles_start = false;
 
         this.audio = new Audio("assets/somethingfishy.mp3");
+        // this.feeding_model = Mat4.identity();
 
         this.materials = {
             phong: new Material(new Textured_Phong(), {
@@ -117,6 +118,13 @@ export class SomethingFishy extends Scene {
             water_texture: new Material(new defs.Phong_Shader(), {
                 color: hex_color("#81d4fa"),
                 ambient: 0.85, diffusivity: 0, specularity: 0.2,
+            }),
+            coral_texture: new Material(new Textured_Phong(), {
+                ambient: 0.5, diffusivity: 0.1, specularity: 0.1,
+                color: hex_color("#ff7a9e"),
+                ambient: 1, diffusivity: 0.1, specularity: 0.5,
+                color: hex_color("#000000"),
+                // texture: new Texture("assets/coral.jpg", "LINEAR_MIPMAP_LINEAR")
             }),
             coral_texture: new Material(new Textured_Phong(), {
                 ambient: 0.5, diffusivity: 0.1, specularity: 0.1,
@@ -186,7 +194,7 @@ export class SomethingFishy extends Scene {
                 color: hex_color("#000000"),
                 ambient: 1, diffusivity: 0.1, specularity: 0.1,
             }),
-            scared_texture: new Material(new defs.Phong_Shader(), {
+            line_texture: new Material(new defs.Phong_Shader(), {
                 color: hex_color("#000000"),
                 ambient: 1, diffusivity: 1, specularity: 1,
             }),
@@ -320,42 +328,44 @@ export class SomethingFishy extends Scene {
 
     draw_generic_fish(context, program_state, material, x, y, z, left) {
         let t = program_state.animation_time / 1000;
-        let drawleftside = false;
+        let draw_leftside = false;
         let draw_scared = false;
+        let draw_talk = false;
+
         // fish animation starts at t = 10
         if (t >= 10 && t < 14) {
             this.move_vertical += 0.009*Math.sin(2*Math.PI*t/3);
             this.move_horizontal += 0.02;
-            drawleftside = false;
+            draw_leftside = false;
         }
         if (t >= 14 && t <= 18) {
             this.move_vertical += 0.009*Math.sin(2*Math.PI*t/3);
             this.move_horizontal -= 0.02;
-            drawleftside = true;
+            draw_leftside = true;
         }
         if (t >= 18 && t < 22) {
             this.move_horizontal += 0.005*Math.sin(2*Math.PI*t/3);
             this.move_vertical += 0.009*Math.sin(2*Math.PI*t/3);
-            drawleftside = false;
+            draw_leftside = false;
         }
         if (t >= 22 && t < 25) {
             this.move_horizontal += 0.007*Math.sin(2*Math.PI*t/3);
             this.move_vertical -= 0.01;
-            drawleftside = false;
+            draw_leftside = false;
         }
         if (t >= 25 && t < 26) {
             this.move_horizontal += 0.007*Math.sin(2*Math.PI*t/3);
             this.move_vertical -= 0.007*Math.sin(2*Math.PI*t/3);
-            drawleftside = false;
+            draw_leftside = false;
         }
         if (t >= 26 && t < 30) {
             this.move_horizontal += 0.015;
             this.move_vertical -= 0.007*Math.sin(2*Math.PI*t/3);
-            drawleftside = false;
+            draw_leftside = false;
         }
         if (t >= 30 && t < 33) {
             this.move_vertical -= 0.007*Math.sin(2*Math.PI*t/3);
-            drawleftside = false;
+            draw_leftside = false;
         }
         if (t >= 32 && t < 33) {
             draw_scared = true;
@@ -364,16 +374,16 @@ export class SomethingFishy extends Scene {
         if (t >= 33 && t < 34) {
             this.move_horizontal -= 0.1;
             this.move_vertical -= 0.01;
-            drawleftside = true;
+            draw_leftside = true;
         }
         if (t >= 34 && t < 39) {
             this.move_vertical += 0.025*Math.sin(3*Math.PI*t);
-            drawleftside = false;
+            draw_leftside = false;
         }
         if (t >= 39 && t < 42) {
             this.move_vertical += 0.015 + 0.007*Math.sin(3*Math.PI*t);
             this.move_horizontal += 0.02 + 0.003*Math.sin(3*Math.PI*t);
-            drawleftside = false;
+            draw_leftside = false;
         }
         if (t >= 42 && t < 50) {
             // TODO: animate feeding the fish
@@ -403,13 +413,16 @@ export class SomethingFishy extends Scene {
                 this.move_horizontal += 0.02;
                 this.move_vertical += 0.01;
             }
-            drawleftside = true;
+            draw_leftside = true;
         }
        
         if (t >= 50 && t < 53) {
-            drawleftside = false;
-            this.move_horizontal += 0.02;
+            draw_leftside = false;
+            this.move_horizontal += 0.015;
             this.move_vertical += 0.005;
+        }
+        if (t >= 53 && t < 54) {
+            draw_talk = true;
         }
 
         if (t > 56) {
@@ -440,7 +453,7 @@ export class SomethingFishy extends Scene {
         // eye
         let white_eye_model = Mat4.identity().times(Mat4.translation(x + 0.1 + this.move_horizontal, y + 0.04 + this.move_vertical, z + 0.2)).times(Mat4.scale(0.09, 0.09, 0.1));
         let pupil_model = Mat4.identity().times(Mat4.translation(x + 0.1 + this.move_horizontal, y + 0.04 + this.move_vertical, z + 0.2)).times(Mat4.scale(0.089, 0.089, 0.101));
-        if (drawleftside !== true) {
+        if (draw_leftside !== true) {
             upper_body_model = Mat4.identity().times(Mat4.translation(x - 0.3 + this.move_horizontal, fish_function + this.move_vertical, 2)).times(Mat4.scale(0.5, 0.3, 0.1));
             lower_body_model = Mat4.identity().times(Mat4.translation(x - 0.8 + this.move_horizontal, fish_function + this.move_vertical, 2)).times(Mat4.rotation(0.7 * tail_function, 0, 1, 0))
                                     .times(Mat4.scale(0.3, 0.15, 0.01));
@@ -464,14 +477,23 @@ export class SomethingFishy extends Scene {
             pupil_model = Mat4.identity().times(Mat4.translation(x - 0.05 + this.move_horizontal, y + 0.04 + this.move_vertical, z + 0.2)).times(Mat4.scale(0.089, 0.089, 0.101));
         }
 
-        if (draw_scared == true) {
-            let line1_model = Mat4.identity().times(Mat4.translation(x - 0.4 + this.move_horizontal, fish_function + this.move_vertical + 0.6, 2)).times(Mat4.rotation(0.2, 0, 0, 1)).times(Mat4.scale(0.02, 0.1, 0.01));
-            let line2_model = Mat4.identity().times(Mat4.translation(x - 0.2 + this.move_horizontal, fish_function + this.move_vertical + 0.58, 2)).times(Mat4.rotation(-0.1, 0, 0, 1)).times(Mat4.scale(0.02, 0.1, 0.01));
-            let line3_model = Mat4.identity().times(Mat4.translation(x + this.move_horizontal, fish_function + this.move_vertical + 0.54, 2)).times(Mat4.rotation(-0.4, 0, 0, 1)).times(Mat4.scale(0.02, 0.1, 0.01));
+        if (draw_scared === true) {
+            let line1_model = Mat4.identity().times(Mat4.translation(x - 0.4 + this.move_horizontal, fish_function + this.move_vertical + 0.52, 2)).times(Mat4.rotation(0.2, 0, 0, 1)).times(Mat4.scale(0.02, 0.1, 0.01));
+            let line2_model = Mat4.identity().times(Mat4.translation(x - 0.2 + this.move_horizontal, fish_function + this.move_vertical + 0.54, 2)).times(Mat4.rotation(-0.1, 0, 0, 1)).times(Mat4.scale(0.02, 0.1, 0.01));
+            let line3_model = Mat4.identity().times(Mat4.translation(x + this.move_horizontal, fish_function + this.move_vertical + 0.5, 2)).times(Mat4.rotation(-0.4, 0, 0, 1)).times(Mat4.scale(0.02, 0.1, 0.01));
             
-            this.shapes.cube.draw(context, program_state, line1_model, this.materials.scared_texture);
-            this.shapes.cube.draw(context, program_state, line2_model, this.materials.scared_texture);
-            this.shapes.cube.draw(context, program_state, line3_model, this.materials.scared_texture);
+            this.shapes.cube.draw(context, program_state, line1_model, this.materials.line_texture);
+            this.shapes.cube.draw(context, program_state, line2_model, this.materials.line_texture);
+            this.shapes.cube.draw(context, program_state, line3_model, this.materials.line_texture);
+        }
+        if (draw_talk === true) {
+            let line1_model = Mat4.identity().times(Mat4.translation(x + 0.4 + this.move_horizontal, fish_function + this.move_vertical + 0.1, 2)).times(Mat4.rotation(0.2, 0, 0, 1)).times(Mat4.scale(0.1, 0.02, 0.01));
+            let line2_model = Mat4.identity().times(Mat4.translation(x + 0.4 + this.move_horizontal, fish_function + this.move_vertical - 0.05, 2)).times(Mat4.rotation(-0.1, 0, 0, 1)).times(Mat4.scale(0.1, 0.02, 0.01));
+            let line3_model = Mat4.identity().times(Mat4.translation(x + 0.38 + this.move_horizontal, fish_function + this.move_vertical - 0.2, 2)).times(Mat4.rotation(1.2, 0, 0, 1)).times(Mat4.scale(0.02, 0.1, 0.01));
+            
+            this.shapes.cube.draw(context, program_state, line1_model, this.materials.line_texture);
+            this.shapes.cube.draw(context, program_state, line2_model, this.materials.line_texture);
+            this.shapes.cube.draw(context, program_state, line3_model, this.materials.line_texture);
         }
 
         this.shapes.sphere.draw(context, program_state, upper_body_model, material);
@@ -484,9 +506,8 @@ export class SomethingFishy extends Scene {
         this.shapes.sphere.draw(context, program_state, white_eye_model, this.materials.fish_features.override({color: hex_color("#FFFFFF")}));
         this.shapes.sphere.draw(context, program_state, pupil_model, this.materials.fish_features);
         
-        // TODO: Fix this translation
         let initial_model = upper_body_model.times(Mat4.translation(0, 0, 0)).times(Mat4.scale(1/.5, 1/.3, 1/.3));
-        if (drawleftside) {
+        if (draw_leftside) {
             initial_model = upper_body_model.times(Mat4.translation(-2.1, 0, 0)).times(Mat4.scale(1/.5, 1/.3, 1/.3));
         }
         
@@ -501,7 +522,7 @@ export class SomethingFishy extends Scene {
 
     draw_fish_inside_bowl(context, program_state, material, x, y, z, left, fish_transform) {
         let t = program_state.animation_time / 1000;
-        let drawleftside = false;
+        let draw_leftside = false;
   
         let model_transform = Mat4.identity();
         if (fish_transform) {
@@ -511,27 +532,27 @@ export class SomethingFishy extends Scene {
         if (t >= 0 && t < 3) {
             this.move_vertical_bowl += 0.009*Math.sin(2*Math.PI*t/3);
             this.move_horizontal_bowl += 0.005;
-            drawleftside = false;
+            draw_leftside = false;
         }
         if (t >= 3 && t <= 5) {
             this.move_vertical_bowl += 0.009*Math.sin(2*Math.PI*t/3);
             this.move_horizontal_bowl -= 0.01;
-            drawleftside = true;
+            draw_leftside = true;
         }
         if (t >= 5 && t < 7) {
             this.move_horizontal_bowl += 0.005*Math.sin(2*Math.PI*t/3);
             this.move_vertical_bowl += 0.009*Math.sin(2*Math.PI*t/3);
-            drawleftside = false;
+            draw_leftside = false;
         }
         if (t >= 7 && t < 9) {
             this.move_horizontal_bowl += 0.007*Math.sin(2*Math.PI*t/3);
             this.move_vertical_bowl -= 0.005;
-            drawleftside = false;
+            draw_leftside = false;
         }
         if (t >= 9 && t < 11) {
             this.move_horizontal_bowl += 0.007*Math.sin(2*Math.PI*t/3);
             this.move_vertical_bowl -= 0.007*Math.sin(2*Math.PI*t/3);
-            drawleftside = false;
+            draw_leftside = false;
         }
   
         let fish_function = 0.1 * Math.cos(2 * t) + 0.5;   
@@ -558,7 +579,7 @@ export class SomethingFishy extends Scene {
         // eye
         let white_eye_model = model_transform.times(Mat4.translation(x + 0.1 + this.move_horizontal_bowl, y + 0.04 + this.move_vertical_bowl, z + 0.2)).times(Mat4.scale(0.09, 0.09, 0.1));
         let pupil_model = model_transform.times(Mat4.translation(x + 0.1 + this.move_horizontal_bowl, y + 0.04 + this.move_vertical_bowl, z + 0.2)).times(Mat4.scale(0.089, 0.089, 0.101));
-        if (drawleftside !== true) {
+        if (draw_leftside !== true) {
             upper_body_model = model_transform.times(Mat4.translation(x - 0.3 + this.move_horizontal_bowl, fish_function + this.move_vertical_bowl, 2)).times(Mat4.scale(0.5, 0.3, 0.1));
             lower_body_model = model_transform.times(Mat4.translation(x - 0.8 + this.move_horizontal_bowl, fish_function + this.move_vertical_bowl, 2)).times(Mat4.rotation(0.7 * tail_function, 0, 1, 0))
                                     .times(Mat4.scale(0.3, 0.15, 0.01));
@@ -677,10 +698,10 @@ export class SomethingFishy extends Scene {
 
     draw_food_particles(context, program_state, initial_model) {
         this.particles_start = true;
-        let particle_model = initial_model.times(Mat4.translation(0.5, this.particles_time, 0)).times(Mat4.scale(.1,.1,.1));  
-        let r_1 = this.getRandomNum();
-        let r_2 = this.getRandomNum();
-        let r_3 = this.getRandomNum();
+        let particle_model = Mat4.identity().times(Mat4.translation(-1, 1.5, 2)).times(Mat4.scale(0.5, 0.3, 0.1)).times(Mat4.scale(1/.5, 1/.3, 1/.3)).times(Mat4.translation(0.5, this.particles_time - 2, 0)).times(Mat4.scale(.1,.1,.1));  
+        let r_1 = 0;//this.getRandomNum();
+        let r_2 = 0;//this.getRandomNum();
+        let r_3 = 0;//this.getRandomNum();
         if (this.particles_time > -2) {
             this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_1-5, .5*this.particles_time, -5)), this.materials.food_particles);
             this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_2-6, this.particles_time+.8, -5)), this.materials.food_particles);
