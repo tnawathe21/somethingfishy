@@ -707,7 +707,7 @@ export class SomethingFishy extends Scene {
         let r_2 = 0;//this.getRandomNum();
         let r_3 = 0;//this.getRandomNum();
 
-        let hit_floor = -1.5;
+        let hit_floor = -2;
         // let base_x = -0.5;
         // let base_y = (this.particles_time-2) + 1.5;
         // let base_z = 2;
