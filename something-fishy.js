@@ -706,6 +706,11 @@ export class SomethingFishy extends Scene {
         let r_1 = 0;//this.getRandomNum();
         let r_2 = 0;//this.getRandomNum();
         let r_3 = 0;//this.getRandomNum();
+
+        let base_x = -0.5;
+        let base_y = (this.particles_time-2) + 1.5;
+        let base_z = 2;
+
         if (this.particles_time > -2) {
             this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_1-5, .5*this.particles_time, -5)), this.materials.food_particles);
             this.shapes.sphere.draw(context, program_state, particle_model.times(Mat4.translation(r_2-6, this.particles_time+.8, -5)), this.materials.food_particles);
