@@ -6,7 +6,7 @@ The story starts with the camera zooming in from outside the fish bowl to the sc
 
 # Main Features
 
-* Custom made objects: all of our creatures and scenery objects were created from scratch, using primitive shapes.
+* Custom made objects: all of our creatures and scenery objects were created from scratch (essentially our entire animation), using primitive shapes.
 * Shadows: our zoom-in scene into the fishbowl includes calculated shadows (with light source, depth texture) for the fishbowl, the table, the small fish, and the big fish. 
 * Collision Detection: food particles disappear in the proximity of the fish during the feeding scene.
 * Fish motion animation and camera blocks: our animation utilized many camera perspective changes for our various scenes, and the fish motion was modeled accordingly. One of our favorite scenes with camera perspective changes is the zoom in to the fishbowl in the beginning!
