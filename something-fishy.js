@@ -115,89 +115,76 @@ export class SomethingFishy extends Scene {
             light_depth_texture: null
 
         }),
-            water_texture: new Material(new defs.Phong_Shader(), {
-                color: hex_color("#81d4fa"),
-                ambient: 0.85, diffusivity: 0, specularity: 0.2,
-            }),
-            coral_texture: new Material(new Textured_Phong(), {
-                ambient: 0.5, diffusivity: 0.1, specularity: 0.1,
-                color: hex_color("#ff7a9e"),
-                ambient: 1, diffusivity: 0.1, specularity: 0.5,
-                color: hex_color("#000000"),
-                // texture: new Texture("assets/coral.jpg", "LINEAR_MIPMAP_LINEAR")
-            }),
-            coral_texture: new Material(new Textured_Phong(), {
-                ambient: 0.5, diffusivity: 0.1, specularity: 0.1,
-                color: hex_color("#ff7a9e"),
-                ambient: 1, diffusivity: 0.1, specularity: 0.5,
-                color: hex_color("#000000"),
-                // texture: new Texture("assets/coral.jpg", "LINEAR_MIPMAP_LINEAR")
-            }),
-            seaweed_texture: new Material(new Textured_Phong(), {
-                ambient: 0.5, diffusivity: 0.1, specularity: 0.1,
-                color: hex_color("#18aa6c"),
-                texture: new Texture("assets/seaweed.jpeg", "LINEAR_MIPMAP_LINEAR")
-            }),
-            sand_texture: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"),
-                ambient: 1, diffusivity: 0.1, specularity: 0.1,
-                texture: new Texture("assets/sand.png", "LINEAR_MIPMAP_LINEAR")
-            }),
-            big_fish_texture: new Material(new Textured_Phong(), {
-                color: hex_color("#00468b"),
-                ambient: 0.6, diffusivity: 0.1, specularity: 0,
-                texture: new Texture("assets/blue-fish-scales.jpeg", "LINEAR_MIPMAP_LINEAR")
-            }), 
-            big_fish_tail_texture: new Material(new Textured_Phong(), {
-                color: hex_color("#00468b"),
-                ambient: 0.5, diffusivity: 0.1, specularity: 0,
-                texture: new Texture("assets/fish-tail.jpg", "LINEAR_MIPMAP_LINEAR")
-            }),       
-            cave_texture: new Material(new Textured_Phong(), {
-                color: hex_color("#4c4c4c"),
-                ambient: 0.3, diffusivity: 1, specularity: .4,
-                texture: new Texture("assets/rock.jpg", "LINEAR_MIPMAP_LINEAR")
-            }),
-            body_part_texture: new Material(new defs.Phong_Shader(), {
-                ambient: 1,
-                color: hex_color("000000"), 
-            }),
-            crab_texture: new Material(new defs.Phong_Shader(), {
-                color: hex_color("#e88472"), 
-                ambient: 1, diffusivity: 1, specularity: 1,
-            }),
-            crab_dots_texture: new Material(new defs.Phong_Shader(), {
-                color: hex_color("#e88472"), 
-                ambient: 1, diffusivity: 1, specularity: 1,
-                texture: new Texture("assets/crab-texture.jpg", "LINEAR_MIPMAP_LINEAR")
-            }),
-            fish_texture_orange: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"),
-                ambient: 1, diffusivity: 0.1, specularity: 0.1,
-                texture: new Texture("assets/orange_fish.jpg", "LINEAR_MIPMAP_LINEAR")
-            }),
-            fish_texture_pink: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"),
-                ambient: 1, diffusivity: 0.1, specularity: 0.1,
-                texture: new Texture("assets/pink_fish.jpg", "LINEAR_MIPMAP_LINEAR")
-            }),
-            fish_texture_rainbow: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"),
-                ambient: 1, diffusivity: 0.1, specularity: 0.1,
-                texture: new Texture("assets/rainbow_fish.png", "LINEAR_MIPMAP_LINEAR")
-            }),
-            food_particles: new Material(new Textured_Phong(), {
-                color: hex_color("#765424"),
-                ambient: .4, diffusivity: 0.1, specularity: 0.1
-            }),
-            fish_features: new Material(new defs.Phong_Shader(), {
-                color: hex_color("#000000"),
-                ambient: 1, diffusivity: 0.1, specularity: 0.1,
-            }),
-            line_texture: new Material(new defs.Phong_Shader(), {
-                color: hex_color("#000000"),
-                ambient: 1, diffusivity: 1, specularity: 1,
-            }),
+        water_texture: new Material(new defs.Phong_Shader(), {
+            color: hex_color("#81d4fa"),
+            ambient: 0.85, diffusivity: 0, specularity: 0.2,
+        }),
+        coral_purple_texture: new Material(new Textured_Phong(), {
+            ambient: 0.5, diffusivity: 0.1, specularity: 0.1,
+            color: hex_color("#ff7a9e"),
+            ambient: 1, diffusivity: 0.1, specularity: 0.5,
+            color: hex_color("#000000"),
+        }),
+        coral_pink_texture: new Material(new Textured_Phong(), {
+            ambient: 1, diffusivity: 0.1, specularity: 0.5,
+            color: hex_color("#000000"),
+            texture: new Texture("assets/coral.jpg", "LINEAR_MIPMAP_LINEAR")
+        }),
+        seaweed_texture: new Material(new Textured_Phong(), {
+            ambient: 0.5, diffusivity: 0.1, specularity: 0.1,
+            color: hex_color("#18aa6c"),
+            texture: new Texture("assets/seaweed.jpeg", "LINEAR_MIPMAP_LINEAR")
+        }),
+        sand_texture: new Material(new Textured_Phong(), {
+            color: hex_color("#000000"),
+            ambient: 1, diffusivity: 0.1, specularity: 0.1,
+            texture: new Texture("assets/sand.png", "LINEAR_MIPMAP_LINEAR")
+        }),
+        big_fish_texture: new Material(new Textured_Phong(), {
+            color: hex_color("#00468b"),
+            ambient: 0.6, diffusivity: 0.1, specularity: 0,
+            texture: new Texture("assets/blue-fish-scales.jpeg", "LINEAR_MIPMAP_LINEAR")
+        }), 
+        big_fish_tail_texture: new Material(new Textured_Phong(), {
+            color: hex_color("#00468b"),
+            ambient: 0.5, diffusivity: 0.1, specularity: 0,
+            texture: new Texture("assets/fish-tail.jpg", "LINEAR_MIPMAP_LINEAR")
+        }),       
+        cave_texture: new Material(new Textured_Phong(), {
+            color: hex_color("#4c4c4c"),
+            ambient: 0.3, diffusivity: 1, specularity: .4,
+            texture: new Texture("assets/rock.jpg", "LINEAR_MIPMAP_LINEAR")
+        }),
+        body_part_texture: new Material(new defs.Phong_Shader(), {
+            ambient: 1,
+            color: hex_color("000000"), 
+        }),
+        crab_texture: new Material(new defs.Phong_Shader(), {
+            color: hex_color("#e88472"), 
+            ambient: 1, diffusivity: 1, specularity: 1,
+        }),
+        crab_dots_texture: new Material(new defs.Phong_Shader(), {
+            color: hex_color("#e88472"), 
+            ambient: 1, diffusivity: 1, specularity: 1,
+            texture: new Texture("assets/crab-texture.jpg", "LINEAR_MIPMAP_LINEAR")
+        }),
+        fish_texture_orange: new Material(new Textured_Phong(), {
+            color: hex_color("#000000"),
+            ambient: 1, diffusivity: 0.1, specularity: 0.1,
+            texture: new Texture("assets/orange_fish.jpg", "LINEAR_MIPMAP_LINEAR")
+        }),
+        food_particles: new Material(new Textured_Phong(), {
+            color: hex_color("#765424"),
+            ambient: .4, diffusivity: 0.1, specularity: 0.1
+        }),
+        fish_features: new Material(new defs.Phong_Shader(), {
+            color: hex_color("#000000"),
+            ambient: 1, diffusivity: 0.1, specularity: 0.1,
+        }),
+        line_texture: new Material(new defs.Phong_Shader(), {
+            color: hex_color("#000000"),
+            ambient: 1, diffusivity: 1, specularity: 1,
+        }),
         }
 
         this.initial_camera_location = Mat4.look_at(vec3(0, 10, 20), vec3(0, 0, 0), vec3(0, 1, 0));
@@ -259,15 +246,15 @@ export class SomethingFishy extends Scene {
         let branch9_model = model_transform.times(Mat4.translation(-5, -2.45, 1)).times(Mat4.rotation(-0.5, 0, 0, 1))
                             .times(Mat4.scale(0.05, 0.5, 0.05));
 
-        this.shapes.cube.draw(context, program_state, branch1_model, this.materials.coral_texture);
-        this.shapes.cube.draw(context, program_state, branch2_model, this.materials.coral_texture);
-        this.shapes.cube.draw(context, program_state, branch3_model, this.materials.coral_texture);
-        this.shapes.cube.draw(context, program_state, branch4_model, this.materials.coral_texture);
-        this.shapes.cube.draw(context, program_state, branch5_model, this.materials.coral_texture);
-        this.shapes.cube.draw(context, program_state, branch6_model, this.materials.coral_texture);
-        this.shapes.cube.draw(context, program_state, branch7_model, this.materials.coral_texture);
-        this.shapes.cube.draw(context, program_state, branch8_model, this.materials.coral_texture);
-        this.shapes.cube.draw(context, program_state, branch9_model, this.materials.coral_texture);
+        this.shapes.cube.draw(context, program_state, branch1_model, this.materials.coral_purple_texture);
+        this.shapes.cube.draw(context, program_state, branch2_model, this.materials.coral_purple_texture);
+        this.shapes.cube.draw(context, program_state, branch3_model, this.materials.coral_purple_texture);
+        this.shapes.cube.draw(context, program_state, branch4_model, this.materials.coral_purple_texture);
+        this.shapes.cube.draw(context, program_state, branch5_model, this.materials.coral_purple_texture);
+        this.shapes.cube.draw(context, program_state, branch6_model, this.materials.coral_purple_texture);
+        this.shapes.cube.draw(context, program_state, branch7_model, this.materials.coral_purple_texture);
+        this.shapes.cube.draw(context, program_state, branch8_model, this.materials.coral_purple_texture);
+        this.shapes.cube.draw(context, program_state, branch9_model, this.materials.coral_purple_texture);
     }
         
     draw_big_fish(context, program_state, x, y, shadow_pass, draw_shadow=false, big_fish_bowl_transform) {
@@ -370,7 +357,6 @@ export class SomethingFishy extends Scene {
         if (t >= 32 && t < 33) {
             draw_scared = true;
         }
-        // TODO: ADD SCARY FACE TO CRAB AROUND 32 SECONDS
         if (t >= 33 && t < 34) {
             this.move_horizontal -= 0.1;
             this.move_vertical -= 0.01;
@@ -386,7 +372,6 @@ export class SomethingFishy extends Scene {
             draw_leftside = false;
         }
         if (t >= 42 && t < 50) {
-            // TODO: animate feeding the fish
             this.feed_fish = true;
             if (!this.particles_start) {
                 this.particles_time = 3;
