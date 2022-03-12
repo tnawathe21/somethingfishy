@@ -21,7 +21,7 @@ The story starts with the camera zooming in from outside the fish bowl to the sc
 3. Navigate to localhost 800 on chrome web browser
 4. Right click to inspect and go to the Sources tab
 5. Click add folder to workspace, and drag and drop the unzipped folder into this area
-6. Refresh, and watch our scene! The user can have the fish blow bubbles at any time, and make sure to tap the screen in the beginning to hear our music--but other than that, sit back and enjoy!
+6. Refresh, and watch our scene! The user can have the fish blow bubbles at any time, change the coral color when the scene is zoomed out, and make sure to tap the screen in the beginning to hear our music--but other than that, sit back and enjoy!
 
 
 
