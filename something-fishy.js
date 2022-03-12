@@ -62,6 +62,8 @@ export class SomethingFishy extends Scene {
         this.particles_time = 3;
         this.particles_start = false;
 
+        this.change_coral_color = false;
+
         this.audio = new Audio("assets/somethingfishy.mp3");
         // this.feeding_model = Mat4.identity();
 
@@ -246,15 +248,27 @@ export class SomethingFishy extends Scene {
         let branch9_model = model_transform.times(Mat4.translation(-5, -2.45, 1)).times(Mat4.rotation(-0.5, 0, 0, 1))
                             .times(Mat4.scale(0.05, 0.5, 0.05));
 
-        this.shapes.cube.draw(context, program_state, branch1_model, this.materials.coral_purple_texture);
-        this.shapes.cube.draw(context, program_state, branch2_model, this.materials.coral_purple_texture);
-        this.shapes.cube.draw(context, program_state, branch3_model, this.materials.coral_purple_texture);
-        this.shapes.cube.draw(context, program_state, branch4_model, this.materials.coral_purple_texture);
-        this.shapes.cube.draw(context, program_state, branch5_model, this.materials.coral_purple_texture);
-        this.shapes.cube.draw(context, program_state, branch6_model, this.materials.coral_purple_texture);
-        this.shapes.cube.draw(context, program_state, branch7_model, this.materials.coral_purple_texture);
-        this.shapes.cube.draw(context, program_state, branch8_model, this.materials.coral_purple_texture);
-        this.shapes.cube.draw(context, program_state, branch9_model, this.materials.coral_purple_texture);
+        if (this.change_coral_color) {
+            this.shapes.cube.draw(context, program_state, branch1_model, this.materials.coral_purple_texture);
+            this.shapes.cube.draw(context, program_state, branch2_model, this.materials.coral_purple_texture);
+            this.shapes.cube.draw(context, program_state, branch3_model, this.materials.coral_purple_texture);
+            this.shapes.cube.draw(context, program_state, branch4_model, this.materials.coral_purple_texture);
+            this.shapes.cube.draw(context, program_state, branch5_model, this.materials.coral_purple_texture);
+            this.shapes.cube.draw(context, program_state, branch6_model, this.materials.coral_purple_texture);
+            this.shapes.cube.draw(context, program_state, branch7_model, this.materials.coral_purple_texture);
+            this.shapes.cube.draw(context, program_state, branch8_model, this.materials.coral_purple_texture);
+            this.shapes.cube.draw(context, program_state, branch9_model, this.materials.coral_purple_texture);
+        } else {
+            this.shapes.cube.draw(context, program_state, branch1_model, this.materials.coral_pink_texture);
+            this.shapes.cube.draw(context, program_state, branch2_model, this.materials.coral_pink_texture);
+            this.shapes.cube.draw(context, program_state, branch3_model, this.materials.coral_pink_texture);
+            this.shapes.cube.draw(context, program_state, branch4_model, this.materials.coral_pink_texture);
+            this.shapes.cube.draw(context, program_state, branch5_model, this.materials.coral_pink_texture);
+            this.shapes.cube.draw(context, program_state, branch6_model, this.materials.coral_pink_texture);
+            this.shapes.cube.draw(context, program_state, branch7_model, this.materials.coral_pink_texture);
+            this.shapes.cube.draw(context, program_state, branch8_model, this.materials.coral_pink_texture);
+            this.shapes.cube.draw(context, program_state, branch9_model, this.materials.coral_pink_texture);
+        }
     }
         
     draw_big_fish(context, program_state, x, y, shadow_pass, draw_shadow=false, big_fish_bowl_transform) {
@@ -869,6 +883,14 @@ export class SomethingFishy extends Scene {
 
     }
 
+    my_mouse_down(e, pos, context, program_state) {
+        if (pos[0] > -0.71 && pos[1] < -0.14 //top left
+            && pos[0] < -0.58 && pos[1] > -0.62) {
+            console.log("test");
+            this.change_coral_color = !this.change_coral_color;
+        }
+    }
+
     display(context, program_state) {
         let t = program_state.animation_time / 1000, dt = program_state.animation_delta_time / 1000;
         const gl = context.context;
@@ -1166,6 +1188,18 @@ export class SomethingFishy extends Scene {
            //generic fish 
            let fish_function = 0.1 * Math.cos(2 * t) + 0.5;
            this.draw_generic_fish(context, program_state, this.materials.fish_texture_orange, -2.3, fish_function, 2, true);
+
+           let canvas = context.canvas;
+           const mouse_position = (e, rect = canvas.getBoundingClientRect()) =>
+               vec((e.clientX - (rect.left + rect.right) / 2) / ((rect.right - rect.left) / 2),
+                   (e.clientY - (rect.bottom + rect.top) / 2) / ((rect.top - rect.bottom) / 2));
+
+           canvas.addEventListener("mousedown", e => {
+               e.preventDefault();
+               const rect = canvas.getBoundingClientRect()
+               console.log("mouse_position(e): " + mouse_position(e));
+               this.my_mouse_down(e, mouse_position(e), context, program_state);
+           });
         }
     }
 }
