@@ -248,7 +248,7 @@ export class SomethingFishy extends Scene {
         let branch9_model = model_transform.times(Mat4.translation(-5, -2.45, 1)).times(Mat4.rotation(-0.5, 0, 0, 1))
                             .times(Mat4.scale(0.05, 0.5, 0.05));
 
-        if (this.change_coral_color) {
+        if (!this.change_coral_color) {
             this.shapes.cube.draw(context, program_state, branch1_model, this.materials.coral_purple_texture);
             this.shapes.cube.draw(context, program_state, branch2_model, this.materials.coral_purple_texture);
             this.shapes.cube.draw(context, program_state, branch3_model, this.materials.coral_purple_texture);
