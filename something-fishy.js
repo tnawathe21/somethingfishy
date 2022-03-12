@@ -62,6 +62,8 @@ export class SomethingFishy extends Scene {
         this.particles_time = 3;
         this.particles_start = false;
 
+        this.change_coral_color = false;
+
         this.audio = new Audio("assets/somethingfishy.mp3");
         // this.feeding_model = Mat4.identity();
 
@@ -118,13 +120,6 @@ export class SomethingFishy extends Scene {
             water_texture: new Material(new defs.Phong_Shader(), {
                 color: hex_color("#81d4fa"),
                 ambient: 0.85, diffusivity: 0, specularity: 0.2,
-            }),
-            coral_texture: new Material(new Textured_Phong(), {
-                ambient: 0.5, diffusivity: 0.1, specularity: 0.1,
-                color: hex_color("#ff7a9e"),
-                ambient: 1, diffusivity: 0.1, specularity: 0.5,
-                color: hex_color("#000000"),
-                // texture: new Texture("assets/coral.jpg", "LINEAR_MIPMAP_LINEAR")
             }),
             coral_texture: new Material(new Textured_Phong(), {
                 ambient: 0.5, diffusivity: 0.1, specularity: 0.1,
@@ -881,6 +876,13 @@ export class SomethingFishy extends Scene {
 
     }
 
+    my_mouse_down(e, pos, context, program_state) {
+        if (pos[0] > -0.71 && pos[1] < -0.14 //top left
+            && pos[0] < -0.58 && pos[1] > -0.62) {
+            console.log("test");
+        }
+    }
+
     display(context, program_state) {
         let t = program_state.animation_time / 1000, dt = program_state.animation_delta_time / 1000;
         const gl = context.context;
@@ -1178,6 +1180,18 @@ export class SomethingFishy extends Scene {
            //generic fish 
            let fish_function = 0.1 * Math.cos(2 * t) + 0.5;
            this.draw_generic_fish(context, program_state, this.materials.fish_texture_orange, -2.3, fish_function, 2, true);
+
+           let canvas = context.canvas;
+            const mouse_position = (e, rect = canvas.getBoundingClientRect()) =>
+                vec((e.clientX - (rect.left + rect.right) / 2) / ((rect.right - rect.left) / 2),
+                    (e.clientY - (rect.bottom + rect.top) / 2) / ((rect.top - rect.bottom) / 2));
+
+            canvas.addEventListener("mousedown", e => {
+                e.preventDefault();
+                const rect = canvas.getBoundingClientRect()
+                console.log("mouse_position(e): " + mouse_position(e));
+                this.my_mouse_down(e, mouse_position(e), context, program_state);
+            });
         }
     }
 }
